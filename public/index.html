@@ -1322,7 +1322,9 @@ const SECTION_NAMES = ['Customer','Brand','Capabilities','Funnel','Tech','Team',
 const TOTAL = 9;
 const CIRC = 119.38; // 2π × 19
 
-const SHEETS_URL = 'https://script.google.com/a/macros/sprintsandsneakers.com/s/AKfycbyI__xkCha9KP-lL4VJ1sKpG-6aNb48OcG0BYTFCbQdYohZ4cCoB0UCms3yuMjMU6D9/exec';
+// Backend endpoint — wired in Fase 4 (Cloudflare Worker: answers -> Sheet, files -> R2 -> Drive).
+// Empty for now: the old Vercel-export Apps Script URL is intentionally NOT called.
+const SHEETS_URL = '';
 
 let currentStep = 0;
 let bridgeTimers = {};
@@ -1461,6 +1463,7 @@ function submitToSheets() {
   const btn = document.getElementById('btnNext');
   btn.textContent = 'Submitting…';
   btn.disabled = true;
+  if (!SHEETS_URL) { setTimeout(() => goToStep(10), 400); return; }
   fetch(SHEETS_URL, {
     method: 'POST', mode: 'no-cors',
     headers: { 'Content-Type': 'text/plain' },
