@@ -10,9 +10,6 @@ routes = [
 ]
 
 [vars]
-SPREADSHEET_ID = "1a98wRYG9dMu2KG866xrd1VO3iSmv0Qw0wm9ZxqavtX8"
-ANSWERS_TAB = "Questionnaire answers"
-REGISTRY_TAB = "Questionnaire registry"
 # Onboarding root: a token (= a Drive folder id) is only accepted if the folder lives
 # under this folder. This whitelists partner project folders without a registry.
 ROOT_FOLDER_ID = "11ncxYJfj7JL_8b3GX1vrBYfUt6FUo9uU"

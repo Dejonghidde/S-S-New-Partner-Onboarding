@@ -1567,6 +1567,63 @@ function collectAnswers() {
   return d;
 }
 
+// ── Build a readable HTML summary of the answers (becomes a Google Doc in the partner folder) ──
+function escHtml(s) { return String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c])); }
+
+function answerHtml(qb) {
+  const cap = qb.querySelector('.cap-table');
+  if (cap) {
+    let rows = '';
+    cap.querySelectorAll('tbody tr').forEach(tr => {
+      const fn = tr.querySelector('td')?.textContent.trim() || '';
+      const owned = tr.querySelector('select')?.value || '';
+      const note = (tr.querySelector('input[type=text]')?.value || '').trim();
+      if (owned || note) rows += `<tr><td>${escHtml(fn)}</td><td>${escHtml(owned)}</td><td>${escHtml(note)}</td></tr>`;
+    });
+    return rows
+      ? `<table border="1" cellpadding="5" style="border-collapse:collapse"><tr><th>Function</th><th>Owned by</th><th>Notes</th></tr>${rows}</table>`
+      : '<p><i>—</i></p>';
+  }
+  const parts = [];
+  qb.querySelectorAll('input[type=radio]:checked').forEach(r =>
+    parts.push(escHtml(r.closest('.opt')?.querySelector('label')?.textContent.trim() || r.value)));
+  const checks = [...qb.querySelectorAll('input[type=checkbox]:checked')]
+    .map(c => escHtml(c.closest('.opt')?.querySelector('label')?.textContent.trim() || c.value));
+  if (checks.length) parts.push(checks.join(', '));
+  qb.querySelectorAll('textarea, input[type=text], input[type=url], select').forEach(el => {
+    if (el.closest('.cap-table')) return;
+    const v = (el.value || '').trim();
+    if (!v) return;
+    const stack = el.closest('.stack-row')?.querySelector('.stack-label')?.textContent.trim();
+    parts.push((stack ? `<b>${escHtml(stack)}:</b> ` : '') + escHtml(v));
+  });
+  return parts.length ? `<p>${parts.join('<br>')}</p>` : '<p><i>—</i></p>';
+}
+
+function buildAnswersHTML() {
+  const name = (document.getElementById('meta_name')?.value || '').trim();
+  const company = (document.getElementById('meta_company')?.value || '').trim();
+  const when = new Date().toISOString().slice(0, 16).replace('T', ' ');
+  let h = `<h1>Growth Partnership Onboarding</h1><p><b>Company:</b> ${escHtml(company) || '—'}<br>`
+    + `<b>Contact:</b> ${escHtml(name) || '—'}<br><b>Submitted:</b> ${when} UTC</p><hr>`;
+  document.querySelectorAll('.step[data-section]').forEach(step => {
+    const sec = step.querySelector('.section-headline')?.textContent.trim() || '';
+    let body = '';
+    step.querySelectorAll('.q-block').forEach(qb => {
+      const lbl = qb.querySelector('.q-label')?.textContent.trim() || '';
+      if (!lbl) return;
+      body += `<p><b>${escHtml(lbl)}</b></p>${answerHtml(qb)}`;
+    });
+    if (body) h += `<h2>${escHtml(sec)}</h2>${body}`;
+  });
+  if (uploadFiles.length) {
+    h += '<hr><h2>Uploaded files</h2><ul>'
+      + uploadFiles.map(f => `<li>${escHtml(f.name)} (${(f.size / 1048576).toFixed(1)} MB)</li>`).join('')
+      + '</ul>';
+  }
+  return h;
+}
+
 function getToken() { return new URLSearchParams(location.search).get('c') || ''; }
 
 // Upload one file to Drive via the Worker, chunk by chunk (resumable). Returns its Drive link.
@@ -1610,7 +1667,13 @@ async function submitToSheets() {
     btn.textContent = 'Submitting…';
     const r = await fetch(API_BASE + '/submit', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token, answers: collectAnswers(), files: uploaded })
+      body: JSON.stringify({
+        token,
+        name: (document.getElementById('meta_name')?.value || '').trim(),
+        company: (document.getElementById('meta_company')?.value || '').trim(),
+        html: buildAnswersHTML(),
+        files: uploaded
+      })
     });
     if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || ('submit ' + r.status)); }
     goToStep(10);

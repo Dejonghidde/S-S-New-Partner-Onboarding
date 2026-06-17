@@ -2,16 +2,13 @@
 // Same-origin API for the onboarding questionnaire (routed at onboarding.sprintsandsneakers.dev/api/*).
 //  - POST /api/upload/init   { token, filename, mimeType, size } -> { sessionUrl, folderId }
 //  - PUT  /api/upload/chunk  (headers: X-Session-Url, Content-Range; body: chunk) -> { done, range|file }
-//  - POST /api/submit        { token, answers, files } -> { ok }
+//  - POST /api/submit        { token, name, company, html, files } -> { ok, doc }
 //  - GET  /api/health
 //
-// Files are streamed to Google Drive via a resumable upload session (created server-side with a
-// service account), relayed chunk-by-chunk through this Worker so the browser only ever talks to us
-// (no CORS, no per-request body-size problem). The file is reassembled by Drive into ONE intact file
-// inside the partner's project folder (resolved from the Questionnaire registry by token).
-// Answers are appended to a Google Sheet.
-
-const ANSWERS_HEADERS = ['submitted_at', 'token', 'name', 'company', 'uploaded_files', 'answers_json'];
+// Files stream to Google Drive (resumable, relayed chunk-by-chunk through this Worker so the browser
+// only talks to us — no CORS, no per-request size limit; reassembled as ONE intact file). On submit,
+// the answers are written as a readable Google Doc into the SAME partner project folder.
+// The folder = the ?c token itself, accepted only if it lives under ROOT_FOLDER_ID ("2. Current projects").
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -74,31 +71,16 @@ async function uploadChunk(request, env) {
 }
 
 async function submit(request, env) {
-  const { token = '', answers = {}, files = [] } = await request.json();
-  const at = await getAccessToken(env);
-  await ensureTab(env, at, env.ANSWERS_TAB, ANSWERS_HEADERS);
-  const a = answers || {};
-  const row = [
-    a._submitted_at || new Date().toISOString(),
-    token || a._customer || '',
-    a.meta_name || '',
-    a.meta_company || '',
-    (files || []).map((f) => f.webViewLink || f.name || '').filter(Boolean).join('\n'),
-    JSON.stringify(a),
-  ];
-  await sheetsAppend(env, at, env.ANSWERS_TAB, [row]);
-  return J({ ok: true });
+  const { token = '', name = '', company = '', html = '' } = await request.json();
+  const folderId = await resolveFolder(env, token || '');
+  const title = ('Onboarding questionnaire — ' + (company || name || 'partner')).slice(0, 180);
+  const doc = await createAnswersDoc(env, folderId, title, html || '<p>(no answers submitted)</p>');
+  return J({ ok: true, folderId, doc: { id: doc.id, name: doc.name, link: doc.webViewLink } });
 }
 
-// ── Folder routing (token -> partner project folder) ──────
+// ── Folder routing (the ?c token IS the partner project folder id) ──
 async function resolveFolder(env, token) {
-  if (token) {
-    // 1) explicit registry row wins, if one exists (added later for the beheer overview)
-    const fid = await registryLookup(env, token);
-    if (fid) return fid;
-    // 2) the token IS a project folder id — accept it only if it lives under the onboarding root
-    if (await isUnderRoot(env, token, env.ROOT_FOLDER_ID)) return token;
-  }
+  if (token && (await isUnderRoot(env, token, env.ROOT_FOLDER_ID))) return token;
   return env.FALLBACK_FOLDER_ID;
 }
 
@@ -121,49 +103,25 @@ async function isUnderRoot(env, folderId, rootId, maxDepth = 8) {
   return false;
 }
 
-async function registryLookup(env, token) {
+// ── Write the answers as a Google Doc (converted from HTML) into the partner folder ──
+async function createAnswersDoc(env, folderId, name, html) {
   const at = await getAccessToken(env);
-  const range = encodeURIComponent(`'${env.REGISTRY_TAB}'!A2:E`);
-  const resp = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/${range}`,
-    { headers: { Authorization: 'Bearer ' + at } }
-  );
-  if (!resp.ok) return null; // tab may not exist yet
-  const j = await resp.json();
-  for (const r of j.values || []) {
-    if ((r[0] || '').trim() === token.trim()) return (r[4] || '').trim() || null;
-  }
-  return null;
-}
-
-// ── Google Sheets helpers ─────────────────────────────────
-async function ensureTab(env, at, title, headers) {
-  const meta = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}?fields=sheets.properties.title`,
-    { headers: { Authorization: 'Bearer ' + at } }
-  );
-  if (!meta.ok) throw new Error('spreadsheet read failed: ' + meta.status + ' ' + (await meta.text()));
-  const mj = await meta.json();
-  if ((mj.sheets || []).some((s) => s.properties && s.properties.title === title)) return;
-  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}:batchUpdate`, {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + at, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ requests: [{ addSheet: { properties: { title } } }] }),
-  });
-  if (headers && headers.length) await sheetsAppend(env, at, title, [headers]);
-}
-
-async function sheetsAppend(env, at, tab, values) {
-  const range = encodeURIComponent(`'${tab}'!A1`);
-  const resp = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${env.SPREADSHEET_ID}/values/${range}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
+  const boundary = 'ssbnd' + Date.now() + Math.floor(Math.random() * 1e9);
+  const metadata = { name, parents: [folderId], mimeType: 'application/vnd.google-apps.document' };
+  const body =
+    '--' + boundary + '\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n' + JSON.stringify(metadata) +
+    '\r\n--' + boundary + '\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n' + html +
+    '\r\n--' + boundary + '--';
+  const r = await fetch(
+    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true&fields=id,name,webViewLink',
     {
       method: 'POST',
-      headers: { Authorization: 'Bearer ' + at, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ values }),
+      headers: { Authorization: 'Bearer ' + at, 'Content-Type': 'multipart/related; boundary=' + boundary },
+      body,
     }
   );
-  if (!resp.ok) throw new Error('sheets append failed: ' + resp.status + ' ' + (await resp.text()));
+  if (!r.ok) throw new Error('doc create failed: ' + r.status + ' ' + (await r.text()));
+  return await r.json();
 }
 
 // ── Service-account auth (JWT -> access token, cached) ─────
@@ -177,7 +135,7 @@ async function getAccessToken(env) {
   const header = { alg: 'RS256', typ: 'JWT' };
   const claim = {
     iss: sa.client_email,
-    scope: 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets',
+    scope: 'https://www.googleapis.com/auth/drive',
     aud: tokenUri,
     iat: now,
     exp: now + 3600,
