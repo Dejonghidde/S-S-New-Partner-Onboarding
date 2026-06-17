@@ -1,0 +1,69 @@
+
+# Briefing: Onboarding-vragenlijst nieuwe partners (B2C)
+
+Input-document voor een Claude Code sessie waarin de vragenlijst en alles eromheen wordt opgezet en uitgewerkt.
+
+## Doel
+
+S&S stuurt nieuwe partners een interactieve onboarding-vragenlijst (web). Die haalt alle informatie op die alleen de partner ons kan vertellen, zodat we daarna direct creative research, audit en strategie kunnen draaien. Uitgangspunt: alles wat we zelf uit contract, database of markt kunnen halen vragen we niet, de rest wel.
+
+## Bestanden en locatie
+
+- Werkmap / repo: `/Users/dejonghidde/Github/S-S-New-Partner-Onboarding/`
+- Hoofdbestand: `SS_Growth_Partnership_Onboarding_B2C_Quiz.html` (interactieve single-file quiz, HTML/CSS/JS, Engels, circa 1500 regels)
+- Dit is de B2C-versie. Een B2B-variant is mogelijk later en apart.
+
+## Huidige staat van de vragenlijst (al aanwezig)
+
+Single-file interactieve quiz met welkomst- en afsluitscherm en 9 secties:
+1. Your Customer
+2. Brand & Positioning
+3. Capabilities
+4. Your Funnel
+5. Tech & Tracking
+6. Team & Process
+7. Ambition
+8. Assets & Access
+9. Impact
+
+De inhoudelijke selectie (alleen vragen wat de partner zelf kan vertellen) is al verwerkt in deze versie. De antwoorden worden nu nog niet opgeslagen; er is nog geen backend of opslag gekoppeld.
+
+## Wat er gedaan moet worden
+
+### A. Vragen en inhoud
+- Naam en bedrijf toevoegen aan het begin van de vragenlijst. Reden: de infra koppelt nog niet automatisch een unieke link per bedrijf aan de opdrachtbrief, dus dit voorlopig handmatig uitvragen.
+- Een document-upload sectie toevoegen voor brandbook, beeldmateriaal, productfoto's, regulations en legal. Daarbij concrete voorbeelden benoemen van welke documenten we zoeken.
+- De vragen klaarmaken voor review door Gijs en zijn feedback daarna verwerken.
+
+### B. Vormgeving
+- S&S-logo toevoegen aan de HTML.
+- Branding consistent houden met S&S (kleuren, stijl).
+
+### C. Hosting
+- Hosten op Cloudflare via het tools@ account. Niet op Vercel (max 3mb).
+- Subdomein koppelen: DNS-records opzetten vanuit Cloudflare naar Hostnet.
+
+### D. Opslag van antwoorden en documenten
+- Apps Script koppelen zodat de ingevulde antwoorden automatisch in een Google Sheet belanden.
+- Geüploade documenten moeten in Google Drive belanden. Opties om te onderzoeken: Apps Script web-app met upload, of een automation (Make of n8n) die de documenten ophaalt en in Drive plaatst. Zeb werkt aan een sandboxed Drive MCP; workspace CLI kan als tussenoplossing dienen.
+- Antwoorden en documenten moeten netjes en veilig opgeslagen worden en later makkelijk terug te vinden zijn door het team.
+
+### E. Beheer
+- Een sheet aanmaken waarin alle links worden bijgehouden (gehoste vragenlijst, antwoorden-sheet, documenten-map per partner).
+
+## Constraints en voorkeuren
+
+- Filosofie: alleen vragen wat de partner zelf kan vertellen, niets vragen dat wij zelf uit contract, database of markt halen.
+- Single-file HTML moet werkbaar blijven op Cloudflare.
+- Nette en veilige opslag van antwoorden en documenten is een harde eis.
+- Ship small: liever iets kleins dat werkt en live staat dan een grote opzet die niet af is.
+
+## Open punten en beslissingen
+
+- Technische aanpak voor documenten naar Drive (Apps Script upload, automation, of MCP).
+- Of er een aparte B2B-variant moet komen.
+- Welke informatie de productleads nog nodig hebben (buiten kanaaltoegang) om een volledige audit en strategie te draaien. Dit wordt bij hen uitgevraagd en kan tot extra vragen in de lijst leiden, zodat de vragenlijst alomvattend is.
+
+## Referentie: selectie-filosofie (Bart)
+
+"Alles wat we zelf kunnen uitvogelen hoeven we niet te vragen, de rest wel." De basics-sectie (naam, datum, contactgegevens) kon in principe weg omdat die in het contract staan, maar naam en bedrijf vragen we nu toch omdat de automatische koppeling met de opdrachtbrief er nog niet is. Vragen met vakjargon die de partner mogelijk niet begrijpt versimpelen.
