@@ -510,6 +510,49 @@ textarea.tall { min-height: 136px; }
 }
 .callout-body { font-size: 13.5px; color: var(--text-mid); line-height: 1.65; }
 
+/* ── FILE UPLOAD ─────────────────────────── */
+.upload-examples {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 14px 24px; margin: 4px 0 18px;
+}
+.ue-head {
+  display: block; font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--lime); margin-bottom: 6px;
+}
+.ue-col ul { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.ue-col li {
+  font-size: 12.5px; color: var(--text-mid); line-height: 1.4;
+  padding-left: 13px; position: relative;
+}
+.ue-col li::before {
+  content: ''; position: absolute; left: 0; top: 8px;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--black-border);
+}
+.dropzone {
+  border: 1.5px dashed var(--black-border); border-radius: var(--radius-lg);
+  padding: 28px 20px; text-align: center; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.dropzone:hover, .dropzone:focus-visible {
+  border-color: var(--lime-border); background: var(--lime-faint); outline: none;
+}
+.dropzone.dragover { border-color: var(--lime); background: var(--lime-soft); }
+.dropzone svg { color: var(--text-low); margin-bottom: 8px; transition: color .15s; }
+.dropzone:hover svg, .dropzone.dragover svg { color: var(--lime); }
+.dz-title { font-size: 13.5px; color: var(--text-mid); }
+.dz-link { color: var(--lime); font-weight: 600; }
+.dz-sub { font-size: 11.5px; color: var(--text-low); margin-top: 4px; }
+.file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.file-chip {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: var(--radius); padding: 9px 12px;
+}
+.fc-name { flex: 1; font-size: 13px; color: var(--text-high); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fc-size { font-size: 11.5px; color: var(--text-low); flex-shrink: 0; }
+.fc-remove { background: none; border: none; color: var(--text-low); cursor: pointer; font-size: 15px; line-height: 1; padding: 0 2px; flex-shrink: 0; transition: color .15s; }
+.fc-remove:hover { color: #ff6b6b; }
+
 /* ── THEME TOGGLE BUTTON ─────────────────── */
 .theme-toggle {
   width: 32px; height: 32px; border-radius: 50%;
@@ -625,6 +668,17 @@ html[data-theme="light"] .callout {
 }
 html[data-theme="light"] .callout-label { color: #3A8A00; }
 html[data-theme="light"] .callout-body { color: #555555; }
+/* file upload */
+html[data-theme="light"] .ue-head { color: #3A8A00; }
+html[data-theme="light"] .ue-col li { color: #555555; }
+html[data-theme="light"] .ue-col li::before { background: #C8C8C4; }
+html[data-theme="light"] .dropzone { border-color: #D8D8D4; background: #FFFFFF; }
+html[data-theme="light"] .dropzone:hover, html[data-theme="light"] .dropzone:focus-visible { border-color: rgba(80,180,0,0.4); background: rgba(80,180,0,0.05); }
+html[data-theme="light"] .dz-title { color: #555555; }
+html[data-theme="light"] .dz-sub { color: #AAAAAA; }
+html[data-theme="light"] .dz-link { color: #3A8A00; }
+html[data-theme="light"] .file-chip { background: #FFFFFF; border-color: #E2E2DE; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+html[data-theme="light"] .fc-name { color: #111111; }
 /* thank you */
 html[data-theme="light"] .ty-check {
   background: var(--lime); border: none; box-shadow: 0 4px 20px rgba(80,180,0,0.2);
@@ -654,6 +708,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
   .logo-label { display: none; }
   .logo-sep { display: none; }
   .cap-table { font-size: 12px; }
+  .upload-examples { grid-template-columns: 1fr; }
 }
 </style>
 <!-- prevent flash of wrong theme -->
@@ -1216,8 +1271,59 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
 
     <div class="q-block">
       <p class="q-label">Where can we access your brand guidelines, imagery and product photos?</p>
-      <p class="q-hint">A shareable link works — Dropbox, Google Drive, Figma, Notion, anything.</p>
+      <p class="q-hint">A shareable link works — Dropbox, Google Drive, Figma, Notion — <em>or upload the files directly below.</em></p>
       <input type="url" id="q8_1" placeholder="https://…">
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">Or upload your brand &amp; product files directly.</p>
+      <p class="q-hint">Drop in whatever you've got — we'd rather have too much than too little, and we'll sort it. Large files are welcome.</p>
+      <div class="upload-examples">
+        <div class="ue-col">
+          <span class="ue-head">Brand &amp; guidelines</span>
+          <ul>
+            <li>Brand book / style guide</li>
+            <li>Logo files (SVG, PNG, EPS)</li>
+            <li>Fonts</li>
+            <li>Tone-of-voice document</li>
+          </ul>
+        </div>
+        <div class="ue-col">
+          <span class="ue-head">Visual assets</span>
+          <ul>
+            <li>Product photography</li>
+            <li>Lifestyle &amp; campaign imagery</li>
+            <li>Existing video / UGC</li>
+            <li>Packaging shots</li>
+          </ul>
+        </div>
+        <div class="ue-col">
+          <span class="ue-head">Proof &amp; creative</span>
+          <ul>
+            <li>Best-performing ads or posts</li>
+            <li>Reviews &amp; testimonials</li>
+            <li>Press &amp; case studies</li>
+          </ul>
+        </div>
+        <div class="ue-col">
+          <span class="ue-head">Legal &amp; compliance</span>
+          <ul>
+            <li>Claims you can / can't make</li>
+            <li>Regulatory restrictions</li>
+            <li>Certifications &amp; spec sheets</li>
+            <li>Required disclaimers</li>
+          </ul>
+        </div>
+      </div>
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload files">
+        <input type="file" id="fileInput" multiple hidden>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 16v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/></svg>
+        <p class="dz-title">Drag &amp; drop files here, or <span class="dz-link">browse</span></p>
+        <p class="dz-sub">Any format. Large files (200&nbsp;MB+) welcome.</p>
+      </div>
+      <div class="file-list" id="fileList"></div>
     </div>
 
     <div class="q-block">
@@ -1328,6 +1434,7 @@ const SHEETS_URL = '';
 
 let currentStep = 0;
 let bridgeTimers = {};
+const uploadFiles = []; // files chosen in the upload section (wired to R2 in Fase 4)
 
 // ── PILLS ──
 function buildPills() {
@@ -1446,6 +1553,7 @@ function collectAnswers() {
   const d = { _submitted_at: new Date().toISOString() };
   const c = new URLSearchParams(window.location.search).get('c');
   if (c) d._customer = c;
+  d._uploads = uploadFiles.map(f => f.name).join(', ');
   document.querySelectorAll('textarea, input[type=text], input[type=url], select').forEach(el => {
     if (el.id) d[el.id] = el.value || '';
   });
@@ -1531,6 +1639,40 @@ function syncThemeIcon() {
   btn.innerHTML = isLight ? MOON : SUN;
   btn.title = isLight ? 'Switch to dark mode' : 'Switch to light mode';
 }
+
+// ── FILE UPLOAD (UI only; bytes are sent to R2 in Fase 4) ──
+(function initUpload() {
+  const dz = document.getElementById('dropzone');
+  const input = document.getElementById('fileInput');
+  const list = document.getElementById('fileList');
+  if (!dz || !input || !list) return;
+  const fmt = b => b < 1024 ? b + ' B'
+    : b < 1048576 ? (b / 1024).toFixed(0) + ' KB'
+    : b < 1073741824 ? (b / 1048576).toFixed(1) + ' MB'
+    : (b / 1073741824).toFixed(2) + ' GB';
+  const esc = s => s.replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+  function render() {
+    list.innerHTML = uploadFiles.map((f, i) =>
+      `<div class="file-chip"><span class="fc-name">${esc(f.name)}</span><span class="fc-size">${fmt(f.size)}</span><button type="button" class="fc-remove" data-i="${i}" aria-label="Remove file">✕</button></div>`
+    ).join('');
+  }
+  function add(files) { for (const f of files) uploadFiles.push(f); render(); }
+  dz.addEventListener('click', () => input.click());
+  dz.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+  input.addEventListener('change', () => { add(input.files); input.value = ''; });
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('dragover');
+    if (e.dataTransfer && e.dataTransfer.files.length) add(e.dataTransfer.files);
+  });
+  list.addEventListener('click', e => {
+    const btn = e.target.closest('.fc-remove');
+    if (!btn) return;
+    uploadFiles.splice(Number(btn.dataset.i), 1);
+    render();
+  });
+})();
 
 buildPills();
 goToStep(0);
