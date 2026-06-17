@@ -1428,9 +1428,9 @@ const SECTION_NAMES = ['Customer','Brand','Capabilities','Funnel','Tech','Team',
 const TOTAL = 9;
 const CIRC = 119.38; // 2π × 19
 
-// Backend endpoint — wired in Fase 4 (Cloudflare Worker: answers -> Sheet, files -> R2 -> Drive).
-// Empty for now: the old Vercel-export Apps Script URL is intentionally NOT called.
-const SHEETS_URL = '';
+// Backend = same-origin Cloudflare Worker: files stream to Drive in chunks, answers go to the Sheet.
+const API_BASE = '/api';
+const CHUNK = 16 * 1024 * 1024; // 16 MB — multiple of 256 KB, required by Drive resumable upload
 
 let currentStep = 0;
 let bridgeTimers = {};
@@ -1567,16 +1567,58 @@ function collectAnswers() {
   return d;
 }
 
-function submitToSheets() {
+function getToken() { return new URLSearchParams(location.search).get('c') || ''; }
+
+// Upload one file to Drive via the Worker, chunk by chunk (resumable). Returns its Drive link.
+async function uploadOneFile(file, token, onProgress) {
+  const init = await fetch(API_BASE + '/upload/init', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, filename: file.name, mimeType: file.type || 'application/octet-stream', size: file.size })
+  });
+  const ij = await init.json().catch(() => ({}));
+  if (!init.ok || !ij.sessionUrl) throw new Error('init ' + file.name + ': ' + (ij.detail || ij.error || init.status));
+  const sessionUrl = ij.sessionUrl;
+  let start = 0, result = null;
+  while (start < file.size) {
+    const end = Math.min(start + CHUNK, file.size);
+    const r = await fetch(API_BASE + '/upload/chunk', {
+      method: 'PUT',
+      headers: { 'X-Session-Url': sessionUrl, 'Content-Range': `bytes ${start}-${end - 1}/${file.size}` },
+      body: file.slice(start, end)
+    });
+    const rj = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error('chunk ' + file.name + ': ' + (rj.detail || rj.error || r.status));
+    if (rj.done) result = rj.file;
+    start = end;
+    if (onProgress) onProgress(start / file.size);
+  }
+  return { name: file.name, size: file.size, webViewLink: result && result.webViewLink, id: result && result.id };
+}
+
+async function submitToSheets() {
   const btn = document.getElementById('btnNext');
-  btn.textContent = 'Submitting…';
   btn.disabled = true;
-  if (!SHEETS_URL) { setTimeout(() => goToStep(10), 400); return; }
-  fetch(SHEETS_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify(collectAnswers())
-  }).finally(() => goToStep(10));
+  const token = getToken();
+  const files = uploadFiles.filter(f => f.size > 0);
+  try {
+    const uploaded = [];
+    for (let i = 0; i < files.length; i++) {
+      btn.textContent = `Uploading ${i + 1}/${files.length}…`;
+      uploaded.push(await uploadOneFile(files[i], token,
+        p => { btn.textContent = `Uploading ${i + 1}/${files.length} · ${Math.round(p * 100)}%`; }));
+    }
+    btn.textContent = 'Submitting…';
+    const r = await fetch(API_BASE + '/submit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, answers: collectAnswers(), files: uploaded })
+    });
+    if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || ('submit ' + r.status)); }
+    goToStep(10);
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = currentStep === 9 ? 'Submit →' : 'Next →';
+    alert('Something went wrong while submitting:\n' + (e.message || e) + '\n\nYour answers are saved on this device — please try again.');
+  }
 }
 
 // ── SAVE / RESTORE ──

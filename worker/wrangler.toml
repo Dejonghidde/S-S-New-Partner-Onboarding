@@ -1,0 +1,21 @@
+name = "ss-onboarding-api"
+main = "src/index.js"
+compatibility_date = "2026-06-01"
+account_id = "1abe294524503c88d22016d52c424675"
+workers_dev = false
+
+# Same-origin API: intercept /api/* on the form's hostname (Pages serves the rest).
+routes = [
+  { pattern = "onboarding.sprintsandsneakers.dev/api/*", zone_name = "sprintsandsneakers.dev" }
+]
+
+[vars]
+SPREADSHEET_ID = "1a98wRYG9dMu2KG866xrd1VO3iSmv0Qw0wm9ZxqavtX8"
+ANSWERS_TAB = "Questionnaire answers"
+REGISTRY_TAB = "Questionnaire registry"
+# Where files go when a token has no registry row yet (safety net; set to a real folder).
+# Default: "2. Current projects" root. Overridden per-token via the registry.
+FALLBACK_FOLDER_ID = "11ncxYJfj7JL_8b3GX1vrBYfUt6FUo9uU"
+
+# Secret (set via: wrangler secret put GOOGLE_SA_KEY):
+#   GOOGLE_SA_KEY = full service-account JSON key
