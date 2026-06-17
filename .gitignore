@@ -4,3 +4,4 @@
 .wrangler/
 node_modules/
 Claude Code + Cloudflare*
+*.blueprint.json

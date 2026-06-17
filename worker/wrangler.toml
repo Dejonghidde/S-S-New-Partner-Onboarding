@@ -13,8 +13,10 @@ routes = [
 SPREADSHEET_ID = "1a98wRYG9dMu2KG866xrd1VO3iSmv0Qw0wm9ZxqavtX8"
 ANSWERS_TAB = "Questionnaire answers"
 REGISTRY_TAB = "Questionnaire registry"
-# Where files go when a token has no registry row yet (safety net; set to a real folder).
-# Default: "2. Current projects" root. Overridden per-token via the registry.
+# Onboarding root: a token (= a Drive folder id) is only accepted if the folder lives
+# under this folder. This whitelists partner project folders without a registry.
+ROOT_FOLDER_ID = "11ncxYJfj7JL_8b3GX1vrBYfUt6FUo9uU"
+# Where files go when the token resolves to nothing valid (safety net; never lost).
 FALLBACK_FOLDER_ID = "11ncxYJfj7JL_8b3GX1vrBYfUt6FUo9uU"
 
 # Secret (set via: wrangler secret put GOOGLE_SA_KEY):

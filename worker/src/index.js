@@ -93,10 +93,32 @@ async function submit(request, env) {
 // ── Folder routing (token -> partner project folder) ──────
 async function resolveFolder(env, token) {
   if (token) {
+    // 1) explicit registry row wins, if one exists (added later for the beheer overview)
     const fid = await registryLookup(env, token);
     if (fid) return fid;
+    // 2) the token IS a project folder id — accept it only if it lives under the onboarding root
+    if (await isUnderRoot(env, token, env.ROOT_FOLDER_ID)) return token;
   }
   return env.FALLBACK_FOLDER_ID;
+}
+
+// Walk the folder's parent chain; true if rootId is an ancestor (or the folder itself).
+async function isUnderRoot(env, folderId, rootId, maxDepth = 8) {
+  if (!folderId || !rootId) return false;
+  const at = await getAccessToken(env);
+  let current = folderId;
+  for (let i = 0; i < maxDepth && current; i++) {
+    if (current === rootId) return true;
+    const r = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${current}?fields=id,parents&supportsAllDrives=true`,
+      { headers: { Authorization: 'Bearer ' + at } }
+    );
+    if (!r.ok) return false;
+    const parents = (await r.json()).parents || [];
+    if (!parents.length) return false;
+    current = parents[0];
+  }
+  return false;
 }
 
 async function registryLookup(env, token) {
