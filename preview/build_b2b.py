@@ -339,8 +339,8 @@ edits = [
     ('<p class="welcome-body">We pull the channel data, market research and competitor analysis ourselves. This covers the rest: what only you can tell us.</p>',
      '<p class="welcome-body">We pull the market and competitor research ourselves. This covers the rest: what only you can tell us.</p>'),
     ("let h = `<h1>Growth Partnership Onboarding</h1>", "let h = `<h1>Growth Partnership Onboarding — B2B</h1>"),
-    ("        token,\n        name: (document.getElementById('meta_name')",
-     "        token,\n        kind: 'B2B',\n        name: (document.getElementById('meta_name')"),
+    ("          token,\n          name: (document.getElementById('meta_name')",
+     "          token,\n          kind: 'B2B',\n          name: (document.getElementById('meta_name')"),
     ("goToStep(10);", "goToStep(TOTAL + 1);"),
 ]
 missing = []
