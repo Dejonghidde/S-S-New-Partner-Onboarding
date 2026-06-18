@@ -71,9 +71,10 @@ async function uploadChunk(request, env) {
 }
 
 async function submit(request, env) {
-  const { token = '', name = '', company = '', html = '' } = await request.json();
+  const { token = '', name = '', company = '', html = '', kind = '' } = await request.json();
   const folderId = await resolveFolder(env, token || '');
-  const title = ('Onboarding questionnaire — ' + (company || name || 'partner')).slice(0, 180);
+  const tag = kind ? ' (' + kind + ')' : '';
+  const title = ('Onboarding questionnaire' + tag + ' — ' + (company || name || 'partner')).slice(0, 180);
   const doc = await createAnswersDoc(env, folderId, title, html || '<p>(no answers submitted)</p>');
   return J({ ok: true, folderId, doc: { id: doc.id, name: doc.name, link: doc.webViewLink } });
 }
