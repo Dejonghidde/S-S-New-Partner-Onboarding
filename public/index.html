@@ -828,6 +828,14 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <div class="inline-row"><span class="inline-num">3</span><input type="text" id="q1_4c"></div>
       </div>
     </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">What do you know about your customers that the data won't show us?</p>
+      <p class="q-hint">How they really find you, or how they feel about you — the things that never make it into the numbers.</p>
+      <textarea id="q1_5" placeholder="e.g. Most new customers heard about us from a friend in person — that never shows up in analytics. And people trust us because the founder still answers DMs herself."></textarea>
+    </div>
   </div>
 </div>
 
@@ -894,6 +902,20 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-hint">The tired buzzwords and hollow claims every competitor repeats — the ones you find embarrassing.</p>
       <textarea id="q2_5" placeholder="e.g. 'Clean beauty' as a lazy claim with no standards behind it — we'd call that out directly."></textarea>
     </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">How well-known is your brand right now — and how do you measure that?</p>
+      <p class="q-hint">Your honest read on awareness, plus how you track it: surveys, branded search, social mentions… or not at all yet.</p>
+      <textarea id="q2_6" placeholder="e.g. Strong in Amsterdam, barely known outside the Randstad. We mostly watch branded search volume and the odd customer survey — no formal brand tracking."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">What's shifting in your market right now?</p>
+      <p class="q-hint">Trends, changes in demand or behaviour, new entrants — anything moving that we should factor into the strategy.</p>
+      <textarea id="q2_7" placeholder="e.g. Customers increasingly expect next-day delivery, and two well-funded competitors entered last year — pricing pressure is building."></textarea>
+    </div>
   </div>
 </div>
 
@@ -927,26 +949,27 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <p class="section-sub">Who owns what today — so we build around you, not over you.</p>
 
     <div class="q-block">
-      <p class="q-label">Who owns each growth function today?</p>
-      <p class="q-hint">Select the current setup for each area. Add a name or agency name in the notes column where relevant.</p>
+      <p class="q-label">Who owns each growth function today — and how is it performing?</p>
+      <p class="q-hint">Pick the current setup, score how it's performing right now (1 = poor, 10 = excellent), and add a name or agency in the notes where relevant.</p>
       <div class="cap-wrap">
         <table class="cap-table">
           <thead>
             <tr>
-              <th style="width:176px">Function</th>
-              <th style="width:148px">Owned by</th>
+              <th style="width:168px">Function</th>
+              <th style="width:130px">Owned by</th>
+              <th style="width:78px">Score</th>
               <th>Notes</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Paid Social (Meta / TikTok)</td><td><select id="cap_paidsocial"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><input type="text" id="cap_paidsocial_note"></td></tr>
-            <tr><td>Paid Search (Google)</td><td><select id="cap_paidsearch"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><input type="text" id="cap_paidsearch_note"></td></tr>
-            <tr><td>SEO / Content</td><td><select id="cap_seo"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><input type="text" id="cap_seo_note"></td></tr>
-            <tr><td>Email &amp; SMS</td><td><select id="cap_email"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><input type="text" id="cap_email_note"></td></tr>
-            <tr><td>Creative / Video</td><td><select id="cap_creative"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><input type="text" id="cap_creative_note"></td></tr>
-            <tr><td>Influencer / Creator</td><td><select id="cap_influencer"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><input type="text" id="cap_influencer_note"></td></tr>
-            <tr><td>CRO / Experimentation</td><td><select id="cap_cro"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><input type="text" id="cap_cro_note"></td></tr>
-            <tr><td>Analytics &amp; Data</td><td><select id="cap_data"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><input type="text" id="cap_data_note"></td></tr>
+            <tr><td>Paid Social (Meta / TikTok)</td><td><select id="cap_paidsocial"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_paidsocial_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_paidsocial_note"></td></tr>
+            <tr><td>Paid Search (Google)</td><td><select id="cap_paidsearch"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_paidsearch_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_paidsearch_note"></td></tr>
+            <tr><td>SEO / Content</td><td><select id="cap_seo"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_seo_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_seo_note"></td></tr>
+            <tr><td>Email &amp; SMS</td><td><select id="cap_email"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_email_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_email_note"></td></tr>
+            <tr><td>Creative / Video</td><td><select id="cap_creative"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_creative_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_creative_note"></td></tr>
+            <tr><td>Influencer / Creator</td><td><select id="cap_influencer"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_influencer_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_influencer_note"></td></tr>
+            <tr><td>CRO / Experimentation</td><td><select id="cap_cro"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_cro_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_cro_note"></td></tr>
+            <tr><td>Analytics &amp; Data</td><td><select id="cap_data"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_data_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_data_note"></td></tr>
           </tbody>
         </table>
       </div>
@@ -964,6 +987,12 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">Name one creator or customer who would happily film a review this quarter.</p>
       <p class="q-hint">One name or handle is all we need — this gets real content live from sprint one.</p>
       <input type="text" id="q3_3" placeholder="e.g. @username on TikTok, or a loyal customer you can introduce us to">
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Which channel is performing best, which worst — and why?</p>
+      <p class="q-hint">Beyond the scores above: where's the real momentum, and where's it stuck?</p>
+      <textarea id="q3_4" placeholder="e.g. Email is our best — repeat customers respond well. Paid search is the worst; we suspect the wrong keywords and weak landing pages, but we're not sure."></textarea>
     </div>
   </div>
 </div>
@@ -1095,6 +1124,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="tracking" value="serverside"><label>Server-side tagging (GTM server-side or similar)</label></div>
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="tracking" value="metacapi"><label>Meta Conversions API (CAPI)</label></div>
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="tracking" value="tiktokapi"><label>TikTok Events API</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="tracking" value="ga_enhanced"><label>Google Ads enhanced conversions</label></div>
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="tracking" value="cmp"><label>Consent management platform (CMP)</label></div>
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="tracking" value="unsure"><label>Honestly not sure what's live and what isn't</label></div>
       </div>
@@ -1170,6 +1200,20 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">In one sentence — what does a great agency partnership look like for your team?</p>
       <input type="text" id="q6_5" placeholder="e.g. Partners who move fast and surface bad news early — not after it's too late to fix.">
     </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">How quickly can you usually get us feedback or sign-off?</p>
+      <p class="q-hint">Realistically — same day, a couple of days, or does it depend on who needs to weigh in?</p>
+      <input type="text" id="q6_6" placeholder="e.g. Creative feedback within a day; anything that needs legal takes 3–5 working days.">
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">What risks do you see in working together?</p>
+      <p class="q-hint">Anything that could slow us down or trip us up — capacity, budget swings, internal politics, dependencies. Naming it early helps us plan around it.</p>
+      <textarea id="q6_7" placeholder="e.g. Our team is stretched thin, so turnaround on assets might lag. And budget could tighten if Q3 sales disappoint."></textarea>
+    </div>
   </div>
 </div>
 
@@ -1236,6 +1280,20 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">What's completely off-limits — claims, tactics or imagery we must never use in your name?</p>
       <p class="q-hint">Legal constraints, brand guardrails, category sensitivities. List anything that would create a problem if we crossed it.</p>
       <textarea id="q7_5" placeholder="e.g. No before/after imagery (regulatory restriction). Never claim 'clinically proven' without citing a specific study. Competitor name-dropping requires legal sign-off."></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">What do your margins and unit economics look like?</p>
+      <p class="q-hint">Roughly is fine — gross margin, contribution per order or customer, payback period. It shapes how hard we can push on spend. Kept confidential.</p>
+      <textarea id="q7_6" placeholder="e.g. ~60% gross margin, around €25 contribution per first order, payback by the second purchase."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">How's your runway and financial footing?</p>
+      <p class="q-hint">Profitable, funded, bootstrapped? How much room is there to invest before it needs to pay back? We keep this fully confidential.</p>
+      <textarea id="q7_7" placeholder="e.g. Bootstrapped and profitable with a comfortable runway. We can invest ahead of return for a quarter or two, but not indefinitely."></textarea>
     </div>
   </div>
 </div>
@@ -1576,12 +1634,14 @@ function answerHtml(qb) {
     let rows = '';
     cap.querySelectorAll('tbody tr').forEach(tr => {
       const fn = tr.querySelector('td')?.textContent.trim() || '';
-      const owned = tr.querySelector('select')?.value || '';
+      const sels = tr.querySelectorAll('select');
+      const owned = sels[0]?.value || '';
+      const score = sels[1]?.value || '';
       const note = (tr.querySelector('input[type=text]')?.value || '').trim();
-      if (owned || note) rows += `<tr><td>${escHtml(fn)}</td><td>${escHtml(owned)}</td><td>${escHtml(note)}</td></tr>`;
+      if (owned || score || note) rows += `<tr><td>${escHtml(fn)}</td><td>${escHtml(owned)}</td><td>${escHtml(score)}</td><td>${escHtml(note)}</td></tr>`;
     });
     return rows
-      ? `<table border="1" cellpadding="5" style="border-collapse:collapse"><tr><th>Function</th><th>Owned by</th><th>Notes</th></tr>${rows}</table>`
+      ? `<table border="1" cellpadding="5" style="border-collapse:collapse"><tr><th>Function</th><th>Owned by</th><th>Score</th><th>Notes</th></tr>${rows}</table>`
       : '<p><i>—</i></p>';
   }
   const parts = [];
