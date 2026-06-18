@@ -54,6 +54,9 @@ repl = [
  '<h2 class="bridge-title">Day-one content<br>is ready.</h2>'),
 ('<p class="bridge-body">Assets, access and a willing face from the start means we move at sprint speed — no scrambling for brand files, no delays waiting on approvals. We can launch from sprint one.</p>',
  '<p class="bridge-body">With assets, access and a willing face from the start, we move at sprint speed. No scrambling for brand files, no waiting on approvals. We launch in sprint one.</p>'),
+# Gijs review feedback: reword the risks question (Team & Process)
+('<p class="q-label">What risks do you see in working together?</p>',
+ '<p class="q-label">Do you see any potential risks that we can discuss before we encounter them?</p>'),
 ]
 
 missing = []
@@ -67,7 +70,7 @@ for old, new in repl:
 before = src.count(" — ")
 src = src.replace(" — ", ", ")
 
-open("preview/new.html", "w", encoding="utf-8").write(src)
+open("public/index.html", "w", encoding="utf-8").write(src)
 
 print("structural replacements applied:", len(repl) - len(missing), "/", len(repl))
 print("prose em-dashes cleaned:", before)
