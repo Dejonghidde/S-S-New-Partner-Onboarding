@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B2C Onboarding — Now vs Proposed · Sprints &amp; Sneakers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--lime:#B2FA63;--bd:#2a2a2a}
+  body{font-family:'Inter',-apple-system,sans-serif;background:#0a0a0a;color:#efefef;-webkit-font-smoothing:antialiased}
+  header{position:sticky;top:0;z-index:10;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--bd);padding:14px 22px}
+  .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .mark{font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--lime)}
+  h1{font-size:15px;font-weight:600;color:#cfcfcf}
+  .badge{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#f0b37a;
+    background:rgba(180,84,31,.14);border:1px solid rgba(180,84,31,.4);padding:4px 10px;border-radius:20px}
+  .sub{font-size:12.5px;color:#8a8a8a;margin-top:8px;max-width:760px;line-height:1.5}
+  .panes{display:flex;gap:14px;padding:14px}
+  .pane{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .lbl{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
+  .lbl .pip{width:8px;height:8px;border-radius:50%}
+  .now .pip{background:#b4541f}.now{color:#e08b5a}
+  .new .pip{background:var(--lime)}.new{color:var(--lime)}
+  .lbl small{font-weight:500;color:#777;text-transform:none;letter-spacing:0}
+  iframe{width:100%;height:84vh;min-height:560px;border:1px solid var(--bd);border-radius:12px;background:#0a0a0a;display:block}
+  @media(max-width:880px){.panes{flex-direction:column}iframe{height:74vh}}
+</style>
+</head>
+<body>
+<header>
+  <div class="row">
+    <span class="dot"></span><span class="mark">Sprints &amp; Sneakers</span>
+    <h1>B2C onboarding — now vs proposed</h1>
+    <span class="badge">Preview · not applied to the live form</span>
+  </div>
+  <p class="sub">Left is the questionnaire as it reads today. Right is the proposed version: Gijs' new questions added, plus the copy cleaned of AI-writing tics. Click through each side to compare. Submitting is disabled here — nothing leaves this page.</p>
+</header>
+<div class="panes">
+  <div class="pane">
+    <div class="lbl now"><span class="pip"></span>Now — original <small>· live today</small></div>
+    <iframe src="old.html" title="Original questionnaire"></iframe>
+  </div>
+  <div class="pane">
+    <div class="lbl new"><span class="pip"></span>Proposed — new copy <small>· for your review</small></div>
+    <iframe src="new.html" title="Proposed questionnaire"></iframe>
+  </div>
+</div>
+</body>
+</html>
