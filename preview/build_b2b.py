@@ -350,6 +350,8 @@ for old, new in edits:
     else:
         missing.append(old[:60])
 
+out = out.replace(" — ", ", ")  # de-slop prose em-dashes (bridge eyebrows etc.), matching the B2C copy-pass
+
 open("public/b2b.html", "w", encoding="utf-8").write(out)
 
 print("sections:", out.count('data-section="'))

@@ -1591,6 +1591,7 @@ const API_BASE = '/api';
 const CHUNK = 16 * 1024 * 1024; // 16 MB, multiple of 256 KB, required by Drive resumable upload
 
 let currentStep = 0;
+let ready = false; // true after restore; stops init navigation from overwriting saved answers
 let bridgeTimers = {};
 const uploadFiles = []; // files chosen in the upload section (wired to R2 in Fase 4)
 
@@ -1849,6 +1850,7 @@ async function submitToSheets() {
 const KEY = 'ss_onboarding_b2b_v1_' + (new URLSearchParams(location.search).get('c') || 'anon');
 
 function saveAll() {
+  if (!ready) return; // don't save during initial load, before restoreAll() runs
   const d = {};
   document.querySelectorAll('textarea, input[type=text], input[type=url], select').forEach(el => {
     if (el.id) d[el.id] = el.value;
@@ -1943,6 +1945,7 @@ function syncThemeIcon() {
 buildPills();
 goToStep(0);
 restoreAll();
+ready = true; // from here on, edits autosave
 syncThemeIcon();
 </script>
 </body>
