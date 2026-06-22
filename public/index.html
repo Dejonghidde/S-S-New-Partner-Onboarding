@@ -565,6 +565,15 @@ textarea.tall { min-height: 136px; }
 .theme-toggle svg { display: block; }
 
 /* ── LIGHT MODE OVERRIDES ────────────────── */
+/* Light theme uses its own darker text colours (dark theme stays bright) */
+html[data-theme="light"] {
+  --text-high: #1A1A1A;
+  --text-mid:  #555555;
+  --text-low:  #6E6E6E;
+}
+html[data-theme="light"] .bridge-title { color: #1A1A1A; }
+html[data-theme="light"] .bridge-body { color: #555555; }
+
 html[data-theme="light"] body {
   background: #F5F5F2; color: #111111;
 }
@@ -611,10 +620,10 @@ html[data-theme="light"] .btn-start:hover { background: #333333; box-shadow: 0 4
 /* content sections */
 html[data-theme="light"] .section-of { color: #AAAAAA; }
 html[data-theme="light"] .section-headline { color: #111111; }
-html[data-theme="light"] .section-sub { color: #AAAAAA; }
+html[data-theme="light"] .section-sub { color: #6B6B6B; }
 /* questions */
 html[data-theme="light"] .q-label { color: #111111; }
-html[data-theme="light"] .q-hint { color: #AAAAAA; }
+html[data-theme="light"] .q-hint { color: #6B6B6B; }
 html[data-theme="light"] .q-hint em { color: #777777; }
 html[data-theme="light"] .inline-num { color: #3A8A00; }
 html[data-theme="light"] hr.divider { border-color: #E2E2DE; }
@@ -648,7 +657,7 @@ html[data-theme="light"] .options .opt label { color: #777777; }
 html[data-theme="light"] .options .opt:hover label,
 html[data-theme="light"] .options .opt.sel label { color: #111111; }
 /* stack labels */
-html[data-theme="light"] .stack-label { color: #AAAAAA; }
+html[data-theme="light"] .stack-label { color: #6B6B6B; }
 /* cap table */
 html[data-theme="light"] .cap-table th { color: #AAAAAA; border-color: #E2E2DE; }
 html[data-theme="light"] .cap-table td { border-color: #E8E8E4; }
@@ -771,11 +780,11 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="welcome-fields">
       <div class="wf-row">
         <label class="wf-label" for="meta_name">Your name</label>
-        <input type="text" id="meta_name" placeholder="e.g. Sarah de Vries" autocomplete="name">
+        <input type="text" id="meta_name" placeholder="Sarah de Vries" autocomplete="name">
       </div>
       <div class="wf-row">
         <label class="wf-label" for="meta_company">Company</label>
-        <input type="text" id="meta_company" placeholder="e.g. Acme BV" autocomplete="organization">
+        <input type="text" id="meta_company" placeholder="Acme BV" autocomplete="organization">
       </div>
     </div>
     <button class="btn-start" onclick="goToStep(1)">
@@ -798,19 +807,19 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Who is your primary customer?</p>
       <p class="q-hint">Demographics, lifestyle, motivations, and the real reason they buy, even if they'd never say it out loud.</p>
-      <textarea class="tall" id="q1_1" placeholder="e.g. Women 28–42, urban professionals who value sustainable choices but won't sacrifice convenience. They'd never admit the real reason they buy is the social signal, not the values it represents."></textarea>
+      <textarea class="tall" id="q1_1" placeholder="Women 28–42, urban professionals who value sustainable choices but won't sacrifice convenience. They'd never admit the real reason they buy is the social signal, not the values it represents."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">And your secondary customer?</p>
       <p class="q-hint">The next group worth targeting, even if smaller. Leave blank if it's genuinely just one audience.</p>
-      <textarea id="q1_1b" placeholder="e.g. Gift-buyers shopping for the primary audience, often 45+ and less price-sensitive, who need more reassurance before they buy."></textarea>
+      <textarea id="q1_1b" placeholder="Gift-buyers shopping for the primary audience, often 45+ and less price-sensitive, who need more reassurance before they buy."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Who is explicitly <em>not</em> your customer?</p>
       <p class="q-hint">High returns, low LTV, wrong fit, name the profiles that consistently underperform. Knowing who to avoid sharpens targeting immediately.</p>
-      <textarea id="q1_2" placeholder="e.g. Price-driven buyers looking for the cheapest option, or customers who need constant hand-holding, our product is self-serve by design."></textarea>
+      <textarea id="q1_2" placeholder="Price-driven buyers looking for the cheapest option, or customers who need constant hand-holding, our product is self-serve by design."></textarea>
     </div>
 
     <hr class="divider">
@@ -819,7 +828,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">Top 3 reasons customers say they chose you.</p>
       <p class="q-hint">Use their words, from reviews, surveys or support tickets. Not what you believe; what they've actually said.</p>
       <div class="inline-fields">
-        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="q1_3a" placeholder="e.g. Fastest delivery in the category"></div>
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="q1_3a" placeholder="Fastest delivery in the category"></div>
         <div class="inline-row"><span class="inline-num">2</span><input type="text" id="q1_3b"></div>
         <div class="inline-row"><span class="inline-num">3</span><input type="text" id="q1_3c"></div>
       </div>
@@ -829,7 +838,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">Top 3 reasons customers don't buy, return the product, or complain.</p>
       <p class="q-hint">Same sources. "Price" isn't specific enough, tell us the real reason behind the objection.</p>
       <div class="inline-fields">
-        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="q1_4a" placeholder="e.g. Confused by sizing, exchanged twice, then returned"></div>
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="q1_4a" placeholder="Confused by sizing, exchanged twice, then returned"></div>
         <div class="inline-row"><span class="inline-num">2</span><input type="text" id="q1_4b"></div>
         <div class="inline-row"><span class="inline-num">3</span><input type="text" id="q1_4c"></div>
       </div>
@@ -840,7 +849,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">What do you know about your customers that the data won't show us?</p>
       <p class="q-hint">How they really find you, or how they feel about you, the things that never make it into the numbers.</p>
-      <textarea id="q1_5" placeholder="e.g. Most new customers heard about us from a friend in person, that never shows up in analytics. And people trust us because the founder still answers DMs herself."></textarea>
+      <textarea id="q1_5" placeholder="Most new customers heard about us from a friend in person, that never shows up in analytics. And people trust us because the founder still answers DMs herself."></textarea>
     </div>
   </div>
 </div>
@@ -886,7 +895,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Why do customers ultimately choose <em>you</em> over those brands?</p>
       <p class="q-hint">One sentence. The real reason, not the marketing version.</p>
-      <input type="text" id="q2_2" placeholder="e.g. We're the only brand in this category that actually talks to you like an adult.">
+      <input type="text" id="q2_2" placeholder="We're the only brand in this category that actually talks to you like an adult.">
     </div>
 
     <hr class="divider">
@@ -894,19 +903,19 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Your current one-line brand promise.</p>
       <p class="q-hint">No brand promise yet? Write what you'd want it to be.</p>
-      <input type="text" id="q2_3" placeholder="e.g. Skincare that works while you sleep.">
+      <input type="text" id="q2_3" placeholder="Skincare that works while you sleep.">
     </div>
 
     <div class="q-block">
       <p class="q-label">If you could own one feeling or position in your market, what would it be?</p>
       <p class="q-hint">Think in brand perceptions, not product features.</p>
-      <textarea id="q2_4" placeholder="e.g. The brand that made sustainable packaging feel desirable, not preachy."></textarea>
+      <textarea id="q2_4" placeholder="The brand that made sustainable packaging feel desirable, not preachy."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Which category cliché would you happily call out in your marketing?</p>
       <p class="q-hint">The tired buzzwords and hollow claims every competitor repeats, the ones you find embarrassing.</p>
-      <textarea id="q2_5" placeholder="e.g. 'Clean beauty' as a lazy claim with no standards behind it, we'd call that out directly."></textarea>
+      <textarea id="q2_5" placeholder="'Clean beauty' as a lazy claim with no standards behind it, we'd call that out directly."></textarea>
     </div>
 
     <hr class="divider">
@@ -914,13 +923,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">How well-known is your brand right now, and how do you measure that?</p>
       <p class="q-hint">Your honest read on awareness, plus how you track it: surveys, branded search, social mentions… or not at all yet.</p>
-      <textarea id="q2_6" placeholder="e.g. Strong in Amsterdam, barely known outside the Randstad. We mostly watch branded search volume and the odd customer survey, no formal brand tracking."></textarea>
+      <textarea id="q2_6" placeholder="Strong in Amsterdam, barely known outside the Randstad. We mostly watch branded search volume and the odd customer survey, no formal brand tracking."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">What's shifting in your market right now?</p>
       <p class="q-hint">Trends, changes in demand or behaviour, new entrants, anything moving that we should factor into the strategy.</p>
-      <textarea id="q2_7" placeholder="e.g. Customers increasingly expect next-day delivery, and two well-funded competitors entered last year, pricing pressure is building."></textarea>
+      <textarea id="q2_7" placeholder="Customers increasingly expect next-day delivery, and two well-funded competitors entered last year, pricing pressure is building."></textarea>
     </div>
   </div>
 </div>
@@ -990,19 +999,19 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Describe any external growth partnerships you run today.</p>
       <p class="q-hint">Creator/influencer, affiliate, marketplace, referral or brand partnerships: structure (gifting, paid, ambassador, revenue share), rough scale and main platform. If you have none, say so.</p>
-      <textarea id="q3_2" placeholder="e.g. Around 30 micro-influencers on TikTok, gifting only. A small affiliate programme via Awin (~10 active partners). No marketplace or referral programme yet."></textarea>
+      <textarea id="q3_2" placeholder="Around 30 micro-influencers on TikTok, gifting only. A small affiliate programme via Awin (~10 active partners). No marketplace or referral programme yet."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Name one creator, partner or customer who would happily collaborate this quarter.</p>
       <p class="q-hint">A creator who'd film a review, an affiliate who'd push you, or a loyal customer. One name or handle is all we need, this gets real content live from sprint one.</p>
-      <input type="text" id="q3_3" placeholder="e.g. @username on TikTok, an affiliate partner, or a loyal customer you can introduce us to">
+      <input type="text" id="q3_3" placeholder="@username on TikTok, an affiliate partner, or a loyal customer you can introduce us to">
     </div>
 
     <div class="q-block">
       <p class="q-label">Which channel is performing best, which worst, and why?</p>
       <p class="q-hint">Beyond the scores above: where's the real momentum, and where's it stuck?</p>
-      <textarea id="q3_4" placeholder="e.g. Email is our best, repeat customers respond well. Paid search is the worst; we suspect the wrong keywords and weak landing pages, but we're not sure."></textarea>
+      <textarea id="q3_4" placeholder="Email is our best, repeat customers respond well. Paid search is the worst; we suspect the wrong keywords and weak landing pages, but we're not sure."></textarea>
     </div>
   </div>
 </div>
@@ -1075,13 +1084,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">What's your strongest creative angle or hook in market right now?</p>
       <p class="q-hint">What's working, and your best guess at why it resonates.</p>
-      <textarea id="q4_2" placeholder="e.g. 'Before &amp; after' UGC hooks on TikTok outperform everything else. Hypothesis: authenticity beats polish in our category."></textarea>
+      <textarea id="q4_2" placeholder="'Before &amp; after' UGC hooks on TikTok outperform everything else. Hypothesis: authenticity beats polish in our category."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Do you have a loyalty, subscription or referral programme?</p>
       <p class="q-hint">If yes: structure, size and how active it is, in one sentence. If no, just say so.</p>
-      <textarea id="q4_3" placeholder="e.g. Subscription model for our hero product, around 18% of revenue. Referral programme launched three months ago, minimal uptake so far."></textarea>
+      <textarea id="q4_3" placeholder="Subscription model for our hero product, around 18% of revenue. Referral programme launched three months ago, minimal uptake so far."></textarea>
     </div>
   </div>
 </div>
@@ -1119,11 +1128,11 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">Your core tech stack.</p>
       <p class="q-hint">Fill in what you use in each category. Leave anything blank if you're unsure.</p>
       <div style="margin-top:4px">
-        <div class="stack-row"><span class="stack-label">E-comm / CMS</span><input type="text" id="stack_ecomm" placeholder="e.g. Shopify, WooCommerce"></div>
-        <div class="stack-row"><span class="stack-label">Email / SMS</span><input type="text" id="stack_email" placeholder="e.g. Klaviyo, Mailchimp"></div>
-        <div class="stack-row"><span class="stack-label">CDP / Data</span><input type="text" id="stack_cdp" placeholder="e.g. Segment, Bloomreach, none"></div>
-        <div class="stack-row"><span class="stack-label">Analytics</span><input type="text" id="stack_analytics" placeholder="e.g. GA4, Triple Whale, Northbeam"></div>
-        <div class="stack-row"><span class="stack-label">CRM</span><input type="text" id="stack_crm" placeholder="e.g. HubSpot, Salesforce, none"></div>
+        <div class="stack-row"><span class="stack-label">E-comm / CMS</span><input type="text" id="stack_ecomm" placeholder="Shopify, WooCommerce"></div>
+        <div class="stack-row"><span class="stack-label">Email / SMS</span><input type="text" id="stack_email" placeholder="Klaviyo, Mailchimp"></div>
+        <div class="stack-row"><span class="stack-label">CDP / Data</span><input type="text" id="stack_cdp" placeholder="Segment, Bloomreach, none"></div>
+        <div class="stack-row"><span class="stack-label">Analytics</span><input type="text" id="stack_analytics" placeholder="GA4, Triple Whale, Northbeam"></div>
+        <div class="stack-row"><span class="stack-label">CRM</span><input type="text" id="stack_crm" placeholder="HubSpot, Salesforce, none"></div>
       </div>
     </div>
 
@@ -1166,7 +1175,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
 
     <div class="q-block">
       <p class="q-label">What's the biggest tracking gap hurting your media decisions right now?</p>
-      <textarea id="q5_4" placeholder="e.g. We can't reliably attribute offline conversions. Meta ROAS looks strong, but we suspect it's heavily over-counting."></textarea>
+      <textarea id="q5_4" placeholder="We can't reliably attribute offline conversions. Meta ROAS looks strong, but we suspect it's heavily over-counting."></textarea>
     </div>
   </div>
 </div>
@@ -1203,12 +1212,12 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">How is your marketing team structured?</p>
       <p class="q-hint">Roles, headcount (FTE) and reporting lines. A rough sketch in words is perfectly fine.</p>
-      <textarea id="q6_1" placeholder="e.g. Head of Growth (1 FTE, reports to CEO) → Performance Marketer (1 FTE), CRM Manager (0.5 FTE). No dedicated creative in-house."></textarea>
+      <textarea id="q6_1" placeholder="Head of Growth (1 FTE, reports to CEO) → Performance Marketer (1 FTE), CRM Manager (0.5 FTE). No dedicated creative in-house."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Who has final sign-off on creative, messaging and budget?</p>
-      <input type="text" id="q6_2" placeholder="e.g. CMO for budgets above €5k, Head of Growth for everything else.">
+      <input type="text" id="q6_2" placeholder="CMO for budgets above €5k, Head of Growth for everything else.">
     </div>
 
     <hr class="divider">
@@ -1217,18 +1226,18 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">Our sprint cadence: a weekly check-in plus a monthly strategic review.</p>
       <p class="q-hint">We work in sprints, so alignment is built in: a weekly 30-minute check-in to keep momentum, and a monthly 90-minute review to step back and steer. That rhythm is how we keep the partnership moving.</p>
       <p class="q-hint" style="margin-top:12px">Preferred day and time for the weekly check-in (optional):</p>
-      <input type="text" id="q6_3_time" placeholder="e.g. Tuesday mornings from 9:30 CET">
+      <input type="text" id="q6_3_time" placeholder="Tuesday mornings from 9:30 CET">
     </div>
 
     <div class="q-block">
       <p class="q-label">Any other stakeholders we should loop in?</p>
       <p class="q-hint">Anyone who touches approvals, legal review or budget, so we're never caught off guard.</p>
-      <textarea id="q6_4" placeholder="e.g. Legal reviews all claims before launch, allow 3–5 working days. CFO approves any budget change above €10k."></textarea>
+      <textarea id="q6_4" placeholder="Legal reviews all claims before launch, allow 3–5 working days. CFO approves any budget change above €10k."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">In one sentence, what does a great agency partnership look like for your team?</p>
-      <input type="text" id="q6_5" placeholder="e.g. Partners who move fast and surface bad news early, not after it's too late to fix.">
+      <input type="text" id="q6_5" placeholder="Partners who move fast and surface bad news early, not after it's too late to fix.">
     </div>
 
     <hr class="divider">
@@ -1236,13 +1245,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">How quickly can you usually get us feedback or sign-off?</p>
       <p class="q-hint">Realistically, same day, a couple of days, or does it depend on who needs to weigh in?</p>
-      <input type="text" id="q6_6" placeholder="e.g. Creative feedback within a day; anything that needs legal takes 3–5 working days.">
+      <input type="text" id="q6_6" placeholder="Creative feedback within a day; anything that needs legal takes 3–5 working days.">
     </div>
 
     <div class="q-block">
       <p class="q-label">Do you see any potential risks that we can discuss before we encounter them?</p>
       <p class="q-hint">Anything that could slow us down or trip us up, capacity, budget swings, internal politics, dependencies. Naming it early helps us plan around it.</p>
-      <textarea id="q6_7" placeholder="e.g. Our team is stretched thin, so turnaround on assets might lag. And budget could tighten if Q3 sales disappoint."></textarea>
+      <textarea id="q6_7" placeholder="Our team is stretched thin, so turnaround on assets might lag. And budget could tighten if Q3 sales disappoint."></textarea>
     </div>
   </div>
 </div>
@@ -1279,23 +1288,23 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Your three-year vision.</p>
       <p class="q-hint">Where is this business in <span id="visionYear"></span> if everything goes right?</p>
-      <textarea id="q7_1" placeholder="e.g. Category leader in sustainable homeware across the Benelux, €25M in revenue, profitable, with a community of 200k active customers."></textarea>
+      <textarea id="q7_1" placeholder="Category leader in sustainable homeware across the Benelux, €25M in revenue, profitable, with a community of 200k active customers."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Commercial targets for the next 12 months.</p>
       <div style="margin-top:8px">
-        <div class="stack-row"><span class="stack-label">Revenue</span><input type="text" id="q7_2a" placeholder="e.g. €4.2M (+40% YoY)"></div>
-        <div class="stack-row"><span class="stack-label">New customers</span><input type="text" id="q7_2b" placeholder="e.g. 8,000 new customers"></div>
-        <div class="stack-row"><span class="stack-label">ROAS / CAC</span><input type="text" id="q7_2c" placeholder="e.g. Blended ROAS 4.5×"></div>
-        <div class="stack-row"><span class="stack-label">Repeat / LTV</span><input type="text" id="q7_2d" placeholder="e.g. Repeat rate from 22% to 30%"></div>
+        <div class="stack-row"><span class="stack-label">Revenue</span><input type="text" id="q7_2a" placeholder="€4.2M (+40% YoY)"></div>
+        <div class="stack-row"><span class="stack-label">New customers</span><input type="text" id="q7_2b" placeholder="8,000 new customers"></div>
+        <div class="stack-row"><span class="stack-label">ROAS / CAC</span><input type="text" id="q7_2c" placeholder="Blended ROAS 4.5×"></div>
+        <div class="stack-row"><span class="stack-label">Repeat / LTV</span><input type="text" id="q7_2d" placeholder="Repeat rate from 22% to 30%"></div>
       </div>
     </div>
 
     <div class="q-block">
       <p class="q-label">The one metric that, if it moves, the business wins.</p>
       <p class="q-hint">One. Not three. The north star that everything else serves.</p>
-      <input type="text" id="q7_3" placeholder="e.g. Monthly recurring subscribers, everything else is a proxy.">
+      <input type="text" id="q7_3" placeholder="Monthly recurring subscribers, everything else is a proxy.">
     </div>
 
     <hr class="divider">
@@ -1303,13 +1312,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Monthly media and growth budget.</p>
       <p class="q-hint">A range is fine, this shapes sprint sizing and channel mix, not a commitment.</p>
-      <input type="text" id="q7_4" placeholder="e.g. €25k–€40k per month, with flexibility to scale in Q4.">
+      <input type="text" id="q7_4" placeholder="€25k–€40k per month, with flexibility to scale in Q4.">
     </div>
 
     <div class="q-block">
       <p class="q-label">What's completely off-limits, claims, tactics or imagery we must never use in your name?</p>
       <p class="q-hint">Legal constraints, brand guardrails, category sensitivities. List anything that would create a problem if we crossed it.</p>
-      <textarea id="q7_5" placeholder="e.g. No before/after imagery (regulatory restriction). Never claim 'clinically proven' without citing a specific study. Competitor name-dropping requires legal sign-off."></textarea>
+      <textarea id="q7_5" placeholder="No before/after imagery (regulatory restriction). Never claim 'clinically proven' without citing a specific study. Competitor name-dropping requires legal sign-off."></textarea>
     </div>
 
     <hr class="divider">
@@ -1317,13 +1326,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">What do your margins and unit economics look like?</p>
       <p class="q-hint">Roughly is fine, gross margin, contribution per order or customer, payback period. It shapes how hard we can push on spend. Kept confidential.</p>
-      <textarea id="q7_6" placeholder="e.g. ~60% gross margin, around €25 contribution per first order, payback by the second purchase."></textarea>
+      <textarea id="q7_6" placeholder="~60% gross margin, around €25 contribution per first order, payback by the second purchase."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">How's your runway and financial footing?</p>
       <p class="q-hint">Profitable, funded, bootstrapped? How much room is there to invest before it needs to pay back? We keep this fully confidential.</p>
-      <textarea id="q7_7" placeholder="e.g. Bootstrapped and profitable with a comfortable runway. We can invest ahead of return for a quarter or two, but not indefinitely."></textarea>
+      <textarea id="q7_7" placeholder="Bootstrapped and profitable with a comfortable runway. We can invest ahead of return for a quarter or two, but not indefinitely."></textarea>
     </div>
   </div>
 </div>
@@ -1417,18 +1426,18 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Who's willing to be the public face of the brand on social?</p>
       <p class="q-hint">Founders, employees, customers, creators, name and platform. This unlocks authentic content from sprint one.</p>
-      <textarea id="q8_2" placeholder="e.g. Co-founder Sarah is comfortable on LinkedIn and Instagram Reels. Customer Anna (@handle) is already posting TikToks about us unprompted."></textarea>
+      <textarea id="q8_2" placeholder="Co-founder Sarah is comfortable on LinkedIn and Instagram Reels. Customer Anna (@handle) is already posting TikToks about us unprompted."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">What proof can we use externally?</p>
       <p class="q-hint">Reviews, UGC, press coverage, case studies, and flag any usage rights or restrictions we should know about.</p>
-      <textarea id="q8_3" placeholder="e.g. 4.7 stars on Trustpilot (1,200 reviews, open to use). Press feature in LINDA. magazine. UGC from @handle, no formal usage rights agreed yet."></textarea>
+      <textarea id="q8_3" placeholder="4.7 stars on Trustpilot (1,200 reviews, open to use). Press feature in LINDA. magazine. UGC from @handle, no formal usage rights agreed yet."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Words, tones or visuals we must never use in your name.</p>
-      <input type="text" id="q8_4" placeholder="e.g. No aggressive urgency copy. Never use competitor logos. Avoid hyper-sexualised imagery.">
+      <input type="text" id="q8_4" placeholder="No aggressive urgency copy. Never use competitor logos. Avoid hyper-sexualised imagery.">
     </div>
   </div>
 </div>
@@ -1465,7 +1474,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">What positive change should our partnership help your business create?</p>
       <p class="q-hint">For people, society or the planet, and where in your current growth work is that ambition still missing?</p>
-      <textarea class="tall" id="q9_1" placeholder="e.g. We want every purchase to fund a tree planted, but right now it's buried in the checkout footer and no customer knows about it. It should be front and centre in every campaign we run."></textarea>
+      <textarea class="tall" id="q9_1" placeholder="We want every purchase to fund a tree planted, but right now it's buried in the checkout footer and no customer knows about it. It should be front and centre in every campaign we run."></textarea>
     </div>
 
     <div class="callout">

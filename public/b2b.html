@@ -565,6 +565,15 @@ textarea.tall { min-height: 136px; }
 .theme-toggle svg { display: block; }
 
 /* ── LIGHT MODE OVERRIDES ────────────────── */
+/* Light theme uses its own darker text colours (dark theme stays bright) */
+html[data-theme="light"] {
+  --text-high: #1A1A1A;
+  --text-mid:  #555555;
+  --text-low:  #6E6E6E;
+}
+html[data-theme="light"] .bridge-title { color: #1A1A1A; }
+html[data-theme="light"] .bridge-body { color: #555555; }
+
 html[data-theme="light"] body {
   background: #F5F5F2; color: #111111;
 }
@@ -771,11 +780,11 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="welcome-fields">
       <div class="wf-row">
         <label class="wf-label" for="meta_name">Your name</label>
-        <input type="text" id="meta_name" placeholder="e.g. Sarah de Vries" autocomplete="name">
+        <input type="text" id="meta_name" placeholder="Sarah de Vries" autocomplete="name">
       </div>
       <div class="wf-row">
         <label class="wf-label" for="meta_company">Company</label>
-        <input type="text" id="meta_company" placeholder="e.g. Acme BV" autocomplete="organization">
+        <input type="text" id="meta_company" placeholder="Acme BV" autocomplete="organization">
       </div>
     </div>
     <button class="btn-start" onclick="goToStep(1)">
@@ -798,32 +807,32 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
 
     <div class="q-block">
       <p class="q-label">Which single offer or product line drives most of your revenue today?</p>
-      <textarea id="b1_1" placeholder="e.g. Our core SaaS platform on annual contracts; services are a small add-on."></textarea>
+      <textarea id="b1_1" placeholder="Our core SaaS platform on annual contracts; services are a small add-on."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Your commercial snapshot for that core offering.</p>
       <p class="q-hint">Rough figures are fine.</p>
       <div style="margin-top:4px">
-        <div class="stack-row"><span class="stack-label">ACV</span><input type="text" id="b1_2a" placeholder="e.g. €24k average annual contract value"></div>
-        <div class="stack-row"><span class="stack-label">Sales cycle</span><input type="text" id="b1_2b" placeholder="e.g. 8–12 weeks"></div>
-        <div class="stack-row"><span class="stack-label">Gross margin</span><input type="text" id="b1_2c" placeholder="e.g. high (~80%)"></div>
-        <div class="stack-row"><span class="stack-label">Pricing model</span><input type="text" id="b1_2d" placeholder="e.g. per-seat subscription"></div>
+        <div class="stack-row"><span class="stack-label">ACV</span><input type="text" id="b1_2a" placeholder="€24k average annual contract value"></div>
+        <div class="stack-row"><span class="stack-label">Sales cycle</span><input type="text" id="b1_2b" placeholder="8–12 weeks"></div>
+        <div class="stack-row"><span class="stack-label">Gross margin</span><input type="text" id="b1_2c" placeholder="high (~80%)"></div>
+        <div class="stack-row"><span class="stack-label">Pricing model</span><input type="text" id="b1_2d" placeholder="per-seat subscription"></div>
       </div>
     </div>
 
     <hr class="divider">
 
     <div class="q-block">
-      <p class="q-label">What problem does your core offering solve, in your best customers' own words?</p>
+      <p class="q-label">What problem does your core offering solve — in the words your best customers use?</p>
       <p class="q-hint">Their phrasing, from calls or reviews, not the marketing version.</p>
-      <textarea id="b1_3" placeholder="e.g. "We stopped losing deals because finance could finally see margin per project in real time.""></textarea>
+      <textarea id="b1_3" placeholder="&quot;We stopped losing deals because finance could finally see margin per project in real time.&quot;"></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">When prospects don't buy from you, what do they usually do instead?</p>
       <p class="q-hint">Build it internally, stick with the status quo, pick a cheaper competitor, go with a full-stack incumbent?</p>
-      <textarea id="b1_4" placeholder="e.g. Most stick with spreadsheets for another year, or pick a cheaper point tool that they outgrow."></textarea>
+      <textarea id="b1_4" placeholder="Most stick with spreadsheets for another year, or pick a cheaper point tool that they outgrow."></textarea>
     </div>
   </div>
 </div>
@@ -860,13 +869,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Describe your best-fit account.</p>
       <p class="q-hint">Industry, size (FTEs and revenue), region, tech stack, and any signals that mark a strong fit.</p>
-      <textarea id="b2_1" class="tall" placeholder="e.g. B2B SaaS, 50–500 FTE, Benelux + DACH, already on HubSpot, scaling a revenue team."></textarea>
+      <textarea id="b2_1" class="tall" placeholder="B2B SaaS, 50–500 FTE, Benelux + DACH, already on HubSpot, scaling a revenue team."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Who sits in the typical buying group, and what's their role?</p>
       <p class="q-hint">List each role and tag it: Champion, Economic Buyer, Technical User, Influencer or Blocker.</p>
-      <textarea id="b2_2" placeholder="e.g. VP Marketing (Champion), CFO (Economic Buyer), RevOps lead (Technical User), CEO (Influencer), IT/security (Blocker)."></textarea>
+      <textarea id="b2_2" placeholder="VP Marketing (Champion), CFO (Economic Buyer), RevOps lead (Technical User), CEO (Influencer), IT/security (Blocker)."></textarea>
     </div>
 
     <hr class="divider">
@@ -874,14 +883,14 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Which industries, sizes or buyer profiles are a poor fit?</p>
       <p class="q-hint">Naming who to avoid sharpens targeting straight away.</p>
-      <textarea id="b2_3" placeholder="e.g. Sub-10-FTE startups (no budget) and heavily regulated enterprises (12-month security reviews)."></textarea>
+      <textarea id="b2_3" placeholder="Sub-10-FTE startups (no budget) and heavily regulated enterprises (12-month security reviews)."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Top 3 reasons your best customers chose you.</p>
       <p class="q-hint">Use their words.</p>
       <div class="inline-fields">
-        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b2_4a" placeholder="e.g. Fastest time-to-value in the category"></div>
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b2_4a" placeholder="Fastest time-to-value in the category"></div>
         <div class="inline-row"><span class="inline-num">2</span><input type="text" id="b2_4b"></div>
         <div class="inline-row"><span class="inline-num">3</span><input type="text" id="b2_4c"></div>
       </div>
@@ -891,7 +900,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">Top 3 reasons deals stall or are lost.</p>
       <p class="q-hint">The real reason behind the objection, not just "price".</p>
       <div class="inline-fields">
-        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b2_5a" placeholder="e.g. No clear ROI case for the CFO"></div>
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b2_5a" placeholder="No clear ROI case for the CFO"></div>
         <div class="inline-row"><span class="inline-num">2</span><input type="text" id="b2_5b"></div>
         <div class="inline-row"><span class="inline-num">3</span><input type="text" id="b2_5c"></div>
       </div>
@@ -902,7 +911,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Which signal or trigger most reliably means an account is ready to talk?</p>
       <p class="q-hint">Funding round, leadership hire, job posting, tech change, regulatory shift, end of an incumbent contract.</p>
-      <textarea id="b2_6" placeholder="e.g. A new VP of Revenue in their first 90 days, or a fresh Series B."></textarea>
+      <textarea id="b2_6" placeholder="A new VP of Revenue in their first 90 days, or a fresh Series B."></textarea>
     </div>
 
     <div class="q-block">
@@ -950,7 +959,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">The three competitors prospects most often shortlist you against.</p>
       <div class="inline-fields">
-        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b3_1a" placeholder="e.g. Incumbent X"></div>
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b3_1a" placeholder="Incumbent X"></div>
         <div class="inline-row"><span class="inline-num">2</span><input type="text" id="b3_1b"></div>
         <div class="inline-row"><span class="inline-num">3</span><input type="text" id="b3_1c"></div>
       </div>
@@ -959,7 +968,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">The single biggest reason customers pick you over them.</p>
       <p class="q-hint">One sentence. The real reason.</p>
-      <input type="text" id="b3_2" placeholder="e.g. We're the only one that ties marketing spend to closed revenue, not leads.">
+      <input type="text" id="b3_2" placeholder="We're the only one that ties marketing spend to closed revenue, not leads.">
     </div>
 
     <hr class="divider">
@@ -967,18 +976,18 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Your current one-line positioning statement.</p>
       <p class="q-hint">No statement yet? Write what you'd want it to be.</p>
-      <input type="text" id="b3_3" placeholder="e.g. The revenue platform for B2B teams that sell through complex buying groups.">
+      <input type="text" id="b3_3" placeholder="The revenue platform for B2B teams that sell through complex buying groups.">
     </div>
 
     <div class="q-block">
       <p class="q-label">If you could own one new category label in your market, what would it be?</p>
-      <input type="text" id="b3_4" placeholder="e.g. "Revenue orchestration"">
+      <input type="text" id="b3_4" placeholder="&quot;Revenue orchestration&quot;">
     </div>
 
     <div class="q-block">
       <p class="q-label">Which common industry assumption would you happily challenge in your marketing?</p>
       <p class="q-hint">The tired belief everyone repeats that you think is wrong.</p>
-      <textarea id="b3_5" placeholder="e.g. That more leads is the goal. We'd argue most pipeline is the wrong pipeline."></textarea>
+      <textarea id="b3_5" placeholder="That more leads is the goal. We'd argue most pipeline is the wrong pipeline."></textarea>
     </div>
   </div>
 </div>
@@ -1015,7 +1024,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">The three channels generating the most new pipeline today, ranked.</p>
       <div class="inline-fields">
-        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b4_1a" placeholder="e.g. Outbound SDR"></div>
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b4_1a" placeholder="Outbound SDR"></div>
         <div class="inline-row"><span class="inline-num">2</span><input type="text" id="b4_1b"></div>
         <div class="inline-row"><span class="inline-num">3</span><input type="text" id="b4_1c"></div>
       </div>
@@ -1023,13 +1032,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
 
     <div class="q-block">
       <p class="q-label">Which channels did you stop using in the past two years, and why?</p>
-      <textarea id="b4_2" placeholder="e.g. Dropped trade shows in 2024, cost per opportunity was triple our outbound."></textarea>
+      <textarea id="b4_2" placeholder="Dropped trade shows in 2024, cost per opportunity was triple our outbound."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Your strongest message, hook or angle in market right now.</p>
       <p class="q-hint">What's working, and your best guess at why.</p>
-      <textarea id="b4_3" placeholder="e.g. A teardown of the prospect's own funnel on the first call. It earns the second meeting."></textarea>
+      <textarea id="b4_3" placeholder="A teardown of the prospect's own funnel on the first call. It earns the second meeting."></textarea>
     </div>
 
     <hr class="divider">
@@ -1037,8 +1046,8 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Rough split of new pipeline: inbound vs outbound.</p>
       <div style="margin-top:4px">
-        <div class="stack-row"><span class="stack-label">Inbound %</span><input type="text" id="b4_4a" placeholder="e.g. 40"></div>
-        <div class="stack-row"><span class="stack-label">Outbound %</span><input type="text" id="b4_4b" placeholder="e.g. 60"></div>
+        <div class="stack-row"><span class="stack-label">Inbound %</span><input type="text" id="b4_4a" placeholder="40"></div>
+        <div class="stack-row"><span class="stack-label">Outbound %</span><input type="text" id="b4_4b" placeholder="60"></div>
       </div>
     </div>
 
@@ -1046,18 +1055,18 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">Who owns each function today?</p>
       <p class="q-hint">In-house, freelance, or the agency name.</p>
       <div style="margin-top:4px">
-        <div class="stack-row"><span class="stack-label">Content</span><input type="text" id="b4_5a" placeholder="e.g. In-house, 1 writer"></div>
-        <div class="stack-row"><span class="stack-label">Paid media</span><input type="text" id="b4_5b" placeholder="e.g. Agency, name"></div>
-        <div class="stack-row"><span class="stack-label">SEO</span><input type="text" id="b4_5c" placeholder="e.g. Freelance"></div>
-        <div class="stack-row"><span class="stack-label">Outbound (SDR/BDR)</span><input type="text" id="b4_5d" placeholder="e.g. In-house, 2 SDRs"></div>
-        <div class="stack-row"><span class="stack-label">Events</span><input type="text" id="b4_5e" placeholder="e.g. Not active"></div>
+        <div class="stack-row"><span class="stack-label">Content</span><input type="text" id="b4_5a" placeholder="In-house, 1 writer"></div>
+        <div class="stack-row"><span class="stack-label">Paid media</span><input type="text" id="b4_5b" placeholder="Agency, name"></div>
+        <div class="stack-row"><span class="stack-label">SEO</span><input type="text" id="b4_5c" placeholder="Freelance"></div>
+        <div class="stack-row"><span class="stack-label">Outbound (SDR/BDR)</span><input type="text" id="b4_5d" placeholder="In-house, 2 SDRs"></div>
+        <div class="stack-row"><span class="stack-label">Events</span><input type="text" id="b4_5e" placeholder="Not active"></div>
       </div>
     </div>
 
     <div class="q-block">
       <p class="q-label">Describe your account-based marketing approach, if any.</p>
       <p class="q-hint">If you don't run ABM, just say so.</p>
-      <textarea id="b4_6" placeholder="e.g. Light ABM on ~50 target accounts: tailored LinkedIn ads plus SDR sequences. No formal scoring yet."></textarea>
+      <textarea id="b4_6" placeholder="Light ABM on ~50 target accounts: tailored LinkedIn ads plus SDR sequences. No formal scoring yet."></textarea>
     </div>
   </div>
 </div>
@@ -1106,12 +1115,12 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Where do deals stall or die most often?</p>
       <p class="q-hint">The stage that worries you most, and your best guess why.</p>
-      <textarea id="b5_2" placeholder="e.g. Between demo and proposal. Champions love it but can't get the CFO to prioritise."></textarea>
+      <textarea id="b5_2" placeholder="Between demo and proposal. Champions love it but can't get the CFO to prioritise."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Win rate from SQL to closed-won (%).</p>
-      <input type="text" id="b5_3" placeholder="e.g. 22%">
+      <input type="text" id="b5_3" placeholder="22%">
     </div>
 
     <hr class="divider">
@@ -1129,13 +1138,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">What does win/loss analysis tell you about why you win and why you lose?</p>
       <p class="q-hint">If you don't run formal win/loss, your honest read is fine.</p>
-      <textarea id="b5_5" placeholder="e.g. We win on ease of onboarding, we lose when procurement runs a feature checklist."></textarea>
+      <textarea id="b5_5" placeholder="We win on ease of onboarding, we lose when procurement runs a feature checklist."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Which capability or asset is most missing from your funnel?</p>
       <p class="q-hint">Nurture flow, demo, business-case template, ROI calculator, references, security or legal package.</p>
-      <textarea id="b5_6" placeholder="e.g. A CFO-ready ROI calculator. Champions can't sell up without it."></textarea>
+      <textarea id="b5_6" placeholder="A CFO-ready ROI calculator. Champions can't sell up without it."></textarea>
     </div>
   </div>
 </div>
@@ -1190,19 +1199,19 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
 
     <div class="q-block">
       <p class="q-label">The single most common reason customers leave.</p>
-      <textarea id="b6_3" placeholder="e.g. Champion changes job and the replacement never adopted it."></textarea>
+      <textarea id="b6_3" placeholder="Champion changes job and the replacement never adopted it."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Where's the biggest expansion opportunity in your existing book?</p>
       <p class="q-hint">Upsell tier, cross-sell module, multi-team or multi-region rollout.</p>
-      <textarea id="b6_4" placeholder="e.g. Rolling out from marketing into the sales team inside accounts we already serve."></textarea>
+      <textarea id="b6_4" placeholder="Rolling out from marketing into the sales team inside accounts we already serve."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">How many reference-ready customers do you have, and which two would join a case study or reference call this quarter?</p>
       <p class="q-hint">Names or accounts is all we need.</p>
-      <textarea id="b6_5" placeholder="e.g. About 8 references. Acme and Globex would both go on record."></textarea>
+      <textarea id="b6_5" placeholder="About 8 references. Acme and Globex would both go on record."></textarea>
     </div>
   </div>
 </div>
@@ -1240,10 +1249,10 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <p class="q-label">Your core stack.</p>
       <p class="q-hint">Leave anything blank if you're unsure.</p>
       <div style="margin-top:4px">
-        <div class="stack-row"><span class="stack-label">CRM</span><input type="text" id="b7_1a" placeholder="e.g. HubSpot, Salesforce"></div>
-        <div class="stack-row"><span class="stack-label">Marketing automation</span><input type="text" id="b7_1b" placeholder="e.g. HubSpot, Marketo"></div>
-        <div class="stack-row"><span class="stack-label">Analytics</span><input type="text" id="b7_1c" placeholder="e.g. GA4, Mixpanel"></div>
-        <div class="stack-row"><span class="stack-label">Sales engagement</span><input type="text" id="b7_1d" placeholder="e.g. Outreach, Salesloft, Apollo"></div>
+        <div class="stack-row"><span class="stack-label">CRM</span><input type="text" id="b7_1a" placeholder="HubSpot, Salesforce"></div>
+        <div class="stack-row"><span class="stack-label">Marketing automation</span><input type="text" id="b7_1b" placeholder="HubSpot, Marketo"></div>
+        <div class="stack-row"><span class="stack-label">Analytics</span><input type="text" id="b7_1c" placeholder="GA4, Mixpanel"></div>
+        <div class="stack-row"><span class="stack-label">Sales engagement</span><input type="text" id="b7_1d" placeholder="Outreach, Salesloft, Apollo"></div>
       </div>
     </div>
 
@@ -1277,12 +1286,12 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
 
     <div class="q-block">
       <p class="q-label">Where does your team look for the single source of truth on pipeline and marketing performance?</p>
-      <textarea id="b7_4" placeholder="e.g. A Looker dashboard off the CRM. Marketing still argues with sales about attribution."></textarea>
+      <textarea id="b7_4" placeholder="A Looker dashboard off the CRM. Marketing still argues with sales about attribution."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">The biggest data or tracking gap blocking better commercial decisions.</p>
-      <textarea id="b7_5" placeholder="e.g. We can't tie closed revenue back to the campaign that sourced it."></textarea>
+      <textarea id="b7_5" placeholder="We can't tie closed revenue back to the campaign that sourced it."></textarea>
     </div>
   </div>
 </div>
@@ -1319,13 +1328,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">How are sales and marketing structured?</p>
       <p class="q-hint">Roles, headcount (FTE) and reporting lines. A rough sketch is fine.</p>
-      <textarea id="b8_1" placeholder="e.g. CMO (1) → Demand Gen (1), Content (1). VP Sales (1) → 2 AEs, 2 SDRs. Both report to the CEO."></textarea>
+      <textarea id="b8_1" placeholder="CMO (1) → Demand Gen (1), Content (1). VP Sales (1) → 2 AEs, 2 SDRs. Both report to the CEO."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Describe the lead handoff from marketing to sales.</p>
       <p class="q-hint">Criteria, SLA, tooling.</p>
-      <textarea id="b8_2" placeholder="e.g. MQL at score 50 routes to an SDR in HubSpot, follow-up within 24 hours. Honoured about half the time."></textarea>
+      <textarea id="b8_2" placeholder="MQL at score 50 routes to an SDR in HubSpot, follow-up within 24 hours. Honoured about half the time."></textarea>
     </div>
 
     <hr class="divider">
@@ -1333,19 +1342,19 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">What's the current state of CRM hygiene and pipeline data quality?</p>
       <p class="q-hint">Be honest, it shapes what we can trust.</p>
-      <textarea id="b8_3" placeholder="e.g. Stages are inconsistent between reps and close dates slip without updates."></textarea>
+      <textarea id="b8_3" placeholder="Stages are inconsistent between reps and close dates slip without updates."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Who has final sign-off on creative, messaging and budget?</p>
-      <input type="text" id="b8_4" placeholder="e.g. CMO for messaging and budget up to €10k, CEO above that.">
+      <input type="text" id="b8_4" placeholder="CMO for messaging and budget up to €10k, CEO above that.">
     </div>
 
     <div class="q-block">
       <p class="q-label">Our sprint cadence: a weekly check-in plus a monthly strategic review.</p>
       <p class="q-hint">We work in sprints, so alignment is built in: a weekly 30-minute check-in to keep momentum, and a monthly 90-minute review to step back and steer. That rhythm is how we keep the partnership moving.</p>
       <p class="q-hint" style="margin-top:12px">Preferred day and time for the weekly check-in (optional):</p>
-      <input type="text" id="b8_5_time" placeholder="e.g. Tuesday mornings from 9:30 CET">
+      <input type="text" id="b8_5_time" placeholder="Tuesday mornings from 9:30 CET">
     </div>
   </div>
 </div>
@@ -1382,23 +1391,23 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Your three-year vision.</p>
       <p class="q-hint">Where is this business in <span id="visionYear"></span> if everything goes right?</p>
-      <textarea id="b9_1" placeholder="e.g. The default revenue platform for mid-market B2B in the Benelux, €30M ARR, profitable."></textarea>
+      <textarea id="b9_1" placeholder="The default revenue platform for mid-market B2B in the Benelux, €30M ARR, profitable."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Commercial targets for the next 12 months.</p>
       <div style="margin-top:4px">
-        <div class="stack-row"><span class="stack-label">Revenue / ARR</span><input type="text" id="b9_2a" placeholder="e.g. €8M ARR (+45%)"></div>
-        <div class="stack-row"><span class="stack-label">Pipeline</span><input type="text" id="b9_2b" placeholder="e.g. €30M qualified pipeline"></div>
-        <div class="stack-row"><span class="stack-label">New logos</span><input type="text" id="b9_2c" placeholder="e.g. 120 new logos"></div>
-        <div class="stack-row"><span class="stack-label">NRR / expansion</span><input type="text" id="b9_2d" placeholder="e.g. NRR from 105% to 115%"></div>
+        <div class="stack-row"><span class="stack-label">Revenue / ARR</span><input type="text" id="b9_2a" placeholder="€8M ARR (+45%)"></div>
+        <div class="stack-row"><span class="stack-label">Pipeline</span><input type="text" id="b9_2b" placeholder="€30M qualified pipeline"></div>
+        <div class="stack-row"><span class="stack-label">New logos</span><input type="text" id="b9_2c" placeholder="120 new logos"></div>
+        <div class="stack-row"><span class="stack-label">NRR / expansion</span><input type="text" id="b9_2d" placeholder="NRR from 105% to 115%"></div>
       </div>
     </div>
 
     <div class="q-block">
       <p class="q-label">The one metric that, if it moves, the business wins.</p>
       <p class="q-hint">One. The north star everything else serves.</p>
-      <input type="text" id="b9_3" placeholder="e.g. Net new ARR per quarter.">
+      <input type="text" id="b9_3" placeholder="Net new ARR per quarter.">
     </div>
 
     <hr class="divider">
@@ -1406,13 +1415,13 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Realistic monthly budget for marketing and growth.</p>
       <p class="q-hint">A range is fine. It shapes sprint sizing, not a commitment.</p>
-      <input type="text" id="b9_4" placeholder="e.g. €30k–€50k per month.">
+      <input type="text" id="b9_4" placeholder="€30k–€50k per month.">
     </div>
 
     <div class="q-block">
       <p class="q-label">What's off-limits for compliance, legal or brand reasons?</p>
       <p class="q-hint">Claims, tactics or topics we must never touch in your name.</p>
-      <textarea id="b9_5" placeholder="e.g. No naming customers in regulated sectors. No competitor comparison ads without legal sign-off."></textarea>
+      <textarea id="b9_5" placeholder="No naming customers in regulated sectors. No competitor comparison ads without legal sign-off."></textarea>
     </div>
   </div>
 </div>
@@ -1485,18 +1494,18 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">Who's willing to be the public face?</p>
       <p class="q-hint">Founders, execs or subject-matter experts, for LinkedIn, podcasts, webinars or events. Name and platform.</p>
-      <textarea id="b10_2" placeholder="e.g. Our CEO is comfortable on LinkedIn and panels. Our Head of Product can do technical webinars."></textarea>
+      <textarea id="b10_2" placeholder="Our CEO is comfortable on LinkedIn and panels. Our Head of Product can do technical webinars."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">What proof can we use externally?</p>
       <p class="q-hint">Customer cases, data points, ROI numbers, press. Flag any usage limits.</p>
-      <textarea id="b10_3" placeholder="e.g. Two named case studies (approved), an aggregate "31% faster close" stat, plus a G2 leader badge."></textarea>
+      <textarea id="b10_3" placeholder="Two named case studies (approved), an aggregate &quot;31% faster close&quot; stat, plus a G2 leader badge."></textarea>
     </div>
 
     <div class="q-block">
       <p class="q-label">Words, tones or imagery we must never use in your name.</p>
-      <input type="text" id="b10_4" placeholder="e.g. No "disrupt", no hype, never name a customer's competitor.">
+      <input type="text" id="b10_4" placeholder="No &quot;disrupt&quot;, no hype, never name a customer's competitor.">
     </div>
   </div>
 </div>
@@ -1533,7 +1542,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <p class="q-label">What positive change should our partnership help your business create?</p>
       <p class="q-hint">For people, society or the planet, and where in your current growth work is that ambition still under-served?</p>
-      <textarea id="b11_1" class="tall" placeholder="e.g. We want every new customer to cut their reporting waste. Right now that story is buried in a feature list instead of leading our pitch."></textarea>
+      <textarea id="b11_1" class="tall" placeholder="We want every new customer to cut their reporting waste. Right now that story is buried in a feature list instead of leading our pitch."></textarea>
     </div>
 
     <div class="callout">
