@@ -32,8 +32,8 @@
   --lime-glow:   rgba(178,250,99,0.08);
   --white:       #FFFFFF;
   --text-high:   #EFEFEF;
-  --text-mid:    #8A8A8A;
-  --text-low:    #4A4A4A;
+  --text-mid:    #ABABAB;
+  --text-low:    #757575;
   --radius:      10px;
   --radius-lg:   16px;
   --top-h:       106px;
@@ -802,6 +802,12 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     </div>
 
     <div class="q-block">
+      <p class="q-label">And your secondary customer?</p>
+      <p class="q-hint">The next group worth targeting, even if smaller. Leave blank if it's genuinely just one audience.</p>
+      <textarea id="q1_1b" placeholder="e.g. Gift-buyers shopping for the primary audience, often 45+ and less price-sensitive, who need more reassurance before they buy."></textarea>
+    </div>
+
+    <div class="q-block">
       <p class="q-label">Who is explicitly <em>not</em> your customer?</p>
       <p class="q-hint">High returns, low LTV, wrong fit, name the profiles that consistently underperform. Knowing who to avoid sharpens targeting immediately.</p>
       <textarea id="q1_2" placeholder="e.g. Price-driven buyers looking for the cheapest option, or customers who need constant hand-holding, our product is self-serve by design."></textarea>
@@ -847,7 +853,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
         <circle class="ring-fg" id="ring-1" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
           stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
-        <text class="countdown-num" id="num-1" x="25" y="25">5</text>
+        <text class="countdown-num" id="num-1" x="25" y="25">10</text>
       </svg>
       <span class="bridge-timer-label">Moving on automatically…</span>
     </div>
@@ -866,7 +872,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
       <span class="section-of">of 9</span>
     </div>
     <h2 class="section-headline">Brand &amp; Positioning</h2>
-    <p class="section-sub">How the category sees you, and how you want to be felt.</p>
+    <p class="section-sub">How your customers see you, and how you want to be felt.</p>
 
     <div class="q-block">
       <p class="q-label">The three brands customers most often consider alongside you.</p>
@@ -927,7 +933,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
         <circle class="ring-fg" id="ring-2" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
           stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
-        <text class="countdown-num" id="num-2" x="25" y="25">5</text>
+        <text class="countdown-num" id="num-2" x="25" y="25">10</text>
       </svg>
       <span class="bridge-timer-label">Moving on automatically…</span>
     </div>
@@ -962,14 +968,18 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
             </tr>
           </thead>
           <tbody>
-            <tr><td>Paid Social (Meta / TikTok)</td><td><select id="cap_paidsocial"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_paidsocial_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_paidsocial_note"></td></tr>
-            <tr><td>Paid Search (Google)</td><td><select id="cap_paidsearch"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_paidsearch_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_paidsearch_note"></td></tr>
-            <tr><td>SEO / Content</td><td><select id="cap_seo"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_seo_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_seo_note"></td></tr>
-            <tr><td>Email &amp; SMS</td><td><select id="cap_email"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_email_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_email_note"></td></tr>
-            <tr><td>Creative / Video</td><td><select id="cap_creative"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_creative_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_creative_note"></td></tr>
+            <tr><td>Paid Social</td><td><select id="cap_paidsocial"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_paidsocial_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_paidsocial_note"></td></tr>
+            <tr><td>Paid Search</td><td><select id="cap_paidsearch"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_paidsearch_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_paidsearch_note"></td></tr>
+            <tr><td>SEO / GEO</td><td><select id="cap_seo"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_seo_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_seo_note"></td></tr>
+            <tr><td>Organic socials</td><td><select id="cap_organicsocial"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_organicsocial_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_organicsocial_note"></td></tr>
+            <tr><td>Content: organic / ads</td><td><select id="cap_creative"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_creative_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_creative_note"></td></tr>
             <tr><td>Influencer / Creator</td><td><select id="cap_influencer"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_influencer_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_influencer_note"></td></tr>
-            <tr><td>CRO / Experimentation</td><td><select id="cap_cro"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_cro_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_cro_note"></td></tr>
-            <tr><td>Analytics &amp; Data</td><td><select id="cap_data"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_data_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_data_note"></td></tr>
+            <tr><td>Affiliate / Marketplaces</td><td><select id="cap_affiliate"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_affiliate_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_affiliate_note"></td></tr>
+            <tr><td>Branding / Communication</td><td><select id="cap_branding"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_branding_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_branding_note"></td></tr>
+            <tr><td>CRO / Website</td><td><select id="cap_cro"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_cro_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_cro_note"></td></tr>
+            <tr><td>Analytics / Data</td><td><select id="cap_data"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_data_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_data_note"></td></tr>
+            <tr><td>Retentie / Mail / SMS / WhatsApp</td><td><select id="cap_email"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_email_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_email_note"></td></tr>
+            <tr><td>Referral / Community</td><td><select id="cap_referral"><option value="">—</option><option>In-house</option><option>Freelance</option><option>Agency</option><option>Not active</option></select></td><td><select id="cap_referral_score"><option value="">—</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select></td><td><input type="text" id="cap_referral_note"></td></tr>
           </tbody>
         </table>
       </div>
@@ -978,15 +988,15 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <hr class="divider">
 
     <div class="q-block">
-      <p class="q-label">Describe your creator or influencer programme, if you have one.</p>
-      <p class="q-hint">Structure (gifting, paid, affiliate, ambassador), approximate number of active creators, and primary platform. If you don't have one, say so.</p>
-      <textarea id="q3_2" placeholder="e.g. Around 30 micro-influencers on TikTok, gifting only, no paid deals yet. Managed in-house by one person, no formal brief process in place."></textarea>
+      <p class="q-label">Describe any external growth partnerships you run today.</p>
+      <p class="q-hint">Creator/influencer, affiliate, marketplace, referral or brand partnerships: structure (gifting, paid, ambassador, revenue share), rough scale and main platform. If you have none, say so.</p>
+      <textarea id="q3_2" placeholder="e.g. Around 30 micro-influencers on TikTok, gifting only. A small affiliate programme via Awin (~10 active partners). No marketplace or referral programme yet."></textarea>
     </div>
 
     <div class="q-block">
-      <p class="q-label">Name one creator or customer who would happily film a review this quarter.</p>
-      <p class="q-hint">One name or handle is all we need, this gets real content live from sprint one.</p>
-      <input type="text" id="q3_3" placeholder="e.g. @username on TikTok, or a loyal customer you can introduce us to">
+      <p class="q-label">Name one creator, partner or customer who would happily collaborate this quarter.</p>
+      <p class="q-hint">A creator who'd film a review, an affiliate who'd push you, or a loyal customer. One name or handle is all we need, this gets real content live from sprint one.</p>
+      <input type="text" id="q3_3" placeholder="e.g. @username on TikTok, an affiliate partner, or a loyal customer you can introduce us to">
     </div>
 
     <div class="q-block">
@@ -1005,7 +1015,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
         <circle class="ring-fg" id="ring-3" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
           stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
-        <text class="countdown-num" id="num-3" x="25" y="25">5</text>
+        <text class="countdown-num" id="num-3" x="25" y="25">10</text>
       </svg>
       <span class="bridge-timer-label">Moving on automatically…</span>
     </div>
@@ -1029,17 +1039,35 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <div class="q-block">
       <div class="q-label-row">
         <p class="q-label" style="margin:0">Where is the biggest leak in your funnel right now?</p>
-        <div class="tip">?<div class="tip-body">A funnel leak is any step where significantly more people drop off than you'd expect, e.g. high traffic but low add-to-cart, or many checkout starts but high abandonment.</div></div>
+        <div class="tip">?<div class="tip-body">We map growth across the AAARRR funnel: Awareness → Acquisition → Activation → Revenue → Retention → Referral. A leak is any stage where significantly more people drop off than you'd expect.</div></div>
       </div>
       <p class="q-hint" style="margin-top:6px;margin-bottom:12px">Pick the stage that worries you most, then describe what you think is behind it.</p>
       <div class="options" style="margin-bottom:14px">
-        <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="awareness"><label>Awareness, not enough people find us</label></div>
-        <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="consideration"><label>Consideration, visitors don't engage or browse</label></div>
-        <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="purchase"><label>Purchase, carts are abandoned, checkout drops off</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="awareness"><label>Awareness, not enough people know we exist</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="acquisition"><label>Acquisition, too little traffic reaches the site</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="activation"><label>Activation, visitors arrive but take no first action</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="revenue"><label>Revenue, carts are abandoned, checkout drops off</label></div>
         <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="retention"><label>Retention, customers buy once and disappear</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="referral"><label>Referral, customers don't recommend or refer us</label></div>
         <div class="opt" onclick="selectOpt(this,'funnel_leak')"><input type="radio" name="funnel_leak" value="multiple"><label>Multiple stages, there are leaks throughout</label></div>
       </div>
       <textarea id="q4_1_explain" placeholder="Describe what you think is causing this, even a rough hypothesis helps."></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">And which part of the funnel is your strongest right now?</p>
+      <p class="q-hint" style="margin-bottom:12px">Where you already win, so we build on it instead of rebuilding it.</p>
+      <div class="options" style="margin-bottom:14px">
+        <div class="opt" onclick="selectOpt(this,'funnel_strength')"><input type="radio" name="funnel_strength" value="awareness"><label>Awareness, strong brand recognition and reach</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_strength')"><input type="radio" name="funnel_strength" value="acquisition"><label>Acquisition, we drive plenty of quality traffic</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_strength')"><input type="radio" name="funnel_strength" value="activation"><label>Activation, a well-converting site or landing page</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_strength')"><input type="radio" name="funnel_strength" value="revenue"><label>Revenue, strong conversion and order value</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_strength')"><input type="radio" name="funnel_strength" value="retention"><label>Retention, a loyal, repeat-buying customer base</label></div>
+        <div class="opt" onclick="selectOpt(this,'funnel_strength')"><input type="radio" name="funnel_strength" value="referral"><label>Referral, customers actively recommend us</label></div>
+      </div>
+      <textarea id="q4_1b_explain" placeholder="What makes this your strongest stage? A number or example helps."></textarea>
     </div>
 
     <hr class="divider">
@@ -1066,7 +1094,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
         <circle class="ring-fg" id="ring-4" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
           stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
-        <text class="countdown-num" id="num-4" x="25" y="25">5</text>
+        <text class="countdown-num" id="num-4" x="25" y="25">10</text>
       </svg>
       <span class="bridge-timer-label">Moving on automatically…</span>
     </div>
@@ -1108,8 +1136,14 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="meta"><label>Meta (Facebook / Instagram)</label></div>
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="tiktok"><label>TikTok</label></div>
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="google"><label>Google (Search / Shopping / YouTube)</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="microsoft"><label>Microsoft Advertising (Bing)</label></div>
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="pinterest"><label>Pinterest</label></div>
         <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="snapchat"><label>Snapchat</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="linkedin"><label>LinkedIn</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="x"><label>X (Twitter)</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="amazon"><label>Amazon Ads</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="bol"><label>Bol.com advertising</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="adacc" value="affiliate"><label>Affiliate platform (Awin, Daisycon, TradeTracker…)</label></div>
       </div>
     </div>
 
@@ -1145,7 +1179,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
         <circle class="ring-fg" id="ring-5" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
           stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
-        <text class="countdown-num" id="num-5" x="25" y="25">5</text>
+        <text class="countdown-num" id="num-5" x="25" y="25">10</text>
       </svg>
       <span class="bridge-timer-label">Moving on automatically…</span>
     </div>
@@ -1180,13 +1214,9 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
     <hr class="divider">
 
     <div class="q-block">
-      <p class="q-label">Which meeting cadence works best for regular alignment?</p>
-      <div class="options" style="margin-bottom:10px">
-        <div class="opt" onclick="selectOpt(this,'cadence')"><input type="radio" name="cadence" value="weekly"><label>Weekly sprint check-in, 30 minutes</label></div>
-        <div class="opt" onclick="selectOpt(this,'cadence')"><input type="radio" name="cadence" value="biweekly"><label>Bi-weekly, 60 minutes every two weeks</label></div>
-        <div class="opt" onclick="selectOpt(this,'cadence')"><input type="radio" name="cadence" value="monthly"><label>Monthly, 90-minute strategic review</label></div>
-      </div>
-      <p class="q-hint">Preferred day and time (optional):</p>
+      <p class="q-label">Our sprint cadence: a weekly check-in plus a monthly strategic review.</p>
+      <p class="q-hint">We work in sprints, so alignment is built in: a weekly 30-minute check-in to keep momentum, and a monthly 90-minute review to step back and steer. That rhythm is how we keep the partnership moving.</p>
+      <p class="q-hint" style="margin-top:12px">Preferred day and time for the weekly check-in (optional):</p>
       <input type="text" id="q6_3_time" placeholder="e.g. Tuesday mornings from 9:30 CET">
     </div>
 
@@ -1225,7 +1255,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
         <circle class="ring-fg" id="ring-6" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
           stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
-        <text class="countdown-num" id="num-6" x="25" y="25">5</text>
+        <text class="countdown-num" id="num-6" x="25" y="25">10</text>
       </svg>
       <span class="bridge-timer-label">Moving on automatically…</span>
     </div>
@@ -1248,7 +1278,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
 
     <div class="q-block">
       <p class="q-label">Your three-year vision.</p>
-      <p class="q-hint">Where is this business in 2029 if everything goes right?</p>
+      <p class="q-hint">Where is this business in <span id="visionYear"></span> if everything goes right?</p>
       <textarea id="q7_1" placeholder="e.g. Category leader in sustainable homeware across the Benelux, €25M in revenue, profitable, with a community of 200k active customers."></textarea>
     </div>
 
@@ -1306,7 +1336,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
         <circle class="ring-fg" id="ring-7" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
           stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
-        <text class="countdown-num" id="num-7" x="25" y="25">5</text>
+        <text class="countdown-num" id="num-7" x="25" y="25">10</text>
       </svg>
       <span class="bridge-timer-label">Moving on automatically…</span>
     </div>
@@ -1411,7 +1441,7 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
         <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
         <circle class="ring-fg" id="ring-8" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
           stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
-        <text class="countdown-num" id="num-8" x="25" y="25">5</text>
+        <text class="countdown-num" id="num-8" x="25" y="25">10</text>
       </svg>
       <span class="bridge-timer-label">Moving on automatically…</span>
     </div>
@@ -1573,16 +1603,16 @@ function showBridge(num, next) {
   const ring = document.getElementById('ring-' + num);
   const numEl = document.getElementById('num-' + num);
   if (ring) { ring.style.transition = 'none'; ring.style.strokeDashoffset = '0'; }
-  if (numEl) numEl.textContent = '5';
+  if (numEl) numEl.textContent = '10';
 
   clearBridgeTimers();
   let elapsed = 0;
   bridgeTimers[num] = setInterval(() => {
     elapsed += 80;
-    const pct = Math.min(elapsed / 5000, 1);
+    const pct = Math.min(elapsed / 10000, 1);
     if (ring) { ring.style.transition = 'stroke-dashoffset 0.08s linear'; ring.style.strokeDashoffset = CIRC * pct; }
-    if (numEl) numEl.textContent = Math.max(1, Math.ceil(5 - elapsed / 1000));
-    if (elapsed >= 5000) { clearInterval(bridgeTimers[num]); goToStep(next); }
+    if (numEl) numEl.textContent = Math.max(1, Math.ceil(10 - elapsed / 1000));
+    if (elapsed >= 10000) { clearInterval(bridgeTimers[num]); goToStep(next); }
   }, 80);
 }
 
@@ -1616,7 +1646,7 @@ function collectAnswers() {
   document.querySelectorAll('textarea, input[type=text], input[type=url], select').forEach(el => {
     if (el.id) d[el.id] = el.value || '';
   });
-  ['funnel_leak', 'cadence'].forEach(name => {
+  ['funnel_leak', 'funnel_strength'].forEach(name => {
     const el = document.querySelector(`input[name="${name}"]:checked`);
     d[name] = el ? el.value : '';
   });
@@ -1848,6 +1878,9 @@ function syncThemeIcon() {
     render();
   });
 })();
+
+const visionYearEl = document.getElementById('visionYear');
+if (visionYearEl) visionYearEl.textContent = new Date().getFullYear() + 3;
 
 buildPills();
 goToStep(0);
