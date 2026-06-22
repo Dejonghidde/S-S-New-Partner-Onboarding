@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Partnership Onboarding (B2B), Sprints &amp; Sneakers</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="description" content="Sprints &amp; Sneakers, Growth Partnership onboarding questionnaire for new partners.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0A0A0A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Growth Partnership Onboarding, Sprints &amp; Sneakers">
+<meta property="og:description" content="The onboarding questionnaire for new S&amp;S growth partners, everything only you can tell us.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --black:       #0A0A0A;
+  --black-soft:  #141414;
+  --black-card:  #1A1A1A;
+  --black-mid:   #222222;
+  --black-border:#2E2E2E;
+  --black-hover: #242424;
+  --lime:        #B2FA63;
+  --lime-dim:    #8DCC44;
+  --lime-faint:  rgba(178,250,99,0.06);
+  --lime-soft:   rgba(178,250,99,0.12);
+  --lime-border: rgba(178,250,99,0.25);
+  --lime-glow:   rgba(178,250,99,0.08);
+  --white:       #FFFFFF;
+  --text-high:   #EFEFEF;
+  --text-mid:    #ABABAB;
+  --text-low:    #757575;
+  --radius:      10px;
+  --radius-lg:   16px;
+  --top-h:       106px;
+  --bottom-h:    70px;
+  --max:         660px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--black);
+  color: var(--text-high);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ────────────────────────────── */
+.top-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  background: rgba(10,10,10,0.97);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--black-border);
+}
+.top-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 54px;
+  max-width: 960px; margin: 0 auto; gap: 20px;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.logo-mark { display: flex; align-items: center; color: var(--white); flex-shrink: 0; }
+.logo-mark svg { height: 22px; width: auto; display: block; }
+.logo-sep {
+  width: 1px; height: 13px;
+  background: var(--black-border); flex-shrink: 0;
+}
+.logo-label {
+  font-size: 11px; font-weight: 500; color: var(--text-low);
+  white-space: nowrap; letter-spacing: 0.1px;
+}
+.save-dot {
+  font-size: 11px; font-weight: 600; color: var(--lime);
+  opacity: 0; transition: opacity 0.3s; flex-shrink: 0;
+  display: flex; align-items: center; gap: 5px;
+}
+.save-dot::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--lime); display: block;
+}
+.save-dot.show { opacity: 1; }
+
+/* section pills */
+.pills-row {
+  overflow-x: auto; scrollbar-width: none;
+  display: flex; align-items: center; gap: 2px;
+  padding: 0 32px 10px;
+  max-width: 960px; margin: 0 auto;
+}
+.pills-row::-webkit-scrollbar { display: none; }
+.pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 11px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.2px;
+  color: var(--text-low); white-space: nowrap; flex-shrink: 0;
+  border: 1px solid transparent;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+.pill-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--black-border); flex-shrink: 0;
+  transition: background 0.2s;
+}
+.pill.done { color: var(--text-mid); }
+.pill.done .pill-dot { background: var(--lime-dim); }
+.pill.active {
+  color: var(--lime);
+  background: var(--lime-faint);
+  border-color: var(--lime-border);
+}
+.pill.active .pill-dot { background: var(--lime); }
+
+/* progress */
+.progress-track { height: 2px; background: var(--black-border); }
+.progress-fill {
+  height: 100%; background: var(--lime);
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px rgba(178,250,99,0.4);
+}
+
+/* ── MAIN ────────────────────────────────── */
+.main { padding-top: var(--top-h); min-height: 100vh; }
+
+/* ── STEP ANIMATION ── */
+.step { display: none; }
+.step.active { display: block; animation: fadeUp 0.3s ease both; }
+.bridge-step { display: none; }
+.bridge-step.active { display: flex; animation: fadeUp 0.3s ease both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── WELCOME ─────────────────────────────── */
+.welcome-wrap {
+  max-width: var(--max); margin: 0 auto;
+  padding: 40px 28px;
+  min-height: calc(100vh - var(--top-h));
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative;
+}
+/* lime glow top-left */
+.welcome-wrap::before {
+  content: '';
+  position: absolute; top: -120px; left: -120px;
+  width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(178,250,99,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.welcome-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--lime); margin-bottom: 20px;
+}
+.welcome-headline {
+  font-size: clamp(40px, 6.5vw, 64px); font-weight: 900;
+  letter-spacing: -2.5px; line-height: 1.0;
+  color: var(--white); margin-bottom: 20px;
+}
+.welcome-headline em { font-style: normal; color: var(--lime); }
+.welcome-body {
+  font-size: 15px; color: var(--text-mid);
+  max-width: 440px; line-height: 1.75; margin-bottom: 36px;
+}
+.welcome-list {
+  display: flex; flex-direction: column; gap: 10px; margin-bottom: 44px;
+}
+.welcome-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  font-size: 13px; color: var(--text-mid); line-height: 1.55;
+}
+.w-icon {
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  background: var(--lime-faint); border: 1px solid var(--lime-border);
+  color: var(--lime); font-size: 8px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.welcome-item strong { color: var(--text-high); font-weight: 600; }
+.welcome-fields {
+  display: flex; flex-direction: column; gap: 14px;
+  margin-bottom: 36px; max-width: 440px;
+}
+.wf-row { display: flex; flex-direction: column; gap: 6px; }
+.wf-label {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.2px;
+  color: var(--text-mid);
+}
+.btn-start {
+  display: inline-flex; align-items: center; gap: 10px;
+  align-self: flex-start;
+  background: var(--lime); color: var(--black);
+  font-size: 14px; font-weight: 700; letter-spacing: 0.1px;
+  padding: 13px 26px; border-radius: var(--radius);
+  border: none; cursor: pointer;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  box-shadow: 0 0 0 0 rgba(178,250,99,0);
+}
+.btn-start:hover {
+  background: var(--lime-dim); transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(178,250,99,0.2);
+}
+
+/* ── CONTENT SECTION ─────────────────────── */
+.content-wrap {
+  max-width: var(--max); margin: 0 auto;
+  padding: 52px 28px calc(var(--bottom-h) + 48px);
+}
+.section-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+.section-num {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--black);
+  background: var(--lime); padding: 2px 7px; border-radius: 4px;
+}
+.section-of {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-low);
+}
+.section-headline {
+  font-size: 30px; font-weight: 800; letter-spacing: -0.8px;
+  color: var(--white); margin-bottom: 6px; line-height: 1.1;
+}
+.section-sub {
+  font-size: 13.5px; color: var(--text-low); margin-bottom: 44px;
+  line-height: 1.55;
+}
+
+/* ── QUESTIONS ──────────────────────────── */
+.q-block { margin-bottom: 38px; }
+.q-label {
+  font-size: 15.5px; font-weight: 600; color: var(--text-high);
+  margin-bottom: 6px; line-height: 1.4;
+}
+.q-hint {
+  font-size: 12.5px; color: var(--text-low);
+  margin-bottom: 11px; line-height: 1.55;
+}
+.q-hint em { font-style: italic; color: var(--text-mid); }
+hr.divider {
+  border: none; border-top: 1px solid var(--black-border); margin: 34px 0;
+}
+
+/* inputs */
+textarea, input[type=text], input[type=url] {
+  width: 100%;
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  border-radius: var(--radius);
+  color: var(--text-high);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px; line-height: 1.6;
+  padding: 13px 16px;
+  resize: vertical; outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+textarea:focus, input[type=text]:focus, input[type=url]:focus {
+  border-color: rgba(178,250,99,0.4);
+  box-shadow: 0 0 0 3px rgba(178,250,99,0.06);
+  background: var(--black-mid);
+}
+textarea::placeholder, input::placeholder { color: var(--text-low); }
+textarea { min-height: 98px; }
+textarea.tall { min-height: 136px; }
+
+/* numbered inline rows */
+.inline-fields { display: flex; flex-direction: column; gap: 8px; }
+.inline-row { display: flex; align-items: flex-start; gap: 10px; }
+.inline-num {
+  font-size: 10.5px; font-weight: 700; color: var(--lime);
+  width: 18px; flex-shrink: 0; padding-top: 15px; text-align: center;
+}
+.inline-row input[type=text] { flex: 1; margin: 0; }
+
+/* option cards */
+.options { display: flex; flex-direction: column; gap: 7px; }
+.opt {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: var(--radius); padding: 12px 16px; cursor: pointer;
+  transition: border-color 0.15s, background 0.15s; user-select: none;
+}
+.opt:hover { border-color: rgba(178,250,99,0.2); background: var(--black-mid); }
+.opt.sel { border-color: var(--lime); background: var(--lime-faint); }
+.opt.sel label { color: var(--text-high); }
+.opt input { accent-color: var(--lime); cursor: pointer; flex-shrink: 0; }
+.opt label {
+  font-size: 13.5px; font-weight: 500; color: var(--text-mid);
+  cursor: pointer; flex: 1; transition: color 0.15s;
+}
+.opt:hover label { color: var(--text-high); }
+
+/* stack rows */
+.stack-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.stack-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.8px;
+  text-transform: uppercase; color: var(--text-low);
+  width: 116px; flex-shrink: 0;
+}
+.stack-row input[type=text] { flex: 1; margin: 0; }
+
+/* capabilities table */
+.cap-wrap { overflow-x: auto; margin-top: 10px; }
+.cap-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.cap-table th {
+  text-align: left; font-size: 9.5px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-low);
+  padding: 8px 14px; border-bottom: 1px solid var(--black-border);
+}
+.cap-table td {
+  padding: 6px 14px; border-bottom: 1px solid var(--black-border);
+  vertical-align: middle;
+}
+.cap-table tr:last-child td { border-bottom: none; }
+.cap-table tr:hover td { background: var(--black-hover); }
+.cap-table td:first-child { color: var(--text-mid); font-weight: 500; }
+.cap-table select {
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: 6px; color: var(--text-high);
+  font-family: 'Inter', sans-serif; font-size: 12.5px;
+  padding: 5px 10px; outline: none; cursor: pointer; width: 100%;
+  transition: border-color 0.15s;
+}
+.cap-table select:focus { border-color: var(--lime-border); }
+.cap-table input[type=text] { margin: 0; padding: 5px 10px; font-size: 12.5px; }
+
+/* label row with tooltip */
+.q-label-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.tip {
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--black-border); color: var(--text-low);
+  font-size: 9px; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: help; position: relative; flex-shrink: 0;
+}
+.tip-body {
+  display: none; position: absolute; top: calc(100% + 7px); left: 0;
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: 8px; padding: 10px 14px; font-size: 12px;
+  color: var(--text-mid); width: 260px; z-index: 100; line-height: 1.55;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.tip:hover .tip-body { display: block; }
+
+/* ── BRIDGE SCREENS ──────────────────────── */
+.bridge-step {
+  min-height: calc(100vh - var(--top-h));
+  align-items: stretch;
+}
+.bridge-wrap {
+  max-width: var(--max); margin: 0 auto;
+  padding: 0 28px;
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+}
+/* large background number */
+.bridge-wrap::before {
+  content: attr(data-num);
+  position: absolute; right: -20px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 220px; font-weight: 900; letter-spacing: -10px;
+  color: rgba(178,250,99,0.04);
+  pointer-events: none; user-select: none; line-height: 1;
+}
+.bridge-timer {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 40px;
+}
+.countdown-svg { flex-shrink: 0; }
+.countdown-svg .ring-bg { stroke: var(--black-border); }
+.countdown-svg .ring-fg {
+  stroke: var(--lime); stroke-linecap: round;
+  transition: stroke-dashoffset 0.1s linear;
+  filter: drop-shadow(0 0 4px rgba(178,250,99,0.5));
+}
+.countdown-num {
+  font-size: 13px; font-weight: 800; fill: var(--lime);
+  dominant-baseline: central; text-anchor: middle;
+}
+.bridge-timer-label {
+  font-size: 11.5px; color: var(--text-low); font-weight: 500;
+}
+.bridge-eyebrow {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--lime); margin-bottom: 16px;
+}
+.bridge-title {
+  font-size: clamp(28px, 4.5vw, 42px); font-weight: 900;
+  letter-spacing: -1px; color: var(--white);
+  line-height: 1.08; margin-bottom: 18px;
+}
+.bridge-body {
+  font-size: 15.5px; color: var(--text-mid);
+  max-width: 460px; line-height: 1.72; margin-bottom: 40px;
+}
+.btn-bridge {
+  display: inline-flex; align-items: center; gap: 10px;
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--black-border);
+  color: var(--text-low); font-size: 13.5px; font-weight: 600;
+  padding: 11px 22px; border-radius: var(--radius); cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.btn-bridge:hover {
+  border-color: var(--lime-border);
+  color: var(--lime); background: var(--lime-faint);
+}
+
+/* ── THANK YOU ───────────────────────────── */
+.ty-wrap {
+  max-width: var(--max); margin: 0 auto;
+  padding: 80px 28px;
+  min-height: calc(100vh - var(--top-h));
+  display: flex; flex-direction: column; justify-content: center;
+}
+.ty-check {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--lime-faint); border: 1px solid var(--lime-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 32px;
+  box-shadow: 0 0 24px rgba(178,250,99,0.1);
+}
+.ty-headline {
+  font-size: 48px; font-weight: 900; letter-spacing: -2px;
+  color: var(--white); margin-bottom: 16px; line-height: 1;
+}
+.ty-body {
+  font-size: 15.5px; color: var(--text-mid);
+  line-height: 1.75; max-width: 460px; margin-bottom: 48px;
+}
+.ty-steps { display: flex; flex-direction: column; gap: 20px; }
+.ty-row { display: flex; gap: 18px; align-items: flex-start; }
+.ty-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--black-card); border: 1px solid var(--black-border);
+  font-size: 11px; font-weight: 700; color: var(--lime);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.ty-text { font-size: 14px; color: var(--text-mid); line-height: 1.65; }
+.ty-text strong { color: var(--text-high); font-weight: 600; }
+.ty-footer {
+  margin-top: 56px; padding-top: 28px;
+  border-top: 1px solid var(--black-border);
+}
+.ty-footer p { font-size: 12px; color: var(--text-low); line-height: 1.8; }
+
+/* ── BOTTOM NAV ──────────────────────────── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: var(--bottom-h);
+  background: rgba(10,10,10,0.97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--black-border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; z-index: 800;
+}
+.bottom-nav.hidden { display: none; }
+.btn-back {
+  background: transparent; border: 1px solid var(--black-border);
+  color: var(--text-low); font-size: 13px; font-weight: 600;
+  padding: 9px 18px; border-radius: var(--radius); cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-back:hover { color: var(--text-high); border-color: var(--text-low); }
+.btn-back.invisible { visibility: hidden; pointer-events: none; }
+.nav-label {
+  font-size: 11px; font-weight: 600; color: var(--text-low);
+  letter-spacing: 0.3px; text-align: center;
+}
+.btn-next {
+  background: var(--lime); color: var(--black);
+  font-size: 13px; font-weight: 700; letter-spacing: 0.1px;
+  padding: 10px 22px; border-radius: var(--radius);
+  border: none; cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  font-family: 'Inter', sans-serif;
+}
+.btn-next:hover {
+  background: var(--lime-dim);
+  box-shadow: 0 0 16px rgba(178,250,99,0.2);
+}
+.btn-next:disabled {
+  opacity: 0.6; cursor: default; box-shadow: none;
+}
+
+/* ── CALLOUT BOX ─────────────────────────── */
+.callout {
+  margin-top: 40px; padding: 24px 26px;
+  background: var(--lime-faint); border: 1px solid var(--lime-border);
+  border-radius: var(--radius-lg);
+}
+.callout-label {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--lime); margin-bottom: 8px;
+}
+.callout-body { font-size: 13.5px; color: var(--text-mid); line-height: 1.65; }
+
+/* ── FILE UPLOAD ─────────────────────────── */
+.upload-examples {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 14px 24px; margin: 4px 0 18px;
+}
+.ue-head {
+  display: block; font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--lime); margin-bottom: 6px;
+}
+.ue-col ul { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+.ue-col li {
+  font-size: 12.5px; color: var(--text-mid); line-height: 1.4;
+  padding-left: 13px; position: relative;
+}
+.ue-col li::before {
+  content: ''; position: absolute; left: 0; top: 8px;
+  width: 4px; height: 4px; border-radius: 50%; background: var(--black-border);
+}
+.dropzone {
+  border: 1.5px dashed var(--black-border); border-radius: var(--radius-lg);
+  padding: 28px 20px; text-align: center; cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.dropzone:hover, .dropzone:focus-visible {
+  border-color: var(--lime-border); background: var(--lime-faint); outline: none;
+}
+.dropzone.dragover { border-color: var(--lime); background: var(--lime-soft); }
+.dropzone svg { color: var(--text-low); margin-bottom: 8px; transition: color .15s; }
+.dropzone:hover svg, .dropzone.dragover svg { color: var(--lime); }
+.dz-title { font-size: 13.5px; color: var(--text-mid); }
+.dz-link { color: var(--lime); font-weight: 600; }
+.dz-sub { font-size: 11.5px; color: var(--text-low); margin-top: 4px; }
+.file-list { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; }
+.file-chip {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--black-card); border: 1px solid var(--black-border);
+  border-radius: var(--radius); padding: 9px 12px;
+}
+.fc-name { flex: 1; font-size: 13px; color: var(--text-high); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fc-size { font-size: 11.5px; color: var(--text-low); flex-shrink: 0; }
+.fc-remove { background: none; border: none; color: var(--text-low); cursor: pointer; font-size: 15px; line-height: 1; padding: 0 2px; flex-shrink: 0; transition: color .15s; }
+.fc-remove:hover { color: #ff6b6b; }
+
+/* ── THEME TOGGLE BUTTON ─────────────────── */
+.theme-toggle {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--black-card); border: 1px solid var(--black-border);
+  color: var(--text-mid); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.theme-toggle:hover { border-color: var(--lime-border); color: var(--lime); }
+.theme-toggle svg { display: block; }
+
+/* ── LIGHT MODE OVERRIDES ────────────────── */
+/* Light theme uses its own darker text colours (dark theme stays bright) */
+html[data-theme="light"] {
+  --text-high: #1A1A1A;
+  --text-mid:  #555555;
+  --text-low:  #6E6E6E;
+}
+html[data-theme="light"] .bridge-title { color: #1A1A1A; }
+html[data-theme="light"] .bridge-body { color: #555555; }
+
+html[data-theme="light"] body {
+  background: #F5F5F2; color: #111111;
+}
+/* top bar */
+html[data-theme="light"] .top-bar {
+  background: rgba(245,245,242,0.97); border-color: #E2E2DE;
+}
+html[data-theme="light"] .logo-mark { color: #111111; }
+html[data-theme="light"] .logo-sep { background: #D0D0CC; }
+html[data-theme="light"] .logo-label { color: #AAAAAA; }
+html[data-theme="light"] .save-dot { color: #3A8A00; }
+html[data-theme="light"] .save-dot::before { background: #8DCC44; }
+html[data-theme="light"] .theme-toggle {
+  background: #FFFFFF; border-color: #E2E2DE; color: #777777;
+}
+html[data-theme="light"] .theme-toggle:hover {
+  border-color: rgba(80,180,0,0.35); color: #3A8A00;
+}
+/* pills */
+html[data-theme="light"] .pill { color: #AAAAAA; }
+html[data-theme="light"] .pill-dot { background: #E2E2DE; }
+html[data-theme="light"] .pill.done { color: #777777; }
+html[data-theme="light"] .pill.done .pill-dot { background: #8DCC44; }
+html[data-theme="light"] .pill.active {
+  color: #3A8A00; background: rgba(80,180,0,0.08); border-color: rgba(80,180,0,0.25);
+}
+html[data-theme="light"] .pill.active .pill-dot { background: #8DCC44; }
+/* progress */
+html[data-theme="light"] .progress-track { background: #E2E2DE; }
+/* welcome */
+html[data-theme="light"] .welcome-wrap::before { opacity: 0; }
+html[data-theme="light"] .welcome-eyebrow { color: #3A8A00; }
+html[data-theme="light"] .welcome-headline { color: #111111; }
+html[data-theme="light"] .welcome-headline em {
+  color: #111111; background: var(--lime);
+  padding: 0 6px 3px; border-radius: 6px; display: inline-block;
+}
+html[data-theme="light"] .welcome-body { color: #555555; }
+html[data-theme="light"] .welcome-item { color: #555555; }
+html[data-theme="light"] .welcome-item strong { color: #111111; }
+html[data-theme="light"] .w-icon { background: var(--lime); color: #111111; border-color: #8DCC44; }
+html[data-theme="light"] .btn-start { background: #111111; color: #FFFFFF; box-shadow: none; }
+html[data-theme="light"] .btn-start:hover { background: #333333; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+/* content sections */
+html[data-theme="light"] .section-of { color: #AAAAAA; }
+html[data-theme="light"] .section-headline { color: #111111; }
+html[data-theme="light"] .section-sub { color: #6B6B6B; }
+/* questions */
+html[data-theme="light"] .q-label { color: #111111; }
+html[data-theme="light"] .q-hint { color: #6B6B6B; }
+html[data-theme="light"] .q-hint em { color: #777777; }
+html[data-theme="light"] .inline-num { color: #3A8A00; }
+html[data-theme="light"] hr.divider { border-color: #E2E2DE; }
+/* inputs */
+html[data-theme="light"] textarea,
+html[data-theme="light"] input[type=text],
+html[data-theme="light"] input[type=url] {
+  background: #FFFFFF; border-color: #E2E2DE; color: #111111;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+html[data-theme="light"] textarea:focus,
+html[data-theme="light"] input[type=text]:focus,
+html[data-theme="light"] input[type=url]:focus {
+  border-color: #8DCC44; box-shadow: 0 0 0 3px rgba(80,180,0,0.08);
+  background: #FFFFFF;
+}
+html[data-theme="light"] textarea::placeholder,
+html[data-theme="light"] input::placeholder { color: #C8C8C4; }
+/* options */
+html[data-theme="light"] .options .opt {
+  background: #FFFFFF; border-color: #E2E2DE;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+html[data-theme="light"] .options .opt:hover {
+  border-color: rgba(80,180,0,0.3); background: rgba(80,180,0,0.05); box-shadow: none;
+}
+html[data-theme="light"] .options .opt.sel {
+  border-color: #8DCC44; background: rgba(80,180,0,0.07);
+}
+html[data-theme="light"] .options .opt label { color: #777777; }
+html[data-theme="light"] .options .opt:hover label,
+html[data-theme="light"] .options .opt.sel label { color: #111111; }
+/* stack labels */
+html[data-theme="light"] .stack-label { color: #6B6B6B; }
+/* cap table */
+html[data-theme="light"] .cap-table th { color: #AAAAAA; border-color: #E2E2DE; }
+html[data-theme="light"] .cap-table td { border-color: #E8E8E4; }
+html[data-theme="light"] .cap-table tr:hover td { background: #F5F5F2; }
+html[data-theme="light"] .cap-table td:first-child { color: #555555; }
+html[data-theme="light"] .cap-table select {
+  background: #FFFFFF; border-color: #E2E2DE; color: #111111;
+}
+html[data-theme="light"] .cap-table select:focus { border-color: #8DCC44; }
+html[data-theme="light"] .cap-table input[type=text] { box-shadow: none; }
+/* tooltip */
+html[data-theme="light"] .tip { background: #E2E2DE; color: #777777; }
+html[data-theme="light"] .tip-body { background: #111111; color: #CCCCCC; }
+/* callout */
+html[data-theme="light"] .callout {
+  background: rgba(80,180,0,0.07); border-color: rgba(80,180,0,0.22);
+}
+html[data-theme="light"] .callout-label { color: #3A8A00; }
+html[data-theme="light"] .callout-body { color: #555555; }
+/* file upload */
+html[data-theme="light"] .ue-head { color: #3A8A00; }
+html[data-theme="light"] .ue-col li { color: #555555; }
+html[data-theme="light"] .ue-col li::before { background: #C8C8C4; }
+html[data-theme="light"] .dropzone { border-color: #D8D8D4; background: #FFFFFF; }
+html[data-theme="light"] .dropzone:hover, html[data-theme="light"] .dropzone:focus-visible { border-color: rgba(80,180,0,0.4); background: rgba(80,180,0,0.05); }
+html[data-theme="light"] .dz-title { color: #555555; }
+html[data-theme="light"] .dz-sub { color: #AAAAAA; }
+html[data-theme="light"] .dz-link { color: #3A8A00; }
+html[data-theme="light"] .file-chip { background: #FFFFFF; border-color: #E2E2DE; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+html[data-theme="light"] .fc-name { color: #111111; }
+/* thank you */
+html[data-theme="light"] .ty-check {
+  background: var(--lime); border: none; box-shadow: 0 4px 20px rgba(80,180,0,0.2);
+}
+html[data-theme="light"] .ty-headline { color: #111111; }
+html[data-theme="light"] .ty-body { color: #555555; }
+html[data-theme="light"] .ty-num { background: var(--lime); color: #111111; border: none; }
+html[data-theme="light"] .ty-text { color: #555555; }
+html[data-theme="light"] .ty-text strong { color: #111111; }
+html[data-theme="light"] .ty-footer { border-color: #E2E2DE; }
+html[data-theme="light"] .ty-footer p { color: #AAAAAA; }
+/* bottom nav */
+html[data-theme="light"] .bottom-nav {
+  background: rgba(245,245,242,0.97); border-color: #E2E2DE;
+}
+html[data-theme="light"] .btn-back { color: #AAAAAA; border-color: #E2E2DE; }
+html[data-theme="light"] .btn-back:hover { color: #111111; border-color: #C0C0BC; }
+html[data-theme="light"] .nav-label { color: #AAAAAA; }
+html[data-theme="light"] .btn-next { background: #111111; color: #FFFFFF; }
+html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 620px) {
+  .top-row, .pills-row { padding-left: 18px; padding-right: 18px; }
+  .content-wrap, .welcome-wrap, .bridge-wrap, .ty-wrap { padding-left: 18px; padding-right: 18px; }
+  .bottom-nav { padding: 0 18px; }
+  .logo-label { display: none; }
+  .logo-sep { display: none; }
+  .cap-table { font-size: 12px; }
+  .upload-examples { grid-template-columns: 1fr; }
+}
+</style>
+<!-- prevent flash of wrong theme -->
+<script>
+  (function(){
+    const t = localStorage.getItem('ss_theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<header class="top-bar">
+  <div class="top-row">
+    <div class="logo">
+      <span class="logo-mark" role="img" aria-label="Sprints &amp; Sneakers">
+        <svg viewBox="0 0 1645 367" fill="currentColor" aria-hidden="true"><path d="M0 140.383C0 121.499 2.88061 104.536 8.64183 89.4923C14.7231 74.1291 23.2049 61.0063 34.0872 50.124C45.2896 38.9216 58.5724 30.4398 73.9357 24.6786C89.2989 18.5973 106.262 15.5566 124.826 15.5566H332.23L278.459 99.5744H132.508C120.025 99.5744 109.943 103.415 102.262 111.097C94.58 118.779 90.7392 129.021 90.7392 141.823C90.7392 154.306 94.58 164.388 102.262 172.07C109.943 179.751 120.025 183.592 132.508 183.592H222.767L166.595 267.61H124.826C106.262 267.61 89.2989 264.729 73.9357 258.968C58.5724 252.887 45.2896 244.405 34.0872 233.523C23.2049 222.32 14.7231 209.038 8.64183 193.674C2.88061 178.311 0 161.348 0 142.784V140.383Z"/><path d="M445.543 226.799C445.543 245.363 442.502 262.327 436.421 277.69C430.66 293.053 422.178 306.336 410.976 317.538C400.093 328.421 386.97 336.903 371.607 342.984C356.564 348.745 339.6 351.626 320.716 351.626H113.312L167.084 267.608H312.555C325.037 267.608 335.119 263.767 342.801 256.085C350.483 248.404 354.324 238.162 354.324 225.359C354.324 212.876 350.483 202.794 342.801 195.113C335.119 187.431 325.037 183.59 312.555 183.59H222.776L278.948 99.5723H320.716C339.6 99.5723 356.564 102.613 371.607 108.694C386.97 114.455 400.093 122.937 410.976 134.14C422.178 145.022 430.66 158.145 436.421 173.508C442.502 188.551 445.543 205.515 445.543 224.399V226.799Z"/><path d="M545.374 172.743C501.913 172.743 477.816 152.089 477.816 120.892H522.137C522.137 132.08 529.237 139.61 547.31 139.61C559.789 139.61 567.75 135.307 567.75 127.131C567.75 115.513 561.94 114.007 535.907 110.134C499.547 104.755 481.044 90.1252 481.044 62.5858C481.044 30.7434 505.786 11.8101 545.804 11.8101C583.456 11.8101 608.628 30.7434 608.628 59.1434H564.737C564.092 47.5252 554.195 44.298 544.728 44.298C533.54 44.298 526.225 49.0313 526.225 56.7767C526.225 68.1798 535.692 68.8252 559.789 72.4828C584.747 76.1404 613.146 83.0252 613.146 122.613C613.146 152.089 590.771 172.743 545.374 172.743ZM625.753 170.592V13.7465H696.968C731.607 13.7465 754.414 33.1101 754.414 66.8888C754.414 98.7312 733.759 120.677 696.968 120.677H669.429V170.592H625.753ZM689.223 50.3222H669.429V87.3282H689.223C698.474 87.3282 710.092 85.3919 710.092 68.6101C710.092 52.4737 698.474 50.3222 689.223 50.3222ZM764.853 170.592V13.7465H846.611C885.768 13.7465 904.271 30.3131 904.271 60.4343C904.271 78.9373 893.514 93.7828 877.378 97.4403V98.9464C892.223 102.174 900.184 111.425 900.184 128.852V151.658C900.184 157.683 900.184 164.352 902.981 170.592H859.09C857.368 167.149 856.508 160.049 856.508 151.874V136.383C856.508 125.41 852.205 118.74 836.499 118.74H808.529V170.592H764.853ZM808.529 84.5313H840.156C854.141 84.5313 859.52 76.7858 859.52 66.4585C859.52 53.7646 851.559 49.4616 840.156 49.4616H808.529V84.5313ZM916.981 170.592V13.7465H960.656V170.592H916.981ZM981.702 170.592V13.7465H1033.12L1084.11 109.919H1085.84L1084.33 62.1555V13.7465H1126.28V170.592H1077.88L1026.88 77.8616H1025.16L1026.24 119.816V170.592H981.702ZM1177.4 170.592V51.1828H1134.15V13.7465H1265.61V51.1828H1221.07V170.592H1177.4ZM1330.6 172.743C1287.14 172.743 1263.04 152.089 1263.04 120.892H1307.36C1307.36 132.08 1314.46 139.61 1332.54 139.61C1345.02 139.61 1352.98 135.307 1352.98 127.131C1352.98 115.513 1347.17 114.007 1321.13 110.134C1284.77 104.755 1266.27 90.1252 1266.27 62.5858C1266.27 30.7434 1291.01 11.8101 1331.03 11.8101C1368.68 11.8101 1393.86 30.7434 1393.86 59.1434H1349.96C1349.32 47.5252 1339.42 44.298 1329.96 44.298C1318.77 44.298 1311.45 49.0313 1311.45 56.7767C1311.45 68.1798 1320.92 68.8252 1345.02 72.4828C1369.97 76.1404 1398.37 83.0252 1398.37 122.613C1398.37 152.089 1376 172.743 1330.6 172.743ZM1489.32 172.743C1459.85 172.743 1439.19 156.607 1439.19 129.498C1439.19 111.855 1451.46 95.504 1469.96 87.9737C1459.42 77.8616 1453.39 65.5979 1453.39 52.904C1453.39 28.1616 1474.26 11.595 1503.09 11.595C1530.2 11.595 1548.7 28.3768 1548.7 51.6131C1548.7 68.8252 1537.95 82.5949 1521.59 89.4797V90.7706L1539.45 109.919C1543.11 103.465 1545.48 94.6434 1545.91 85.607H1588.72V116.159H1572.8C1570.65 123.258 1566.78 130.143 1562.69 135.092L1595.61 170.592H1546.12L1534.29 157.683C1523.96 167.58 1506.53 172.743 1489.32 172.743ZM1501.37 70.3313H1502.88C1509.55 66.8888 1513.42 61.0798 1513.42 55.0555C1513.42 48.8161 1509.33 44.5131 1503.31 44.5131C1497.07 44.5131 1492.55 49.2464 1492.55 55.0555C1492.55 60.4343 1496.64 66.4585 1501.37 70.3313ZM1480.29 124.334C1480.29 133.371 1486.96 139.18 1496.42 139.18C1502.45 139.18 1508.26 137.458 1511.91 133.371L1490.18 109.489C1484.59 112.071 1480.29 117.019 1480.29 124.334ZM545.374 355.743C501.913 355.743 477.816 335.089 477.816 303.892H522.137C522.137 315.08 529.237 322.61 547.31 322.61C559.789 322.61 567.75 318.307 567.75 310.131C567.75 298.513 561.94 297.007 535.907 293.134C499.547 287.755 481.044 273.125 481.044 245.586C481.044 213.743 505.786 194.81 545.804 194.81C583.456 194.81 608.628 213.743 608.628 242.143H564.737C564.092 230.525 554.195 227.298 544.728 227.298C533.54 227.298 526.225 232.031 526.225 239.777C526.225 251.18 535.692 251.825 559.789 255.483C584.747 259.14 613.146 266.025 613.146 305.613C613.146 335.089 590.771 355.743 545.374 355.743ZM625.753 353.592V196.746H677.174L728.165 292.919H729.886L728.38 245.156V196.746H770.335V353.592H721.926L670.935 260.862H669.214L670.289 302.816V353.592H625.753ZM791.327 353.592V196.746H909.66V233.752H835.003V256.989H898.903V291.628H835.003V316.586H910.306V353.592H791.327ZM910.95 353.592L959.789 196.746H1021.97L1070.81 353.592H1025.41L1017.23 325.622H964.522L956.346 353.592H910.95ZM974.204 292.489H1007.55L998.301 260.862L991.631 235.904H990.125L983.456 260.862L974.204 292.489ZM1076.67 353.592V196.746H1120.35V263.013L1171.55 196.746H1223.19L1167.68 261.722L1223.62 353.592H1172.2L1137.77 293.349L1120.35 313.574V353.592H1076.67ZM1231.32 353.592V196.746H1349.65V233.752H1275V256.989H1338.9V291.628H1275V316.586H1350.3V353.592H1231.32ZM1366.22 353.592V196.746H1447.98C1487.13 196.746 1505.64 213.313 1505.64 243.434C1505.64 261.937 1494.88 276.783 1478.74 280.44V281.946C1493.59 285.174 1501.55 294.425 1501.55 311.852V334.658C1501.55 340.683 1501.55 347.352 1504.35 353.592H1460.45C1458.73 350.149 1457.87 343.049 1457.87 334.874V319.383C1457.87 308.41 1453.57 301.74 1437.86 301.74H1409.89V353.592H1366.22ZM1409.89 267.531H1441.52C1455.51 267.531 1460.88 259.786 1460.88 249.459C1460.88 236.765 1452.92 232.462 1441.52 232.462H1409.89V267.531ZM1576.44 355.743C1532.98 355.743 1508.88 335.089 1508.88 303.892H1553.2C1553.2 315.08 1560.3 322.61 1578.37 322.61C1590.85 322.61 1598.81 318.307 1598.81 310.131C1598.81 298.513 1593 297.007 1566.97 293.134C1530.61 287.755 1512.11 273.125 1512.11 245.586C1512.11 213.743 1536.85 194.81 1576.87 194.81C1614.52 194.81 1639.69 213.743 1639.69 242.143H1595.8C1595.15 230.525 1585.26 227.298 1575.79 227.298C1564.6 227.298 1557.29 232.031 1557.29 239.777C1557.29 251.18 1566.75 251.825 1590.85 255.483C1615.81 259.14 1644.21 266.025 1644.21 305.613C1644.21 335.089 1621.83 355.743 1576.44 355.743Z"/></svg>
+      </span>
+      <div class="logo-sep"></div>
+      <span class="logo-label">Growth Partnership Onboarding &middot; B2B Edition &middot; 11 sections</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <div class="save-dot" id="saveDot">Saved</div>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Switch to light mode" aria-label="Toggle theme"></button>
+    </div>
+  </div>
+  <div class="pills-row" id="pillsRow"></div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</header>
+
+<main class="main">
+
+<!-- ══ WELCOME ══════════════════════════════════════ -->
+<div class="step active" id="step-0">
+  <div class="welcome-wrap">
+    <p class="welcome-eyebrow">B2B Edition &middot; 11 sections &middot; ~20 min</p>
+    <h1 class="welcome-headline">Let's grow<br>something<br><em>worth running for.</em></h1>
+    <p class="welcome-body">We pull the market and competitor research ourselves. This covers the rest: what only you can tell us.</p>
+    <div class="welcome-list">
+      <div class="welcome-item">
+        <div class="w-icon">⏱</div>
+        <span>Takes <strong>15–20 minutes.</strong> Pull in colleagues from sales or customer success where you need their input.</span>
+      </div>
+      <div class="welcome-item">
+        <div class="w-icon">✓</div>
+        <span><strong>Honest beats polished.</strong> "Don't know" is a fine answer. Flag anything that feels off and we'll dig into it on the kick-off call.</span>
+      </div>
+      <div class="welcome-item">
+        <div class="w-icon">↗</div>
+        <span>Got an existing ICP doc, brand book or GTM plan? <strong>Drop a link</strong> instead of retyping. We'll do the reading.</span>
+      </div>
+      <div class="welcome-item">
+        <div class="w-icon">💾</div>
+        <span>Your answers <strong>save as you go.</strong> Close the tab and come back anytime.</span>
+      </div>
+    </div>
+    <div class="welcome-fields">
+      <div class="wf-row">
+        <label class="wf-label" for="meta_name">Your name</label>
+        <input type="text" id="meta_name" placeholder="Sarah de Vries" autocomplete="name">
+      </div>
+      <div class="wf-row">
+        <label class="wf-label" for="meta_company">Company</label>
+        <input type="text" id="meta_company" placeholder="Acme BV" autocomplete="organization">
+      </div>
+    </div>
+    <button class="btn-start" onclick="goToStep(1)">
+      Start onboarding
+      <svg width="15" height="15" fill="none" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+
+<!-- ══ SECTION 1: OFFERING &AMP; COMMERCIAL MODEL ══ -->
+<div class="step" id="step-1" data-section="1">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">01</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Offering &amp; Commercial Model</h2>
+    <p class="section-sub">What you sell, what it costs, and how the money flows in.</p>
+
+    <div class="q-block">
+      <p class="q-label">Which single offer or product line drives most of your revenue today?</p>
+      <textarea id="b1_1" placeholder="Our core SaaS platform on annual contracts; services are a small add-on."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Your commercial snapshot for that core offering.</p>
+      <p class="q-hint">Rough figures are fine.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">ACV</span><input type="text" id="b1_2a" placeholder="€24k average annual contract value"></div>
+        <div class="stack-row"><span class="stack-label">Sales cycle</span><input type="text" id="b1_2b" placeholder="8–12 weeks"></div>
+        <div class="stack-row"><span class="stack-label">Gross margin</span><input type="text" id="b1_2c" placeholder="high (~80%)"></div>
+        <div class="stack-row"><span class="stack-label">Pricing model</span><input type="text" id="b1_2d" placeholder="per-seat subscription"></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">What problem does your core offering solve, in the words your best customers use?</p>
+      <p class="q-hint">Their phrasing, from calls or reviews, not the marketing version.</p>
+      <textarea id="b1_3" placeholder="&quot;We stopped losing deals because finance could finally see margin per project in real time.&quot;"></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">When prospects don't buy from you, what do they usually do instead?</p>
+      <p class="q-hint">Build it internally, stick with the status quo, pick a cheaper competitor, go with a full-stack incumbent?</p>
+      <textarea id="b1_4" placeholder="Most stick with spreadsheets for another year, or pick a cheaper point tool that they outgrow."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 1 -->
+<div class="bridge-step" id="bridge-1">
+  <div class="bridge-wrap" data-num="01">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-1" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-1" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Offering, done</p>
+    <h2 class="bridge-title">We get how you<br>make money.</h2>
+    <p class="bridge-body">Your core offer, your economics and the problem you solve give us the commercial frame. Every play we run is judged on the revenue it can move.</p>
+    <button class="btn-bridge" onclick="advanceBridge(1)">Continue to ICP &amp; DMU →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 2: ICP, ACCOUNTS &AMP; DECISION-MAKING UNIT ══ -->
+<div class="step" id="step-2" data-section="2">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">02</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">ICP, Accounts &amp; Decision-Making Unit</h2>
+    <p class="section-sub">Who you sell to, who signs, and who can kill the deal.</p>
+
+    <div class="q-block">
+      <p class="q-label">Describe your best-fit account.</p>
+      <p class="q-hint">Industry, size (FTEs and revenue), region, tech stack, and any signals that mark a strong fit.</p>
+      <textarea id="b2_1" class="tall" placeholder="B2B SaaS, 50–500 FTE, Benelux + DACH, already on HubSpot, scaling a revenue team."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Who sits in the typical buying group, and what's their role?</p>
+      <p class="q-hint">List each role and tag it: Champion, Economic Buyer, Technical User, Influencer or Blocker.</p>
+      <textarea id="b2_2" placeholder="VP Marketing (Champion), CFO (Economic Buyer), RevOps lead (Technical User), CEO (Influencer), IT/security (Blocker)."></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">Which industries, sizes or buyer profiles are a poor fit?</p>
+      <p class="q-hint">Naming who to avoid sharpens targeting straight away.</p>
+      <textarea id="b2_3" placeholder="Sub-10-FTE startups (no budget) and heavily regulated enterprises (12-month security reviews)."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Top 3 reasons your best customers chose you.</p>
+      <p class="q-hint">Use their words.</p>
+      <div class="inline-fields">
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b2_4a" placeholder="Fastest time-to-value in the category"></div>
+        <div class="inline-row"><span class="inline-num">2</span><input type="text" id="b2_4b"></div>
+        <div class="inline-row"><span class="inline-num">3</span><input type="text" id="b2_4c"></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Top 3 reasons deals stall or are lost.</p>
+      <p class="q-hint">The real reason behind the objection, not just "price".</p>
+      <div class="inline-fields">
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b2_5a" placeholder="No clear ROI case for the CFO"></div>
+        <div class="inline-row"><span class="inline-num">2</span><input type="text" id="b2_5b"></div>
+        <div class="inline-row"><span class="inline-num">3</span><input type="text" id="b2_5c"></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">Which signal or trigger most reliably means an account is ready to talk?</p>
+      <p class="q-hint">Funding round, leadership hire, job posting, tech change, regulatory shift, end of an incumbent contract.</p>
+      <textarea id="b2_6" placeholder="A new VP of Revenue in their first 90 days, or a fresh Series B."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">How do you target accounts today?</p>
+      <div class="options">
+        <div class="opt" onclick="selectOpt(this,'b2_7')"><input type="radio" name="b2_7" value="named"><label>A named account list</label></div>
+        <div class="opt" onclick="selectOpt(this,'b2_7')"><input type="radio" name="b2_7" value="programmatic"><label>Programmatic / broad</label></div>
+        <div class="opt" onclick="selectOpt(this,'b2_7')"><input type="radio" name="b2_7" value="hybrid"><label>A mix of both</label></div>
+      </div>
+      <p class="q-hint" style="margin-top:10px">Briefly, how does that work in practice?</p>
+      <input type="text" id="b2_7_note" placeholder="">
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 2 -->
+<div class="bridge-step" id="bridge-2">
+  <div class="bridge-wrap" data-num="02">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-2" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-2" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Accounts, done</p>
+    <h2 class="bridge-title">We know who to win,<br>and who signs.</h2>
+    <p class="bridge-body">Your best-fit accounts and the people in the room shape our targeting and our messaging. We aim at the accounts worth winning and speak to each role that moves the deal.</p>
+    <button class="btn-bridge" onclick="advanceBridge(2)">Continue to Positioning →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 3: POSITIONING &AMP; COMPETITION ══ -->
+<div class="step" id="step-3" data-section="3">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">03</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Positioning &amp; Competition</h2>
+    <p class="section-sub">How the market shortlists you, and how you want to be framed.</p>
+
+    <div class="q-block">
+      <p class="q-label">The three competitors prospects most often shortlist you against.</p>
+      <div class="inline-fields">
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b3_1a" placeholder="Incumbent X"></div>
+        <div class="inline-row"><span class="inline-num">2</span><input type="text" id="b3_1b"></div>
+        <div class="inline-row"><span class="inline-num">3</span><input type="text" id="b3_1c"></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">The single biggest reason customers pick you over them.</p>
+      <p class="q-hint">One sentence. The real reason.</p>
+      <input type="text" id="b3_2" placeholder="We're the only one that ties marketing spend to closed revenue, not leads.">
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">Your current one-line positioning statement.</p>
+      <p class="q-hint">No statement yet? Write what you'd want it to be.</p>
+      <input type="text" id="b3_3" placeholder="The revenue platform for B2B teams that sell through complex buying groups.">
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">If you could own one new category label in your market, what would it be?</p>
+      <input type="text" id="b3_4" placeholder="&quot;Revenue orchestration&quot;">
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Which common industry assumption would you happily challenge in your marketing?</p>
+      <p class="q-hint">The tired belief everyone repeats that you think is wrong.</p>
+      <textarea id="b3_5" placeholder="That more leads is the goal. We'd argue most pipeline is the wrong pipeline."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 3 -->
+<div class="bridge-step" id="bridge-3">
+  <div class="bridge-wrap" data-num="03">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-3" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-3" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Positioning, done</p>
+    <h2 class="bridge-title">We know how<br>to frame you.</h2>
+    <p class="bridge-body">Most vendors in your space sound interchangeable. Your answers let us frame you sharply and hold that frame across every touch.</p>
+    <button class="btn-bridge" onclick="advanceBridge(3)">Continue to Channels →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 4: ACQUISITION CHANNELS ══ -->
+<div class="step" id="step-4" data-section="4">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">04</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Acquisition Channels</h2>
+    <p class="section-sub">Where pipeline comes from today, and what stopped working.</p>
+
+    <div class="q-block">
+      <p class="q-label">The three channels generating the most new pipeline today, ranked.</p>
+      <div class="inline-fields">
+        <div class="inline-row"><span class="inline-num">1</span><input type="text" id="b4_1a" placeholder="Outbound SDR"></div>
+        <div class="inline-row"><span class="inline-num">2</span><input type="text" id="b4_1b"></div>
+        <div class="inline-row"><span class="inline-num">3</span><input type="text" id="b4_1c"></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Which channels did you stop using in the past two years, and why?</p>
+      <textarea id="b4_2" placeholder="Dropped trade shows in 2024, cost per opportunity was triple our outbound."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Your strongest message, hook or angle in market right now.</p>
+      <p class="q-hint">What's working, and your best guess at why.</p>
+      <textarea id="b4_3" placeholder="A teardown of the prospect's own funnel on the first call. It earns the second meeting."></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">Rough split of new pipeline: inbound vs outbound.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">Inbound %</span><input type="text" id="b4_4a" placeholder="40"></div>
+        <div class="stack-row"><span class="stack-label">Outbound %</span><input type="text" id="b4_4b" placeholder="60"></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Who owns each function today?</p>
+      <p class="q-hint">In-house, freelance, or the agency name.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">Content</span><input type="text" id="b4_5a" placeholder="In-house, 1 writer"></div>
+        <div class="stack-row"><span class="stack-label">Paid media</span><input type="text" id="b4_5b" placeholder="Agency, name"></div>
+        <div class="stack-row"><span class="stack-label">SEO</span><input type="text" id="b4_5c" placeholder="Freelance"></div>
+        <div class="stack-row"><span class="stack-label">Outbound (SDR/BDR)</span><input type="text" id="b4_5d" placeholder="In-house, 2 SDRs"></div>
+        <div class="stack-row"><span class="stack-label">Events</span><input type="text" id="b4_5e" placeholder="Not active"></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Describe your account-based marketing approach, if any.</p>
+      <p class="q-hint">If you don't run ABM, just say so.</p>
+      <textarea id="b4_6" placeholder="Light ABM on ~50 target accounts: tailored LinkedIn ads plus SDR sequences. No formal scoring yet."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 4 -->
+<div class="bridge-step" id="bridge-4">
+  <div class="bridge-wrap" data-num="04">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-4" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-4" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Channels, done</p>
+    <h2 class="bridge-title">We see where<br>pipeline comes from.</h2>
+    <p class="bridge-body">What's working, what you dropped and why. We double down on the channels earning pipeline and stop the ones that drain it.</p>
+    <button class="btn-bridge" onclick="advanceBridge(4)">Continue to Pipeline →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 5: PIPELINE &AMP; SALES FUNNEL ══ -->
+<div class="step" id="step-5" data-section="5">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">05</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Pipeline &amp; Sales Funnel</h2>
+    <p class="section-sub">The numbers between first touch and signed contract.</p>
+
+    <div class="q-block">
+      <p class="q-label">Monthly average volumes across your pipeline.</p>
+      <p class="q-hint">Rough averages are fine.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">Leads</span><input type="text" id="b5_1a" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">MQLs</span><input type="text" id="b5_1b" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">SQLs</span><input type="text" id="b5_1c" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">Opportunities</span><input type="text" id="b5_1d" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">Won deals</span><input type="text" id="b5_1e" placeholder=""></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Where do deals stall or die most often?</p>
+      <p class="q-hint">The stage that worries you most, and your best guess why.</p>
+      <textarea id="b5_2" placeholder="Between demo and proposal. Champions love it but can't get the CFO to prioritise."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Win rate from SQL to closed-won (%).</p>
+      <input type="text" id="b5_3" placeholder="22%">
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">Average weekly sales activity per rep.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">Discovery calls</span><input type="text" id="b5_4a" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">Demos</span><input type="text" id="b5_4b" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">Proposals sent</span><input type="text" id="b5_4c" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">Touches per account</span><input type="text" id="b5_4d" placeholder=""></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">What does win/loss analysis tell you about why you win and why you lose?</p>
+      <p class="q-hint">If you don't run formal win/loss, your honest read is fine.</p>
+      <textarea id="b5_5" placeholder="We win on ease of onboarding, we lose when procurement runs a feature checklist."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Which capability or asset is most missing from your funnel?</p>
+      <p class="q-hint">Nurture flow, demo, business-case template, ROI calculator, references, security or legal package.</p>
+      <textarea id="b5_6" placeholder="A CFO-ready ROI calculator. Champions can't sell up without it."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 5 -->
+<div class="bridge-step" id="bridge-5">
+  <div class="bridge-wrap" data-num="05">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-5" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-5" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Pipeline, done</p>
+    <h2 class="bridge-title">We found where<br>deals get stuck.</h2>
+    <p class="bridge-body">Your funnel numbers point us at the stage that's leaking. The first sprint targets that stage until the conversion moves.</p>
+    <button class="btn-bridge" onclick="advanceBridge(5)">Continue to Retention →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 6: RETENTION, EXPANSION &AMP; ADVOCACY ══ -->
+<div class="step" id="step-6" data-section="6">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">06</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Retention, Expansion &amp; Advocacy</h2>
+    <p class="section-sub">What happens after the contract is signed.</p>
+
+    <div class="q-block">
+      <p class="q-label">Your annual churn.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">Logo churn %</span><input type="text" id="b6_1a" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">Revenue churn %</span><input type="text" id="b6_1b" placeholder=""></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Net and gross revenue retention, if you measure them.</p>
+      <p class="q-hint">Leave blank if you don't track these yet.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">NRR %</span><input type="text" id="b6_2a" placeholder=""></div>
+        <div class="stack-row"><span class="stack-label">GRR %</span><input type="text" id="b6_2b" placeholder=""></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">The single most common reason customers leave.</p>
+      <textarea id="b6_3" placeholder="Champion changes job and the replacement never adopted it."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Where's the biggest expansion opportunity in your existing book?</p>
+      <p class="q-hint">Upsell tier, cross-sell module, multi-team or multi-region rollout.</p>
+      <textarea id="b6_4" placeholder="Rolling out from marketing into the sales team inside accounts we already serve."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">How many reference-ready customers do you have, and which two would join a case study or reference call this quarter?</p>
+      <p class="q-hint">Names or accounts is all we need.</p>
+      <textarea id="b6_5" placeholder="About 8 references. Acme and Globex would both go on record."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 6 -->
+<div class="bridge-step" id="bridge-6">
+  <div class="bridge-wrap" data-num="06">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-6" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-6" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Retention, done</p>
+    <h2 class="bridge-title">The base matters as<br>much as new logos.</h2>
+    <p class="bridge-body">Churn, expansion and references show us where the durable revenue sits. We protect the base and grow the accounts you already won.</p>
+    <button class="btn-bridge" onclick="advanceBridge(6)">Continue to Tech →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 7: TECH, DATA &AMP; ATTRIBUTION ══ -->
+<div class="step" id="step-7" data-section="7">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">07</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Tech, Data &amp; Attribution</h2>
+    <p class="section-sub">The plumbing that powers your growth engine.</p>
+
+    <div class="q-block">
+      <p class="q-label">Your core stack.</p>
+      <p class="q-hint">Leave anything blank if you're unsure.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">CRM</span><input type="text" id="b7_1a" placeholder="HubSpot, Salesforce"></div>
+        <div class="stack-row"><span class="stack-label">Marketing automation</span><input type="text" id="b7_1b" placeholder="HubSpot, Marketo"></div>
+        <div class="stack-row"><span class="stack-label">Analytics</span><input type="text" id="b7_1c" placeholder="GA4, Mixpanel"></div>
+        <div class="stack-row"><span class="stack-label">Sales engagement</span><input type="text" id="b7_1d" placeholder="Outreach, Salesloft, Apollo"></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">Which ad accounts are currently active?</p>
+      <p class="q-hint">Select all that apply.</p>
+      <div class="options">
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_2" value="linkedin"><label>LinkedIn</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_2" value="google"><label>Google</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_2" value="microsoft"><label>Microsoft Advertising (Bing)</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_2" value="meta"><label>Meta</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_2" value="x"><label>X (Twitter)</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_2" value="other"><label>Other</label></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">How is conversion tracking set up?</p>
+      <p class="q-hint">Select everything that's live and actually working.</p>
+      <div class="options">
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_3" value="ga4"><label>GA4</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_3" value="serverside"><label>Server-side tagging</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_3" value="metacapi"><label>Meta Conversions API (CAPI)</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_3" value="linkedincapi"><label>LinkedIn Conversions API</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_3" value="offline"><label>Offline conversion upload</label></div>
+        <div class="opt" onclick="toggleOpt(this)"><input type="checkbox" name="b7_3" value="unsure"><label>Honestly not sure what's live</label></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Where does your team look for the single source of truth on pipeline and marketing performance?</p>
+      <textarea id="b7_4" placeholder="A Looker dashboard off the CRM. Marketing still argues with sales about attribution."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">The biggest data or tracking gap blocking better commercial decisions.</p>
+      <textarea id="b7_5" placeholder="We can't tie closed revenue back to the campaign that sourced it."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 7 -->
+<div class="bridge-step" id="bridge-7">
+  <div class="bridge-wrap" data-num="07">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-7" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-7" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Tech, done</p>
+    <h2 class="bridge-title">Solid data,<br>then we scale.</h2>
+    <p class="bridge-body">We map your stack and tracking, close the gaps you flagged, and make every euro measurable before we scale a channel.</p>
+    <button class="btn-bridge" onclick="advanceBridge(7)">Continue to Alignment →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 8: SALES &AMP; MARKETING ALIGNMENT ══ -->
+<div class="step" id="step-8" data-section="8">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">08</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Sales &amp; Marketing Alignment</h2>
+    <p class="section-sub">How sales and marketing talk to each other, and how we plug in.</p>
+
+    <div class="q-block">
+      <p class="q-label">How are sales and marketing structured?</p>
+      <p class="q-hint">Roles, headcount (FTE) and reporting lines. A rough sketch is fine.</p>
+      <textarea id="b8_1" placeholder="CMO (1) → Demand Gen (1), Content (1). VP Sales (1) → 2 AEs, 2 SDRs. Both report to the CEO."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Describe the lead handoff from marketing to sales.</p>
+      <p class="q-hint">Criteria, SLA, tooling.</p>
+      <textarea id="b8_2" placeholder="MQL at score 50 routes to an SDR in HubSpot, follow-up within 24 hours. Honoured about half the time."></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">What's the current state of CRM hygiene and pipeline data quality?</p>
+      <p class="q-hint">Be honest, it shapes what we can trust.</p>
+      <textarea id="b8_3" placeholder="Stages are inconsistent between reps and close dates slip without updates."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Who has final sign-off on creative, messaging and budget?</p>
+      <input type="text" id="b8_4" placeholder="CMO for messaging and budget up to €10k, CEO above that.">
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Our sprint cadence: a weekly check-in plus a monthly strategic review.</p>
+      <p class="q-hint">We work in sprints, so alignment is built in: a weekly 30-minute check-in to keep momentum, and a monthly 90-minute review to step back and steer. That rhythm is how we keep the partnership moving.</p>
+      <p class="q-hint" style="margin-top:12px">Preferred day and time for the weekly check-in (optional):</p>
+      <input type="text" id="b8_5_time" placeholder="Tuesday mornings from 9:30 CET">
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 8 -->
+<div class="bridge-step" id="bridge-8">
+  <div class="bridge-wrap" data-num="08">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-8" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-8" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Alignment, done</p>
+    <h2 class="bridge-title">Sales and marketing,<br>one motion.</h2>
+    <p class="bridge-body">Clear handoffs, clean pipeline data and the right cadence. We slot into how your teams already work and tighten the seams.</p>
+    <button class="btn-bridge" onclick="advanceBridge(8)">Continue to Goals →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 9: GOALS, KPIS &AMP; CONSTRAINTS ══ -->
+<div class="step" id="step-9" data-section="9">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">09</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Goals, KPIs &amp; Constraints</h2>
+    <p class="section-sub">Where you're heading, and what's off the table.</p>
+
+    <div class="q-block">
+      <p class="q-label">Your three-year vision.</p>
+      <p class="q-hint">Where is this business in <span id="visionYear"></span> if everything goes right?</p>
+      <textarea id="b9_1" placeholder="The default revenue platform for mid-market B2B in the Benelux, €30M ARR, profitable."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Commercial targets for the next 12 months.</p>
+      <div style="margin-top:4px">
+        <div class="stack-row"><span class="stack-label">Revenue / ARR</span><input type="text" id="b9_2a" placeholder="€8M ARR (+45%)"></div>
+        <div class="stack-row"><span class="stack-label">Pipeline</span><input type="text" id="b9_2b" placeholder="€30M qualified pipeline"></div>
+        <div class="stack-row"><span class="stack-label">New logos</span><input type="text" id="b9_2c" placeholder="120 new logos"></div>
+        <div class="stack-row"><span class="stack-label">NRR / expansion</span><input type="text" id="b9_2d" placeholder="NRR from 105% to 115%"></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">The one metric that, if it moves, the business wins.</p>
+      <p class="q-hint">One. The north star everything else serves.</p>
+      <input type="text" id="b9_3" placeholder="Net new ARR per quarter.">
+    </div>
+
+    <hr class="divider">
+
+    <div class="q-block">
+      <p class="q-label">Realistic monthly budget for marketing and growth.</p>
+      <p class="q-hint">A range is fine. It shapes sprint sizing, not a commitment.</p>
+      <input type="text" id="b9_4" placeholder="€30k–€50k per month.">
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">What's off-limits for compliance, legal or brand reasons?</p>
+      <p class="q-hint">Claims, tactics or topics we must never touch in your name.</p>
+      <textarea id="b9_5" placeholder="No naming customers in regulated sectors. No competitor comparison ads without legal sign-off."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 9 -->
+<div class="bridge-step" id="bridge-9">
+  <div class="bridge-wrap" data-num="09">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-9" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-9" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Goals, done</p>
+    <h2 class="bridge-title">Targets set.<br>Now we work back.</h2>
+    <p class="bridge-body">On the kick-off call we turn these numbers into sprint priorities. Every play points back to the one metric you named.</p>
+    <button class="btn-bridge" onclick="advanceBridge(9)">Continue to Brand Assets →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 10: BRAND ASSETS &AMP; GUARDRAILS ══ -->
+<div class="step" id="step-10" data-section="10">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">10</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Brand Assets &amp; Guardrails</h2>
+    <p class="section-sub">What we can use on day one, and what we must never touch.</p>
+
+    <div class="q-block">
+      <p class="q-label">Where can we access your brand guidelines?</p>
+      <p class="q-hint">A shareable link works (Drive, Figma, Notion), or upload the files below.</p>
+      <input type="url" id="b10_1" placeholder="https://…">
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Or upload your brand, proof and enablement files directly.</p>
+      <p class="q-hint">Drop in whatever you've got, we'd rather have too much than too little. Large files are welcome.</p>
+      <div class="upload-examples">
+        <div class="ue-col">
+          <span class="ue-head">Brand &amp; guidelines</span>
+          <ul><li>Brand book / style guide</li><li>Logo files (SVG, PNG, EPS)</li><li>Fonts</li><li>Tone-of-voice</li></ul>
+        </div>
+        <div class="ue-col">
+          <span class="ue-head">Proof &amp; cases</span>
+          <ul><li>Case studies</li><li>ROI / results data</li><li>Reference list</li><li>Testimonials</li></ul>
+        </div>
+        <div class="ue-col">
+          <span class="ue-head">Sales enablement</span>
+          <ul><li>Pitch decks</li><li>One-pagers</li><li>Battlecards</li><li>Demo recordings</li></ul>
+        </div>
+        <div class="ue-col">
+          <span class="ue-head">Legal &amp; compliance</span>
+          <ul><li>Security / DPA package</li><li>Claims you can / can't make</li><li>Certifications</li><li>Required disclaimers</li></ul>
+        </div>
+      </div>
+      <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload files">
+        <input type="file" id="fileInput" multiple hidden>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M5 16v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/></svg>
+        <p class="dz-title">Drag &amp; drop files here, or <span class="dz-link">browse</span></p>
+        <p class="dz-sub">Any format. Large files (200&nbsp;MB+) welcome.</p>
+      </div>
+      <div class="file-list" id="fileList"></div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Who's willing to be the public face?</p>
+      <p class="q-hint">Founders, execs or subject-matter experts, for LinkedIn, podcasts, webinars or events. Name and platform.</p>
+      <textarea id="b10_2" placeholder="Our CEO is comfortable on LinkedIn and panels. Our Head of Product can do technical webinars."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">What proof can we use externally?</p>
+      <p class="q-hint">Customer cases, data points, ROI numbers, press. Flag any usage limits.</p>
+      <textarea id="b10_3" placeholder="Two named case studies (approved), an aggregate &quot;31% faster close&quot; stat, plus a G2 leader badge."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-label">Words, tones or imagery we must never use in your name.</p>
+      <input type="text" id="b10_4" placeholder="No &quot;disrupt&quot;, no hype, never name a customer's competitor.">
+    </div>
+  </div>
+</div>
+
+<!-- BRIDGE 10 -->
+<div class="bridge-step" id="bridge-10">
+  <div class="bridge-wrap" data-num="10">
+    <div class="bridge-timer">
+      <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+        <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+        <circle class="ring-fg" id="ring-10" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"
+          stroke-dasharray="119.38" stroke-dashoffset="0" transform="rotate(-90 25 25)"/>
+        <text class="countdown-num" id="num-10" x="25" y="25">10</text>
+      </svg>
+      <span class="bridge-timer-label">Moving on automatically…</span>
+    </div>
+    <p class="bridge-eyebrow">Assets, done</p>
+    <h2 class="bridge-title">Day-one content<br>is ready.</h2>
+    <p class="bridge-body">With brand access, proof and a willing face, we move at sprint speed. No scrambling for files, no waiting on approvals.</p>
+    <button class="btn-bridge" onclick="advanceBridge(10)">Continue to Impact →</button>
+  </div>
+</div>
+
+<!-- ══ SECTION 11: YOUR POSITIVE IMPACT ══ -->
+<div class="step" id="step-11" data-section="11">
+  <div class="content-wrap">
+    <div class="section-tag">
+      <span class="section-num">11</span>
+      <span class="section-of">of 11</span>
+    </div>
+    <h2 class="section-headline">Your Positive Impact</h2>
+    <p class="section-sub">Growth and impact are inseparable at Sprints &amp; Sneakers. We end every partnership conversation here.</p>
+
+    <div class="q-block">
+      <p class="q-label">What positive change should our partnership help your business create?</p>
+      <p class="q-hint">For people, society or the planet, and where in your current growth work is that ambition still under-served?</p>
+      <textarea id="b11_1" class="tall" placeholder="We want every new customer to cut their reporting waste. Right now that story is buried in a feature list instead of leading our pitch."></textarea>
+    </div>
+
+    <div class="callout">
+      <p class="callout-label">Almost there</p>
+      <p class="callout-body">Every honest answer here shaves days off the Audit phase and weeks off the time to your first growth result. Hit submit and we'll take it from here.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ THANK YOU ════════════════════════════════════ -->
+<div class="step" id="step-thankyou">
+  <div class="ty-wrap">
+    <div class="ty-check">✓</div>
+    <h2 class="ty-headline">That's everything.</h2>
+    <p class="ty-body">Your answers are in. We read every word before the kick-off, no skimming, no templates. Here's what happens next.</p>
+    <div class="ty-steps">
+      <div class="ty-row">
+        <div class="ty-num">1</div>
+        <p class="ty-text"><strong>We prepare.</strong> Your S&amp;S lead reads this, cross-references it with market data, and flags any follow-up questions. Allow us 2–3 working days.</p>
+      </div>
+      <div class="ty-row">
+        <div class="ty-num">2</div>
+        <p class="ty-text"><strong>Kick-off call, 90 minutes.</strong> We align on your funnel priorities, sharpen the strategy brief and agree on sprint one. You'll leave knowing exactly what happens next.</p>
+      </div>
+      <div class="ty-row">
+        <div class="ty-num">3</div>
+        <p class="ty-text"><strong>Audit + Strategy Playbook.</strong> In your hands within four weeks. Then we run.</p>
+      </div>
+    </div>
+    <div class="ty-footer">
+      <p>SPRINTS &amp; SNEAKERS · Amsterdam &amp; Groningen</p>
+      <p style="font-style:italic">Growing brands that redefine tomorrow.</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- ── BOTTOM NAV ── -->
+<div class="bottom-nav hidden" id="bottomNav">
+  <button class="btn-back invisible" id="btnBack" onclick="prevStep()">← Back</button>
+  <span class="nav-label" id="navLabel"></span>
+  <button class="btn-next" id="btnNext" onclick="nextStep()">Next →</button>
+</div>
+
+<script>
+const SECTION_NAMES = ['Offering','ICP & DMU','Positioning','Channels','Pipeline','Retention','Tech','Alignment','Goals','Assets','Impact'];
+const TOTAL = 11;
+const CIRC = 119.38; // 2π × 19
+
+// Backend = same-origin Cloudflare Worker: files stream to Drive in chunks, answers go to the Sheet.
+const API_BASE = '/api';
+const CHUNK = 16 * 1024 * 1024; // 16 MB, multiple of 256 KB, required by Drive resumable upload
+
+let currentStep = 0;
+let ready = false; // true after restore; stops init navigation from overwriting saved answers
+let bridgeTimers = {};
+const uploadFiles = []; // files chosen in the upload section (wired to R2 in Fase 4)
+
+// ── PILLS ──
+function buildPills() {
+  document.getElementById('pillsRow').innerHTML = SECTION_NAMES.map((n, i) =>
+    `<div class="pill" id="pill-${i+1}"><div class="pill-dot"></div><span>${i+1}. ${n}</span></div>`
+  ).join('');
+}
+
+function updatePills(active) {
+  for (let i = 1; i <= TOTAL; i++) {
+    const p = document.getElementById('pill-' + i);
+    if (!p) continue;
+    p.classList.remove('active', 'done');
+    if (i < active) p.classList.add('done');
+    else if (i === active) p.classList.add('active');
+  }
+  const a = document.querySelector('.pill.active');
+  if (a) a.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+
+// ── NAV ──
+function goToStep(n) {
+  if (n < 0 || n > TOTAL + 1) return;
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.bridge-step').forEach(el => el.classList.remove('active'));
+  clearBridgeTimers();
+  currentStep = n;
+  saveAll();
+
+  const nav = document.getElementById('bottomNav');
+
+  if (n === 0) {
+    document.getElementById('step-0').classList.add('active');
+    nav.classList.add('hidden');
+    updatePills(0);
+    setProgress(0);
+  } else if (n >= 1 && n <= TOTAL) {
+    document.getElementById('step-' + n).classList.add('active');
+    nav.classList.remove('hidden');
+    document.getElementById('btnBack').classList.toggle('invisible', n === 1);
+    document.getElementById('btnNext').textContent = n === TOTAL ? 'Submit →' : 'Next →';
+    document.getElementById('btnNext').disabled = false;
+    document.getElementById('navLabel').textContent = `${n} of ${TOTAL} · ${SECTION_NAMES[n-1]}`;
+    updatePills(n);
+    setProgress(((n - 1) / TOTAL) * 100);
+    window.scrollTo(0, 0);
+  } else if (n === TOTAL + 1) {
+    document.getElementById('step-thankyou').classList.add('active');
+    nav.classList.add('hidden');
+    updatePills(TOTAL + 1);
+    setProgress(100);
+    window.scrollTo(0, 0);
+  }
+}
+
+function nextStep() {
+  if (currentStep >= 1 && currentStep <= TOTAL - 1) showBridge(currentStep, currentStep + 1);
+  else if (currentStep === TOTAL) submitToSheets();
+}
+
+function prevStep() {
+  if (currentStep > 1) goToStep(currentStep - 1);
+  else if (currentStep === 1) goToStep(0);
+}
+
+// ── BRIDGE ──
+function showBridge(num, next) {
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('bottomNav').classList.add('hidden');
+  const el = document.getElementById('bridge-' + num);
+  if (!el) { goToStep(next); return; }
+  el.classList.add('active');
+  window.scrollTo(0, 0);
+  updatePills(num);
+  setProgress((num / TOTAL) * 100);
+
+  const ring = document.getElementById('ring-' + num);
+  const numEl = document.getElementById('num-' + num);
+  if (ring) { ring.style.transition = 'none'; ring.style.strokeDashoffset = '0'; }
+  if (numEl) numEl.textContent = '10';
+
+  clearBridgeTimers();
+  let elapsed = 0;
+  bridgeTimers[num] = setInterval(() => {
+    elapsed += 80;
+    const pct = Math.min(elapsed / 10000, 1);
+    if (ring) { ring.style.transition = 'stroke-dashoffset 0.08s linear'; ring.style.strokeDashoffset = CIRC * pct; }
+    if (numEl) numEl.textContent = Math.max(1, Math.ceil(10 - elapsed / 1000));
+    if (elapsed >= 10000) { clearInterval(bridgeTimers[num]); goToStep(next); }
+  }, 80);
+}
+
+function advanceBridge(num) { clearBridgeTimers(); goToStep(num + 1); }
+function clearBridgeTimers() { Object.values(bridgeTimers).forEach(clearInterval); bridgeTimers = {}; }
+
+// ── PROGRESS ──
+function setProgress(pct) {
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ── OPTION SELECTORS ──
+function selectOpt(el, name) {
+  document.querySelectorAll(`[name="${name}"]`).forEach(r => r.closest('.opt')?.classList.remove('sel'));
+  el.classList.add('sel');
+  el.querySelector('input[type=radio]').checked = true;
+  saveAll();
+}
+function toggleOpt(el) {
+  el.classList.toggle('sel');
+  el.querySelector('input[type=checkbox]').checked = el.classList.contains('sel');
+  saveAll();
+}
+
+// ── GOOGLE SHEETS SUBMIT ──
+function collectAnswers() {
+  const d = { _submitted_at: new Date().toISOString() };
+  const c = new URLSearchParams(window.location.search).get('c');
+  if (c) d._customer = c;
+  d._uploads = uploadFiles.map(f => f.name).join(', ');
+  document.querySelectorAll('textarea, input[type=text], input[type=url], select').forEach(el => {
+    if (el.id) d[el.id] = el.value || '';
+  });
+  ['b2_7'].forEach(name => {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    d[name] = el ? el.value : '';
+  });
+  ['adacc', 'tracking'].forEach(name => {
+    d[name] = [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(e => e.value).join(', ');
+  });
+  return d;
+}
+
+// ── Build a readable HTML summary of the answers (becomes a Google Doc in the partner folder) ──
+function escHtml(s) { return String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c])); }
+
+function answerHtml(qb) {
+  const cap = qb.querySelector('.cap-table');
+  if (cap) {
+    let rows = '';
+    cap.querySelectorAll('tbody tr').forEach(tr => {
+      const fn = tr.querySelector('td')?.textContent.trim() || '';
+      const sels = tr.querySelectorAll('select');
+      const owned = sels[0]?.value || '';
+      const score = sels[1]?.value || '';
+      const note = (tr.querySelector('input[type=text]')?.value || '').trim();
+      if (owned || score || note) rows += `<tr><td>${escHtml(fn)}</td><td>${escHtml(owned)}</td><td>${escHtml(score)}</td><td>${escHtml(note)}</td></tr>`;
+    });
+    return rows
+      ? `<table border="1" cellpadding="5" style="border-collapse:collapse"><tr><th>Function</th><th>Owned by</th><th>Score</th><th>Notes</th></tr>${rows}</table>`
+      : '<p><i>—</i></p>';
+  }
+  const parts = [];
+  qb.querySelectorAll('input[type=radio]:checked').forEach(r =>
+    parts.push(escHtml(r.closest('.opt')?.querySelector('label')?.textContent.trim() || r.value)));
+  const checks = [...qb.querySelectorAll('input[type=checkbox]:checked')]
+    .map(c => escHtml(c.closest('.opt')?.querySelector('label')?.textContent.trim() || c.value));
+  if (checks.length) parts.push(checks.join(', '));
+  qb.querySelectorAll('textarea, input[type=text], input[type=url], select').forEach(el => {
+    if (el.closest('.cap-table')) return;
+    const v = (el.value || '').trim();
+    if (!v) return;
+    const stack = el.closest('.stack-row')?.querySelector('.stack-label')?.textContent.trim();
+    parts.push((stack ? `<b>${escHtml(stack)}:</b> ` : '') + escHtml(v));
+  });
+  return parts.length ? `<p>${parts.join('<br>')}</p>` : '<p><i>—</i></p>';
+}
+
+function buildAnswersHTML() {
+  const name = (document.getElementById('meta_name')?.value || '').trim();
+  const company = (document.getElementById('meta_company')?.value || '').trim();
+  const when = new Date().toISOString().slice(0, 16).replace('T', ' ');
+  let h = `<h1>Growth Partnership Onboarding, B2B</h1><p><b>Company:</b> ${escHtml(company) || '—'}<br>`
+    + `<b>Contact:</b> ${escHtml(name) || '—'}<br><b>Submitted:</b> ${when} UTC</p><hr>`;
+  document.querySelectorAll('.step[data-section]').forEach(step => {
+    const sec = step.querySelector('.section-headline')?.textContent.trim() || '';
+    let body = '';
+    step.querySelectorAll('.q-block').forEach(qb => {
+      const lbl = qb.querySelector('.q-label')?.textContent.trim() || '';
+      if (!lbl) return;
+      body += `<p><b>${escHtml(lbl)}</b></p>${answerHtml(qb)}`;
+    });
+    if (body) h += `<h2>${escHtml(sec)}</h2>${body}`;
+  });
+  if (uploadFiles.length) {
+    h += '<hr><h2>Uploaded files</h2><ul>'
+      + uploadFiles.map(f => `<li>${escHtml(f.name)} (${(f.size / 1048576).toFixed(1)} MB)</li>`).join('')
+      + '</ul>';
+  }
+  return h;
+}
+
+function getToken() { return new URLSearchParams(location.search).get('c') || ''; }
+
+// Upload one file to Drive via the Worker, chunk by chunk (resumable). Returns its Drive link.
+async function uploadOneFile(file, token, onProgress) {
+  const init = await fetch(API_BASE + '/upload/init', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, filename: file.name, mimeType: file.type || 'application/octet-stream', size: file.size })
+  });
+  const ij = await init.json().catch(() => ({}));
+  if (!init.ok || !ij.sessionUrl) throw new Error('init ' + file.name + ': ' + (ij.detail || ij.error || init.status));
+  const sessionUrl = ij.sessionUrl;
+  let start = 0, result = null;
+  while (start < file.size) {
+    const end = Math.min(start + CHUNK, file.size);
+    const r = await fetch(API_BASE + '/upload/chunk', {
+      method: 'PUT',
+      headers: { 'X-Session-Url': sessionUrl, 'Content-Range': `bytes ${start}-${end - 1}/${file.size}` },
+      body: file.slice(start, end)
+    });
+    const rj = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error('chunk ' + file.name + ': ' + (rj.detail || rj.error || r.status));
+    if (rj.done) result = rj.file;
+    start = end;
+    if (onProgress) onProgress(start / file.size);
+  }
+  return { name: file.name, size: file.size, webViewLink: result && result.webViewLink, id: result && result.id };
+}
+
+let answersSubmitted = false; // once the answers doc is created, a retry skips it (no duplicate)
+async function submitToSheets() {
+  const btn = document.getElementById('btnNext');
+  btn.disabled = true;
+  const token = getToken();
+  const files = uploadFiles.filter(f => f.size > 0);
+  try {
+    // 1. Save the answers first, so a slow or flaky file upload can never lose them.
+    if (!answersSubmitted) {
+      btn.textContent = 'Saving answers…';
+      const r = await fetch(API_BASE + '/submit', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          token,
+          kind: 'B2B',
+          name: (document.getElementById('meta_name')?.value || '').trim(),
+          company: (document.getElementById('meta_company')?.value || '').trim(),
+          html: buildAnswersHTML()
+        })
+      });
+      if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || ('submit ' + r.status)); }
+      answersSubmitted = true;
+    }
+    // 2. Then upload the files into the same folder (skip any already done on a retry).
+    for (let i = 0; i < files.length; i++) {
+      if (files[i]._uploaded) continue;
+      btn.textContent = `Uploading ${i + 1}/${files.length}…`;
+      await uploadOneFile(files[i], token,
+        p => { btn.textContent = `Uploading ${i + 1}/${files.length} · ${Math.round(p * 100)}%`; });
+      files[i]._uploaded = true;
+    }
+    goToStep(TOTAL + 1);
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = currentStep === TOTAL ? 'Submit →' : 'Next →';
+    alert(answersSubmitted
+      ? 'Your answers are saved. A file did not finish uploading. Tap Submit again to retry just the upload; your answers will not be duplicated.'
+      : 'Something went wrong while submitting:\n' + (e.message || e) + '\n\nYour answers are saved on this device, please try again.');
+  }
+}
+
+// ── SAVE / RESTORE ──
+const KEY = 'ss_onboarding_b2b_v1_' + (new URLSearchParams(location.search).get('c') || 'anon');
+
+function saveAll() {
+  if (!ready) return; // don't save during initial load, before restoreAll() runs
+  const d = {};
+  document.querySelectorAll('textarea, input[type=text], input[type=url], select').forEach(el => {
+    if (el.id) d[el.id] = el.value;
+  });
+  document.querySelectorAll('input[type=radio]:checked, input[type=checkbox]:checked').forEach(el => {
+    d['_c_' + el.name + '_' + el.value] = 1;
+  });
+  d._step = currentStep;
+  localStorage.setItem(KEY, JSON.stringify(d));
+  const dot = document.getElementById('saveDot');
+  dot.classList.add('show');
+  setTimeout(() => dot.classList.remove('show'), 1800);
+}
+
+function restoreAll() {
+  const raw = localStorage.getItem(KEY);
+  if (!raw) return;
+  const d = JSON.parse(raw);
+  Object.entries(d).forEach(([k, v]) => {
+    if (k === '_step') return;
+    if (k.startsWith('_c_')) {
+      const rest = k.slice(3), sep = rest.lastIndexOf('_');
+      const name = rest.slice(0, sep), val = rest.slice(sep + 1);
+      const el = document.querySelector(`input[name="${name}"][value="${val}"]`);
+      if (el) { el.checked = true; el.closest('.opt')?.classList.add('sel'); }
+    } else {
+      const el = document.getElementById(k);
+      if (el) el.value = v;
+    }
+  });
+  if (d._step) goToStep(Number(d._step));
+}
+
+let saveTimer;
+document.addEventListener('input', () => { clearTimeout(saveTimer); saveTimer = setTimeout(saveAll, 500); });
+document.addEventListener('change', saveAll);
+
+// ── THEME TOGGLE ──
+const SUN = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const MOON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const next = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('ss_theme', next);
+  syncThemeIcon();
+}
+
+function syncThemeIcon() {
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  btn.innerHTML = isLight ? MOON : SUN;
+  btn.title = isLight ? 'Switch to dark mode' : 'Switch to light mode';
+}
+
+// ── FILE UPLOAD (UI only; bytes are sent to R2 in Fase 4) ──
+(function initUpload() {
+  const dz = document.getElementById('dropzone');
+  const input = document.getElementById('fileInput');
+  const list = document.getElementById('fileList');
+  if (!dz || !input || !list) return;
+  const fmt = b => b < 1024 ? b + ' B'
+    : b < 1048576 ? (b / 1024).toFixed(0) + ' KB'
+    : b < 1073741824 ? (b / 1048576).toFixed(1) + ' MB'
+    : (b / 1073741824).toFixed(2) + ' GB';
+  const esc = s => s.replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+  function render() {
+    list.innerHTML = uploadFiles.map((f, i) =>
+      `<div class="file-chip"><span class="fc-name">${esc(f.name)}</span><span class="fc-size">${fmt(f.size)}</span><button type="button" class="fc-remove" data-i="${i}" aria-label="Remove file">✕</button></div>`
+    ).join('');
+  }
+  function add(files) { for (const f of files) uploadFiles.push(f); render(); }
+  dz.addEventListener('click', () => input.click());
+  dz.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+  input.addEventListener('change', () => { add(input.files); input.value = ''; });
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('dragover');
+    if (e.dataTransfer && e.dataTransfer.files.length) add(e.dataTransfer.files);
+  });
+  list.addEventListener('click', e => {
+    const btn = e.target.closest('.fc-remove');
+    if (!btn) return;
+    uploadFiles.splice(Number(btn.dataset.i), 1);
+    render();
+  });
+})();
+
+const visionYearEl = document.getElementById('visionYear');
+if (visionYearEl) visionYearEl.textContent = new Date().getFullYear() + 3;
+
+buildPills();
+goToStep(0);
+restoreAll();
+ready = true; // from here on, edits autosave
+syncThemeIcon();
+</script>
+</body>
+</html>
