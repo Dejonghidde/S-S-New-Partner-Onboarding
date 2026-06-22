@@ -3,74 +3,384 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onboarding, voor vs na feedback · Sprints &amp; Sneakers</title>
+<title>Onboarding, grote wijzigingen voor vs na · Sprints &amp; Sneakers</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- echte vorm-styling, zodat de fragmenten exact renderen zoals in de vragenlijst -->
+<link rel="stylesheet" href="_form.css">
 <style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{--lime:#B2FA63;--bd:#2a2a2a}
-  body{font-family:'Inter',-apple-system,sans-serif;background:#0a0a0a;color:#efefef;-webkit-font-smoothing:antialiased}
-  header{position:sticky;top:0;z-index:10;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--bd);padding:14px 22px}
-  .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .mark{font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--lime)}
-  h1{font-size:15px;font-weight:600;color:#cfcfcf}
-  .badge{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#f0b37a;
+  /* eigen chrome (overschrijft de vorm-body) */
+  body{padding:0!important;background:#0a0a0a;color:#efefef;font-family:'Inter',sans-serif}
+  .cmp-header{position:sticky;top:0;z-index:30;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);border-bottom:1px solid #2a2a2a;padding:14px 22px}
+  .cmp-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .cmp-dot{width:7px;height:7px;border-radius:50%;background:#B2FA63}
+  .cmp-mark{font-size:12px;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}
+  .cmp-h1{font-size:15px;font-weight:600;color:#cfcfcf}
+  .cmp-badge{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#f0b37a;
     background:rgba(180,84,31,.14);border:1px solid rgba(180,84,31,.4);padding:4px 10px;border-radius:20px}
-  .sub{font-size:12.5px;color:#8a8a8a;margin-top:8px;max-width:820px;line-height:1.5}
+  .cmp-sub{font-size:12.5px;color:#8a8a8a;margin-top:8px;max-width:840px;line-height:1.55}
+  .cmp-legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:#8a8a8a;margin-top:12px}
+  .cmp-legend .k{display:flex;align-items:center;gap:7px}
+  .cmp-legend .pip{width:9px;height:9px;border-radius:50%}
+  .cmp-legend .now .pip{background:#b4541f}.cmp-legend .new .pip{background:#B2FA63}
 
-  .toggle{display:flex;gap:8px;margin-top:12px}
-  .toggle button{font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.4px;
-    color:#bdbdbd;background:#151515;border:1px solid var(--bd);padding:7px 16px;border-radius:20px;cursor:pointer;
-    transition:all .15s}
-  .toggle button:hover{border-color:rgba(178,250,99,.4);color:#fff}
-  .toggle button.on{background:var(--lime);border-color:var(--lime);color:#0a0a0a}
+  .cmp-wrap{max-width:1180px;margin:0 auto;padding:24px 22px 90px}
+  .cmp-sec{margin-top:34px}
+  .cmp-sectag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    color:#0a0a0a;background:#B2FA63;padding:5px 13px;border-radius:20px}
+  .cmp-secnote{font-size:12px;color:#6f6f6f;margin:8px 0 2px 2px}
 
-  .panes{display:flex;gap:14px;padding:14px}
-  .pane{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
-  .lbl{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase}
-  .lbl .pip{width:8px;height:8px;border-radius:50%}
-  .now .pip{background:#b4541f}.now{color:#e08b5a}
-  .new .pip{background:var(--lime)}.new{color:var(--lime)}
-  .lbl small{font-weight:500;color:#777;text-transform:none;letter-spacing:0}
-  iframe{width:100%;height:84vh;min-height:560px;border:1px solid var(--bd);border-radius:12px;background:#0a0a0a;display:block}
-  @media(max-width:880px){.panes{flex-direction:column}iframe{height:74vh}}
+  .chg{margin-top:16px}
+  .chg-head{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+  .chg-head h3{font-size:14.5px;font-weight:700;letter-spacing:-.2px;color:#e8e8e8}
+  .pill-k{font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:20px}
+  .pill-mod{color:#cdbf6a;background:rgba(205,191,106,.12);border:1px solid rgba(205,191,106,.3)}
+  .pill-add{color:#B2FA63;background:rgba(178,250,99,.10);border:1px solid rgba(178,250,99,.3)}
+
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch}
+  .cell{border:1px solid #2a2a2a;border-radius:12px;padding:14px;min-width:0;background:#101010;display:flex;flex-direction:column}
+  .cell.before{border-color:rgba(180,84,31,.35)}
+  .cell.after{border-color:rgba(178,250,99,.3)}
+  .cell.light{background:#f3f3f0}
+  .cell-lbl{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:700;letter-spacing:.6px;
+    text-transform:uppercase;margin-bottom:12px}
+  .cell-lbl .pip{width:8px;height:8px;border-radius:50%}
+  .cell.before .cell-lbl{color:#e08b5a}.cell.before .pip{background:#b4541f}
+  .cell.after .cell-lbl{color:#B2FA63}.cell.after .pip{background:#B2FA63}
+  .empty{color:#5a5a5a;font-size:13px;font-style:italic;margin:auto 0}
+
+  /* bridge-fragment in een vast kader */
+  .bridgebox{height:300px;border-radius:8px;overflow:hidden;display:flex;background:#0a0a0a}
+  .bridgebox .bridge-wrap{padding:0 24px}
+  .bridgebox .bridge-title{font-size:26px}
+  .bridgebox .bridge-body{font-size:13.5px;margin-bottom:0}
+
+  /* lichte-thema demo (handmatige kleuren, los van de dark form-css) */
+  .lt h4{font-size:9.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#3A8A00;margin-bottom:6px}
+  .lt .title{font-size:21px;font-weight:800;line-height:1.1;letter-spacing:-.5px;margin-bottom:8px}
+  .lt .sub{font-size:13px;line-height:1.5}
+  .lt .hint{font-size:12.5px;margin-top:8px}
+  .tagnote{font-size:10.5px;color:#777;margin-top:10px}
+  .cell.light .tagnote{color:#888}
+
+  @media(max-width:820px){.ba{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header>
-  <div class="row">
-    <span class="dot"></span><span class="mark">Sprints &amp; Sneakers</span>
-    <h1>Onboarding, voor vs na de feedback</h1>
-    <span class="badge">Vergelijking · niet de live versie</span>
+<div class="cmp-header">
+  <div class="cmp-row">
+    <span class="cmp-dot"></span><span class="cmp-mark">Sprints &amp; Sneakers</span>
+    <span class="cmp-h1">Onboarding, de grote wijzigingen voor vs na</span>
+    <span class="cmp-badge">Op basis van de feedback · Mira, 11 juni</span>
   </div>
-  <p class="sub">Links de vragenlijst zoals die was <b>vóór</b> de feedback (Mira, 11 juni). Rechts de <b>verwerkte</b>
-  versie die nu live staat. Klik door beide kanten om de exacte verschillen te zien. Wissel hieronder tussen de
-  B2C en B2B vragenlijst. Dit is alleen een vergelijking ter review; vul hier niets in.</p>
-  <div class="toggle">
-    <button id="tab-b2c" class="on" onclick="show('b2c')">B2C</button>
-    <button id="tab-b2b" onclick="show('b2b')">B2B</button>
-  </div>
-</header>
-<div class="panes">
-  <div class="pane">
-    <div class="lbl now"><span class="pip"></span>Voor de feedback <small>· origineel</small></div>
-    <iframe id="fBefore" src="before-b2c.html" title="Vragenlijst voor de feedback"></iframe>
-  </div>
-  <div class="pane">
-    <div class="lbl new"><span class="pip"></span>Na, verwerkt <small>· nu live</small></div>
-    <iframe id="fAfter" src="after-b2c.html" title="Vragenlijst na de feedback"></iframe>
+  <p class="cmp-sub">Alleen de grootste veranderingen, als echte fragmenten uit de vragenlijst: links zoals het
+  was, rechts zoals het nu live staat. Niet de volledige formulieren.</p>
+  <div class="cmp-legend">
+    <span class="k now"><span class="pip"></span>Voor</span>
+    <span class="k new"><span class="pip"></span>Na (nu live)</span>
   </div>
 </div>
-<script>
-  function show(which){
-    document.getElementById('fBefore').src = 'before-' + which + '.html';
-    document.getElementById('fAfter').src  = 'after-'  + which + '.html';
-    document.getElementById('tab-b2c').classList.toggle('on', which === 'b2c');
-    document.getElementById('tab-b2b').classList.toggle('on', which === 'b2b');
-  }
-</script>
+
+<div class="cmp-wrap">
+
+  <!-- ══ 1. CONTRAST ══ -->
+  <div class="cmp-sec">
+    <span class="cmp-sectag">1 · Contrast &amp; leesbaarheid</span>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Donker thema, lees-grijzen</h3><span class="pill-k pill-mod">Aangepast</span></div>
+      <div class="ba">
+        <div class="cell before">
+          <div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <p class="q-label">Who is your primary customer?</p>
+          <p class="q-hint" style="color:#4A4A4A">Demographics, lifestyle, motivations, and the real reason they buy, even if they'd never say it out loud.</p>
+          <span class="tagnote">Hint in #4A4A4A, lastig leesbaar op zwart.</span>
+        </div>
+        <div class="cell after">
+          <div class="cell-lbl"><span class="pip"></span>Na</div>
+          <p class="q-label">Who is your primary customer?</p>
+          <p class="q-hint">Demographics, lifestyle, motivations, and the real reason they buy, even if they'd never say it out loud.</p>
+          <span class="tagnote">Hint helderder (#757575).</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Licht thema, leesbaarheid</h3><span class="pill-k pill-mod">Aangepast</span></div>
+      <div class="ba">
+        <div class="cell before light lt">
+          <div class="cell-lbl" style="color:#b4541f"><span class="pip"></span>Voor</div>
+          <h4>Offering, done</h4>
+          <div class="title" style="color:#fbfbf8">We get how you make money.</div>
+          <div class="sub" style="color:#111">How the category sees you, and how you want to be felt.</div>
+          <div class="hint" style="color:#AAAAAA">Their phrasing, from calls or reviews, not the marketing version.</div>
+          <span class="tagnote">Witte titel op wit + te licht grijs (#AAAAAA).</span>
+        </div>
+        <div class="cell after light lt">
+          <div class="cell-lbl" style="color:#3A8A00"><span class="pip"></span>Na</div>
+          <h4>Offering, done</h4>
+          <div class="title" style="color:#1a1a1a">We get how you make money.</div>
+          <div class="sub" style="color:#111">How your customers see you, and how you want to be felt.</div>
+          <div class="hint" style="color:#6B6B6B">Their phrasing, from calls or reviews, not the marketing version.</div>
+          <span class="tagnote">Donkere titel + leesbaar grijs (#6B6B6B).</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 2. TUSSENPAGINA ══ -->
+  <div class="cmp-sec">
+    <span class="cmp-sectag">2 · Tussenpagina, auto-doorspring</span>
+    <p class="cmp-secnote">De laad-/tussenschermen springen nu later door, zodat je de tekst kunt uitlezen.</p>
+    <div class="chg">
+      <div class="ba">
+        <div class="cell before">
+          <div class="cell-lbl"><span class="pip"></span>Voor · na 5 sec</div>
+          <div class="bridgebox"><div class="bridge-wrap" data-num="01">
+            <div class="bridge-timer">
+              <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+                <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+                <circle class="ring-fg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5" stroke-dasharray="119.38" stroke-dashoffset="60" transform="rotate(-90 25 25)"/>
+                <text class="countdown-num" x="25" y="25">5</text>
+              </svg>
+              <span class="bridge-timer-label">Moving on automatically…</span>
+            </div>
+            <p class="bridge-eyebrow">Customer, done</p>
+            <h2 class="bridge-title">We start with<br>your customer.</h2>
+            <p class="bridge-body">Your answers become our creative brief. We build the ads and emails around the customer you described, not a guess.</p>
+          </div></div>
+        </div>
+        <div class="cell after">
+          <div class="cell-lbl"><span class="pip"></span>Na · na 10 sec</div>
+          <div class="bridgebox"><div class="bridge-wrap" data-num="01">
+            <div class="bridge-timer">
+              <svg class="countdown-svg" width="50" height="50" viewBox="0 0 50 50">
+                <circle class="ring-bg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5"/>
+                <circle class="ring-fg" cx="25" cy="25" r="19" fill="none" stroke-width="2.5" stroke-dasharray="119.38" stroke-dashoffset="95" transform="rotate(-90 25 25)"/>
+                <text class="countdown-num" x="25" y="25">10</text>
+              </svg>
+              <span class="bridge-timer-label">Moving on automatically…</span>
+            </div>
+            <p class="bridge-eyebrow">Customer, done</p>
+            <h2 class="bridge-title">We start with<br>your customer.</h2>
+            <p class="bridge-body">Your answers become our creative brief. We build the ads and emails around the customer you described, not a guess.</p>
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 3. VRAGEN ══ -->
+  <div class="cmp-sec">
+    <span class="cmp-sectag">3 · Vraag-aanpassingen</span>
+    <p class="cmp-secnote">Toegevoegd, aangepast en hernoemd op basis van de feedback.</p>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Secundaire klant</h3><span class="pill-k pill-add">Toegevoegd</span></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <p class="q-label">Who is your primary customer?</p>
+          <span class="empty">Geen vraag naar een secundaire klant.</span>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <p class="q-label">Who is your primary customer?</p>
+          <p class="q-label" style="margin-top:14px">And your secondary customer?</p>
+          <p class="q-hint">The next group worth targeting, even if smaller. Leave blank if it's genuinely just one audience.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Capabilities-tabel</h3><span class="pill-k pill-mod">Aangepast</span><span class="pill-k pill-add">+ rijen</span></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <table class="cap-table"><tbody>
+            <tr><td>Paid Social (Meta / TikTok)</td></tr>
+            <tr><td>Paid Search (Google)</td></tr>
+            <tr><td>SEO / Content</td></tr>
+            <tr><td>Email &amp; SMS</td></tr>
+            <tr><td>Creative / Video</td></tr>
+            <tr><td>Influencer / Creator</td></tr>
+            <tr><td>CRO / Experimentation</td></tr>
+            <tr><td>Analytics &amp; Data</td></tr>
+          </tbody></table>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <table class="cap-table"><tbody>
+            <tr><td>Paid Social</td></tr>
+            <tr><td>Paid Search</td></tr>
+            <tr><td>SEO / GEO</td></tr>
+            <tr><td style="color:#B2FA63!important">Organic socials</td></tr>
+            <tr><td>Content: organic / ads</td></tr>
+            <tr><td>Influencer / Creator</td></tr>
+            <tr><td style="color:#B2FA63!important">Affiliate / Marketplaces</td></tr>
+            <tr><td style="color:#B2FA63!important">Branding / Communication</td></tr>
+            <tr><td>CRO / Website</td></tr>
+            <tr><td>Analytics / Data</td></tr>
+            <tr><td>Retentie / Mail / SMS / WhatsApp</td></tr>
+            <tr><td style="color:#B2FA63!important">Referral / Community</td></tr>
+          </tbody></table>
+          <span class="tagnote">Voorbeelden weg, hernoemd, en 4 rijen toegevoegd (lime).</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Vervolgvraag bij capabilities</h3><span class="pill-k pill-mod">Aangepast</span></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <p class="q-label">Describe your creator or influencer programme, if you have one.</p>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <p class="q-label">Describe any external growth partnerships you run today.</p>
+          <p class="q-hint">Creator/influencer, affiliate, marketplace, referral or brand partnerships.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Funnel, volgens onze AAARRR</h3><span class="pill-k pill-mod">Aangepast</span></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <div class="options">
+            <div class="opt"><input type="radio" disabled><label>Awareness</label></div>
+            <div class="opt"><input type="radio" disabled><label>Consideration</label></div>
+            <div class="opt"><input type="radio" disabled><label>Purchase</label></div>
+            <div class="opt"><input type="radio" disabled><label>Retention</label></div>
+            <div class="opt"><input type="radio" disabled><label>Multiple stages</label></div>
+          </div>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <div class="options">
+            <div class="opt"><input type="radio" disabled><label>Awareness</label></div>
+            <div class="opt sel"><input type="radio" disabled><label>Acquisition</label></div>
+            <div class="opt sel"><input type="radio" disabled><label>Activation</label></div>
+            <div class="opt sel"><input type="radio" disabled><label>Revenue</label></div>
+            <div class="opt"><input type="radio" disabled><label>Retention</label></div>
+            <div class="opt sel"><input type="radio" disabled><label>Referral</label></div>
+            <div class="opt"><input type="radio" disabled><label>Multiple stages</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Sterkste funnel-onderdeel</h3><span class="pill-k pill-add">Toegevoegd</span></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <span class="empty">Niet uitgevraagd.</span>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <p class="q-label">And which part of the funnel is your strongest right now?</p>
+          <p class="q-hint">Where you already win, so we build on it instead of rebuilding it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Ad-platforms</h3><span class="pill-k pill-add">Opties toegevoegd</span></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <div class="options">
+            <div class="opt"><input type="checkbox" disabled><label>Meta (Facebook / Instagram)</label></div>
+            <div class="opt"><input type="checkbox" disabled><label>TikTok</label></div>
+            <div class="opt"><input type="checkbox" disabled><label>Google</label></div>
+            <div class="opt"><input type="checkbox" disabled><label>Pinterest</label></div>
+            <div class="opt"><input type="checkbox" disabled><label>Snapchat</label></div>
+          </div>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <div class="options">
+            <div class="opt"><input type="checkbox" disabled><label>Meta · TikTok · Google · Pinterest · Snapchat</label></div>
+            <div class="opt sel"><input type="checkbox" disabled><label>Microsoft Advertising</label></div>
+            <div class="opt sel"><input type="checkbox" disabled><label>LinkedIn</label></div>
+            <div class="opt sel"><input type="checkbox" disabled><label>X (Twitter)</label></div>
+            <div class="opt sel"><input type="checkbox" disabled><label>Amazon Ads</label></div>
+            <div class="opt sel"><input type="checkbox" disabled><label>Bol.com advertising</label></div>
+            <div class="opt sel"><input type="checkbox" disabled><label>Affiliate-platforms</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Cadans</h3><span class="pill-k pill-mod">Aangepast</span></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <p class="q-label">Which meeting cadence works best for regular alignment?</p>
+          <div class="options" style="margin-top:8px">
+            <div class="opt"><input type="radio" disabled><label>Weekly sprint check-in, 30 minutes</label></div>
+            <div class="opt"><input type="radio" disabled><label>Bi-weekly, 60 minutes every two weeks</label></div>
+            <div class="opt"><input type="radio" disabled><label>Monthly, 90-minute strategic review</label></div>
+          </div>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <p class="q-label">Our sprint cadence: a weekly check-in plus a monthly strategic review.</p>
+          <p class="q-hint">A weekly 30-minute check-in to keep momentum, and a monthly 90-minute review to step back and steer.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>B2B-vraag herschreven</h3><span class="pill-k pill-mod">Aangepast</span></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <p class="q-label">What problem does your core offering solve, in your best customers' own words?</p>
+          <textarea placeholder="e.g. "></textarea>
+          <span class="tagnote">Voorbeeldveld toonde alleen "e.g." (kapotte aanhalingstekens).</span>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <p class="q-label">What problem does your core offering solve, in the words your best customers use?</p>
+          <textarea placeholder="&quot;We stopped losing deals because finance could finally see margin per project in real time.&quot;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 4. PLACEHOLDERS ══ -->
+  <div class="cmp-sec">
+    <span class="cmp-sectag">4 · Placeholders</span>
+    <p class="cmp-secnote">"e.g." is overal verwijderd; het voorbeeld blijft staan. Een paar voorbeelden:</p>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Voorbeeld 1, primaire klant (B2C)</h3></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <textarea placeholder="e.g. Women 28–42, urban professionals who value sustainable choices but won't sacrifice convenience."></textarea>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <textarea placeholder="Women 28–42, urban professionals who value sustainable choices but won't sacrifice convenience."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Voorbeeld 2, best-fit account (B2B)</h3></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <textarea placeholder="e.g. B2B SaaS, 50–500 FTE, Benelux + DACH, already on HubSpot, scaling a revenue team."></textarea>
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <textarea placeholder="B2B SaaS, 50–500 FTE, Benelux + DACH, already on HubSpot, scaling a revenue team."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="chg">
+      <div class="chg-head"><h3>Voorbeeld 3, one-line positioning (B2B)</h3></div>
+      <div class="ba">
+        <div class="cell before"><div class="cell-lbl"><span class="pip"></span>Voor</div>
+          <input type="text" placeholder="e.g. The revenue platform for finance-led teams.">
+        </div>
+        <div class="cell after"><div class="cell-lbl"><span class="pip"></span>Na</div>
+          <input type="text" placeholder="The revenue platform for finance-led teams.">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 </body>
 </html>
