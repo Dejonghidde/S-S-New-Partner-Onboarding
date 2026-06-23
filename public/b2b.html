@@ -271,6 +271,7 @@ textarea:focus, input[type=text]:focus, input[type=url]:focus {
   background: var(--black-mid);
 }
 textarea::placeholder, input::placeholder { color: var(--text-low); }
+input[type=text], input[type=url] { text-overflow: ellipsis; }
 textarea { min-height: 98px; }
 textarea.tall { min-height: 136px; }
 
@@ -351,7 +352,8 @@ textarea.tall { min-height: 136px; }
   color: var(--text-mid); width: 260px; z-index: 100; line-height: 1.55;
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
 }
-.tip:hover .tip-body { display: block; }
+.tip:hover .tip-body, .tip:focus .tip-body, .tip:focus-within .tip-body { display: block; }
+.tip:focus-visible { outline: 2px solid var(--lime-border); outline-offset: 2px; }
 
 /* ── BRIDGE SCREENS ──────────────────────── */
 .bridge-step {
@@ -718,6 +720,10 @@ html[data-theme="light"] .btn-next:hover { background: #333333; box-shadow: 0 4p
   .logo-sep { display: none; }
   .cap-table { font-size: 12px; }
   .upload-examples { grid-template-columns: 1fr; }
+  /* tooltip blijft binnen beeld op mobiel (opent linksom vanaf het icoon) */
+  .tip-body { left: auto; right: 0; width: min(260px, calc(100vw - 40px)); }
+  /* lange voorbeelden in 1-regelige velden netjes laten passen i.p.v. hard afgekapt */
+  input[type=text]::placeholder, input[type=url]::placeholder { font-size: 12.5px; }
 }
 </style>
 <!-- prevent flash of wrong theme -->
