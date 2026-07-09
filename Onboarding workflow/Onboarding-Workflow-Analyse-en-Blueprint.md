@@ -90,6 +90,28 @@ Uit de echte bronbestanden die de workflow kopieert:
 
 Rode draad: **de partner mist geen documenten, maar ritme en regie.**
 
+**Ronde 2 (2026-07-09): Anjo & Sharif**
+
+| Wat de lead ervaart/aangeeft | Wat het ons vertelt | Knop | Bron |
+|---|---|---|---|
+| Bij de start mis je altijd een aantal toegangen, moet wachten | Toegang-lijst wordt door klanten niet goed genoeg doorgenomen; vertraagt niet alleen het gevoel maar concreet de audit en strategie | Interactieve afvink-omgeving i.p.v. statische lijst (zie ideeën) | Anjo |
+| Onboarding zelf is niet het probleem, de verwachting daarna wel | Verschuift de focus van "onboarding beter maken" naar "doorlopend verwachtingen managen ná onboarding" | Expliciet managen wanneer wat wordt opgeleverd | Sharif |
+| Zelfde gesprekken meermaals voeren, telkens met een andere persoon | Gebrek aan continuïteit van contactpersoon/overdracht van context | Vaste contactpersoon of nette overdracht van context tussen gesprekken | Sharif |
+| Klanten snappen toegang verlenen vaak niet | Bevestigt Anjo's punt onafhankelijk — twee leads noemen exact dezelfde frictie | Zie Tooling Access Guide-upgrade + interactieve afvink-omgeving | Sharif |
+| Klanten willen zo snel mogelijk een plan en resultaat | Sluit aan bij bestaande fase-2-ideeën (vroege waarde) | Ergens in de onboarding al concrete waarde/plan laten zien | Sharif |
+| Trajecten beginnen ongecontroleerd, niet volgens opdrachtbrief | Bevestigt onafhankelijk waarom "consistent werkend"/altijd het volledige pakket vóór start moet (zie Onboarding-Aanpassingen-Overzicht.md #8) | Vaste volgorde afdwingen zodat het team alle info heeft vóór start | Sharif |
+
+**Overlap met Ronde 1:** toegang was al bekend ("Access duurt onnodig lang"); Ronde 2 maakt hard dat dit niet alleen traag is maar de audit/strategie concreet vertraagt, en dat twee onafhankelijke leads het noemen. Ook "wanneer wat gebeurt" wordt door Sharif scherper getrokken: niet alleen het welkomstbericht, maar doorlopende verwachtingsmanagement gedurende het hele traject.
+
+**Nieuw t.o.v. Ronde 1:** continuïteit van contactpersoon (herhaalde gesprekken met wisselende personen), en de expliciete bevestiging dat trajecten soms starten zonder dat het team het volledige pakket/de juiste info heeft (opdrachtbrief-issue).
+
+**Ideeën uit deze ronde:**
+- Interactieve toegang-checklist: klant vinkt per tool "heb ik niet" af en gaat door naar de volgende (Anjo) — direct bruikbaar voor de Tooling Access Guide-upgrade.
+- Onboarding-workshops met de klant (Sharif).
+- Gefaseerde oplevering van de audit i.p.v. één grote oplevering aan het eind (Sharif) — sluit aan bij "zsm een plan en resultaat willen".
+- Snel waarde bieden via een directory van ~3 direct inzetbare agents/tools (Sharif) — nader uit te werken wat hiermee precies bedoeld wordt.
+- Eigen onboarding-frontend met checklist van te voltooien stappen + video's over het S&S-proces (Sharif) — **overlapt met Anjo's afvink-idee.** Beide wijzen onafhankelijk naar dezelfde soort oplossing: een begeleide, interactieve onboarding-omgeving in plaats van statische documenten/lijsten. Er is al precedent/infrastructuur voor (de vragenlijst draait al als eigen Cloudflare-frontend).
+
 *(Volgende input van andere leads hier toevoegen.)*
 
 ---
