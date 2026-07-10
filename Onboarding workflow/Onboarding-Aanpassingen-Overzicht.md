@@ -3,7 +3,7 @@ type: aanpassingenlijst
 project: New Partner Onboarding
 status: In uitvoering
 accountable: Hidde
-bijgewerkt: 2026-07-09
+bijgewerkt: 2026-07-10
 ---
 
 # Onboarding — Aanpassingen die gedaan moeten worden
@@ -26,7 +26,8 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 6 | Consistentie & structuur assignment letter + handover | HubSpot-form → Drive-projectmap | - | Open |
 | 7 | DPA — kleine opmaakverbetering | DPA-template (bron: Finance & Legal) | - | Open |
 | 8 | Automation foutloos + sneller + minder handmatig werk | Make (live 3059444 + V2 6226897) | 🔴 Hoogste — eerste stap | Besloten (prioriteit), uitvoering loopt |
-| 9 | Interactieve onboarding-portal / toegang-afvinklijst | Nieuw (uitbreiding op Cloudflare-vragenlijst) | - | Open — idee, valideren |
+| 9 | Interactieve onboarding-portal / toegang-afvinklijst | Nieuw (uitbreiding op Cloudflare-vragenlijst) | - | Open — idee, valideren (buiten v1, zie spec) |
+| 10 | Spec v1 goedgekeurd; accounts@-interim vervallen | spec/spec.md + tickets/ | 🔴 Kader voor alles | Gedaan (2026-07-10) |
 
 ---
 
@@ -145,3 +146,20 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 **Waar:** nieuw te bouwen, vermoedelijk als uitbreiding op de bestaande Cloudflare-vragenlijst-aanpak.
 
 **Status:** Open — idee vanuit leads-input (Anjo/Sharif, 2026-07-09), nog niet besloten of geprioriteerd. Eerst valideren bij Bart/Gijs en afwegen tegen punt 8 (automation eerst).
+
+---
+
+## 10. Spec v1 goedgekeurd: kader voor alle bovenstaande punten, accounts@-interim vervallen
+
+**Wat:** de spec voor het herontwerp (`spec/spec.md`) is opgesteld in de planningssessie met Fable 5 en door Hidde goedgekeurd zonder aanpassingen. De spec is vanaf nu het leidende document; dit changelog blijft de plek waar doorgevoerde wijzigingen worden gelogd. Het werk is opgeknipt in tickets (`tickets/`).
+
+**Belangrijkste besluiten uit de spec die dit changelog raken:**
+- **accounts@-interim vervalt.** Het eerdere voornemen (connecties tijdelijk op accounts@) is geschrapt: het wachtwoord roteert wekelijks (zelfde faalmechanisme als het probleem zelf) en het omhangen zou dubbel werk zijn. Live blijft tot de cutover op de huidige connecties, met als enige live-wijzigingen (elk met expliciete go): een echte onerror-foutmelding en punt 1 (playbook-kopieerstap schrappen).
+- **Punt 8 wordt uitgevoerd via de spec-fasering:** geen zes routes patchen, maar in de sandbox een geconsolideerde growth-route + teamconfiguratie bouwen; Rho apart maar mee in de betrouwbaarheidsslag.
+- **Punt 5 (B2B/B2C) blijft beperkt tot v1-scope** zoals besloten: veld bij intake, juiste vragenlijst-link, label, statusveld.
+- **Punt 9 (portal) staat expliciet buiten v1** (latere fase, na de ruggengraat).
+- **Nieuw geverifieerd tijdens de sessie:** 4 van de 6 "Error"-DM-modules in de scenario's vuren bij succes (sequentieel, geen onerror-handler), en er zit een hardcoded Monday API-token uit 2021 in 10 HTTP-modules (staat ook in de blueprint-exports in git). Rotatie is onderdeel van de cutover (eerder roteren zou live breken).
+
+**Waar:** `spec/spec.md` (beslislog, Definition of Done, fasering) en `tickets/` (uitvoering).
+
+**Status:** Gedaan (2026-07-10). Uitvoering loopt via de tickets.

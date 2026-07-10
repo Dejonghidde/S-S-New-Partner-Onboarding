@@ -1,0 +1,20 @@
+> **Onderzoek afgerond op 10 juli 2026:** [open het volledige benchmarkonderzoek](Benchmarkonderzoek-onboarding-andere-bedrijven.md). Het rapport bevat 59 ontdubbelde onboardingonderdelen, per onderdeel het aantal en de namen van de bedrijven, bronlabels en een prioritering voor S&S.
+
+## Beste directe benchmarks
+
+|Bedrijf|Waarom relevant voor S&S|Wat interessant is|
+|---|---|---|
+|**Hello Social**|Australische social-media/growth agency|Een volledig zichtbare onboarding van 28 dagen met taken, deadlines, eigenaren en klanttoegang. Dit leidde tot 20% efficiëntere onboarding en 12% hogere NPS. Dit is de sterkste directe benchmark. [Bekijk case](https://asana.com/case-study/hello-social)|
+|**Superside**|Wereldwijde Creative-as-a-Service-partner|Past de onboarding aan op teamgrootte, behoeften en complexiteit. Combineert doelen, workflows, brand alignment en een eerste echt project met snelle feedback. [Bekijk onboarding](https://help.superside.com/en/articles/13686092-your-onboarding-process)|
+|**Springbok Agency**|Data-, technologie-, creative- en performance-agency|Begint onboarding feitelijk al tijdens de pitch. Selecteert vooraf het juiste klantteam en vraagt vroeg om data en platformtoegang, zodat onboarding na ondertekening direct kan versnellen. [Bekijk werkwijze](https://funnel.io/blog/how-agencies-onboard)|
+|**WebFX**|Grote Amerikaanse performance-marketingagency|Combineert een vaste accountrelatie met een eigen klantplatform waarin resultaten, data en omzetimpact zichtbaar worden. Interessant voor transparantie en het gevoel van controle vanaf de start. [Bekijk WebFX](https://www.webfx.com/)|
+|**KlientBoost**|Amerikaanse performance-marketingagency|Interessant vanwege hun focus op de eerste 100 dagen, buyer’s remorse na ondertekening en het telkens expliciet vertellen wat de volgende stap is. Minder openbaar over hun exacte proces, maar sterk voor de ervaringskant. [Bekijk CX-aanpak](https://www.klientboost.com/boost-sauce/customer-experience-mastery/)|
+
+## Sterke benchmarks buiten de agencywereld
+
+| Bedrijf                 | Waarom onderzoeken                                                                                                                                                                                                                                                                                                     |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **HubSpot**             | Maakt per klant een onboardingplan op basis van doelen, organisatiecomplexiteit, afgenomen producten en bestaande technologie. Goed voorbeeld van gestandaardiseerd én gepersonaliseerd onboarden. [Bekijk onboarding](https://www.hubspot.com/services/onboarding)                                                    |
+| **Superhuman**          | Bekend om verplichte 1-op-1 concierge-onboarding. Eerst begrijpen ze de workflow en problemen van de klant, daarna richten ze de ervaring persoonlijk in en zorgen ze direct voor een eerste succesmoment. [Bekijk playbook](https://review.firstround.com/superhuman-onboarding-playbook/)                            |
+| **Asana**               | Interessant voor klanteducatie. Klanten die hun trainingen gebruikten hadden volgens een case study een 19 punten hogere NPS. Relevant voor het leren werken met de S&S-werkwijze, experimenten en rapportages. [Bekijk case](https://www.skilljar.com/case-studies/asana)                                             |
+| **Seven Figure Agency** | Geen directe benchmark voor merkbeleving, maar wel een zeer concrete onboarding van een marketingagency met circa $6 miljoen omzet. Vooral bruikbaar voor intake, toegangen, kickoff en snelle eerste resultaten. [Bekijk proces](https://sevenfigureagency.com/client-retention-onboarding-digital-marketing-agency/) |
