@@ -92,7 +92,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 
 **Waar:** Make-scenario's (playbook-/funnel-kopieerstap), Monday-boardtemplates.
 
-**Status:** Open — hangt af van prioriteit t.o.v. de andere v1-verbeteringen.
+**Status:** Deels besloten (2026-07-10, ticket 03): Monday-boardtemplate wordt bepaald door partner_type (B2B `239400674` / B2C `239420131` / regulier-fallback `188077189`), niet meer per team. Overige B2B/B2C-differentiatie (playbook, funnel) blijft open.
 
 ---
 
