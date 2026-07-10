@@ -7,12 +7,12 @@ Nieuwe partners krijgen geen blinde kopie meer van het Strategy Playbook op dag 
 Spec 3.3, fasering plak 0. Aanpassingen-Overzicht punt 1. DoD-punt 10 (deels).
 
 ## Aanpak (agent vult in, Hidde keurt goed)
-Voorstel: de playbook-kopieermodules verwijderen in alle 5 growth-routes van zowel live 3059444 als sandbox 6226897 (Rho heeft deze stap niet), via het echte Make-scenario (nooit de blueprint-exports in de repo bewerken). Ook de bijbehorende GPT-module voor playbook-tekst kan mee (die output landt nergens anders); dat controleren voor verwijdering.
+**Eerst verwijderen en verifiëren in sandbox `6226897`.** Live `3059444` verwerkt doorlopend echte onboardingen en wordt tijdens de bouw niet aangeraakt, ook niet read-only. Voorstel: de playbook-kopieermodules verwijderen in alle 5 growth-routes (Rho heeft deze stap niet), via het echte Make-scenario (nooit de blueprint-exports in de repo bewerken). Ook de bijbehorende GPT-module voor playbook-tekst kan mee (die output landt nergens anders); dat controleren voor verwijdering. Dezelfde verwijdering op live 3059444 is een aparte, latere stap: per wijziging met go van Hidde, op een moment dat hij kiest.
 
 ## Klaar wanneer
-- [ ] Een sandbox-testrun levert het pakket zonder playbook-kopie, verder compleet.
-- [ ] De stap is uit beide scenario's (5 growth-routes), geverifieerd in Make zelf.
+- [ ] Een testrun in **6226897** levert het pakket zonder playbook-kopie, verder compleet, in alle 5 routes.
+- [ ] (Aparte, latere stap) Dezelfde verwijdering is doorgevoerd op live 3059444, met go van Hidde, op een moment dat hij kiest.
 - [ ] Status van Aanpassingen-Overzicht punt 1 staat op Gedaan, met datum.
 
 ## Afhankelijk van
-Go van Hidde voor de live-wijziging. Kan samen met of direct na ticket 00.
+Niets voor de bouw in 6226897 (kan direct). Voor live 3059444: go van Hidde én een apart, door hem gekozen moment (niet automatisch gelijktijdig met de sandbox-wijziging).
