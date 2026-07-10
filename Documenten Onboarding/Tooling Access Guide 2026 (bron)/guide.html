@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tooling Access Guide, Sprints &amp; Sneakers</title>
+<style>
+@font-face { font-family:'HN'; src:url('assets/HelveticaNeueLight.otf'); font-weight:300; }
+@font-face { font-family:'HN'; src:url('assets/HelveticaNeueRoman.otf'); font-weight:400; }
+@font-face { font-family:'HN'; src:url('assets/HelveticaNeueMedium.otf'); font-weight:500; }
+@font-face { font-family:'HN'; src:url('assets/HelveticaNeueBold.otf'); font-weight:700; }
+@font-face { font-family:'HN'; src:url('assets/HelveticaNeueHeavy.otf'); font-weight:800; }
+
+:root{
+  --black:#0A0A0A; --black-card:#161616; --black-border:#2E2E2E;
+  --lime:#B2FA63; --lime-dark:#7FBF3E; --sun:#FF7833; --red:#E53935;
+  --ink:#111111; --ink-mid:#555555; --ink-low:#8A8A8A;
+  --line:#E6E6E6; --bg-soft:#F7F7F5;
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+@page{ size:A4; margin:0; }
+body{ font-family:'HN', 'Helvetica Neue', Arial, sans-serif; color:var(--ink); font-size:9.4pt; line-height:1.55; }
+
+.page{ width:210mm; height:297mm; page-break-after:always; position:relative; overflow:hidden; padding:16mm 15mm 20mm; background:#FFFFFF; }
+.page.dark{ background:var(--black); color:#EFEFEF; }
+
+/* ── header (light pages) ── */
+.hdr{ display:flex; justify-content:space-between; align-items:baseline; font-size:7pt; letter-spacing:1.6px; text-transform:uppercase; font-weight:500; color:var(--ink-low); padding-bottom:8px; border-bottom:1.2px solid var(--red); margin-bottom:9mm; }
+.hdr .l{ color:var(--ink); font-weight:700; }
+.hdr .r em{ font-style:normal; color:var(--red); }
+
+/* ── footer ── */
+.ftr{ position:absolute; left:15mm; right:15mm; bottom:9mm; display:flex; justify-content:space-between; align-items:center; font-size:6.6pt; letter-spacing:1.2px; text-transform:uppercase; color:var(--ink-low); }
+.ftr img{ height:14px; }
+.dark .ftr{ color:#757575; }
+.pgnum{ font-weight:700; color:var(--ink); }
+.dark .pgnum{ color:var(--lime); }
+
+/* ── type ── */
+.eyebrow{ font-size:7.5pt; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--lime); margin-bottom:14px; }
+.light-eyebrow{ color:var(--red); }
+h1.display{ font-size:44pt; font-weight:800; line-height:1.02; letter-spacing:-0.5px; text-transform:uppercase; color:#FFFFFF; }
+h1.display em{ font-style:normal; color:var(--lime); }
+h2.section{ font-size:19pt; font-weight:800; text-transform:uppercase; letter-spacing:-0.2px; color:var(--ink); line-height:1.1; }
+h2.section .no{ color:var(--red); margin-right:6px; }
+.section-intro{ color:var(--ink-mid); margin:6px 0 8mm; max-width:150mm; }
+
+/* ── pills ── */
+.pill{ display:inline-block; background:var(--lime); color:var(--black); font-size:7pt; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; padding:3px 12px; border-radius:20px; }
+.pill.outline{ background:transparent; border:1px solid var(--lime); color:var(--lime); }
+
+/* ── tool cards ── */
+.tool{ border:1px solid var(--line); border-radius:12px; padding:14px 16px 13px; margin-bottom:5mm; page-break-inside:avoid; }
+.tool-head{ display:flex; align-items:baseline; gap:10px; margin-bottom:3px; }
+.tool-no{ font-size:8pt; font-weight:800; color:var(--lime-dark); letter-spacing:0.5px; }
+.tool-name{ font-size:12.5pt; font-weight:700; color:var(--ink); }
+.tool-need{ font-size:8pt; color:var(--ink-mid); margin-bottom:8px; }
+.tool-need b{ color:var(--ink); font-weight:700; }
+ol.steps{ list-style:none; counter-reset:st; }
+ol.steps li{ counter-increment:st; position:relative; padding-left:24px; margin-bottom:4px; color:var(--ink); }
+ol.steps li::before{ content:counter(st); position:absolute; left:0; top:1.5px; width:15px; height:15px; border-radius:50%; background:var(--black); color:var(--lime); font-size:7pt; font-weight:700; text-align:center; line-height:15px; }
+.note{ margin-top:8px; background:var(--bg-soft); border-left:2.5px solid var(--lime); border-radius:0 8px 8px 0; padding:6px 10px; font-size:8.4pt; color:var(--ink-mid); }
+.note b{ color:var(--ink); }
+.mono{ font-family:'HN'; font-weight:700; color:var(--ink); letter-spacing:0.3px; }
+.two-col{ display:flex; gap:5mm; }
+.two-col .tool{ flex:1; }
+
+/* ── dark cards (page 2) ── */
+.rule{ background:var(--black-card); border:1px solid var(--black-border); border-radius:14px; padding:15px 18px; margin-bottom:4.5mm; display:flex; gap:14px; align-items:flex-start; page-break-inside:avoid; }
+.rule-no{ min-width:26px; height:26px; border-radius:50%; background:var(--lime); color:var(--black); font-weight:800; font-size:11pt; text-align:center; line-height:26px; }
+.rule h3{ font-size:11.5pt; font-weight:700; color:#FFFFFF; margin-bottom:2px; }
+.rule p{ color:#ABABAB; font-size:9pt; }
+.rule p b{ color:var(--lime); font-weight:700; }
+.keybox{ margin-top:7mm; border:1px solid rgba(178,250,99,0.35); background:rgba(178,250,99,0.06); border-radius:14px; padding:14px 18px; }
+.keybox h3{ color:var(--lime); font-size:8pt; letter-spacing:2px; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
+.keyrow{ display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid var(--black-border); font-size:9.5pt; }
+.keyrow:last-child{ border-bottom:none; }
+.keyrow .k{ color:#ABABAB; }
+.keyrow .v{ color:#FFFFFF; font-weight:700; }
+
+/* ── checklist ── */
+table.check{ width:100%; border-collapse:collapse; }
+table.check th{ text-align:left; font-size:7pt; letter-spacing:1.6px; text-transform:uppercase; color:var(--ink-low); font-weight:700; padding:0 8px 6px 8px; border-bottom:1.2px solid var(--ink); }
+table.check td{ padding:5.5px 8px; border-bottom:1px solid var(--line); vertical-align:middle; font-size:8.8pt; }
+.box{ display:inline-block; width:11px; height:11px; border:1.4px solid var(--ink); border-radius:3px; }
+.cat td{ background:var(--black); color:var(--lime); font-size:7pt; font-weight:700; letter-spacing:1.6px; text-transform:uppercase; padding:4px 8px; border-bottom:none; }
+table.check .sec{ color:var(--ink-low); font-weight:700; white-space:nowrap; }
+table.check td b{ font-weight:700; }
+
+/* ── cover ── */
+.cover{ padding:18mm 16mm; }
+.cover-top{ display:flex; justify-content:space-between; align-items:center; }
+.cover-top img{ height:24px; }
+.cover-meta{ font-size:7pt; letter-spacing:1.6px; text-transform:uppercase; color:#757575; text-align:right; line-height:1.7; }
+.cover-mid{ margin-top:52mm; }
+.cover-sub{ margin-top:12mm; font-size:12pt; font-weight:300; color:#CFCFCF; max-width:130mm; line-height:1.6; }
+.cover-sub b{ color:#FFFFFF; font-weight:500; }
+.cover-line{ width:52mm; height:2px; background:var(--lime); margin:14mm 0 0; }
+.cover-quote{ position:absolute; bottom:28mm; left:16mm; right:16mm; font-size:9pt; color:#757575; }
+.cover-quote span{ color:var(--lime); font-weight:700; }
+
+/* ── closer ── */
+.next{ display:flex; gap:5mm; margin-top:10mm; }
+.next .stepcard{ flex:1; background:var(--black-card); border:1px solid var(--black-border); border-radius:14px; padding:16px; }
+.next .stepcard .n{ font-size:22pt; font-weight:800; color:var(--lime); }
+.next .stepcard h3{ color:#FFFFFF; font-size:10.5pt; font-weight:700; margin:6px 0 4px; }
+.next .stepcard p{ color:#ABABAB; font-size:8.6pt; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ PAGE 1 · COVER ═══════════ -->
+<div class="page dark cover">
+  <div class="cover-top">
+    <img src="assets/logo-full-white.svg" alt="Sprints &amp; Sneakers">
+    <div class="cover-meta">New Partner Onboarding<br>Version 2.0 &middot; 2026</div>
+  </div>
+  <div class="cover-mid">
+    <div class="eyebrow">Growth Partnership &middot; Getting Started</div>
+    <h1 class="display">Tooling<br>Access<br><em>Guide</em></h1>
+    <p class="cover-sub">Access to your platforms is the first sprint of our partnership. This guide shows you exactly how to grant it: <b>safely, without sharing a single password, in a few minutes per tool.</b></p>
+    <div class="cover-line"></div>
+  </div>
+  <div class="cover-quote">"You are just a few steps away from <span>growing your company.</span>"</div>
+  <div class="ftr">
+    <span>sprintsandsneakers.com</span>
+    <img src="assets/logo-solo-lime.svg" alt="">
+    <span>Tooling Access Guide</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 2 · BEFORE YOU START ═══════════ -->
+<div class="page dark">
+  <div class="hdr" style="border-bottom-color:var(--lime); color:#757575;">
+    <span class="l" style="color:#FFF;">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em style="color:var(--lime);">Before you start</em></span>
+  </div>
+  <div class="eyebrow">Read this first</div>
+  <h2 class="section" style="color:#FFF;">Five rules that make<br>this fast and safe</h2>
+  <p class="section-intro" style="color:#ABABAB;">Why we ask for access: audits, tracking, campaigns and experiments all start inside your tools. The sooner access is complete, the sooner the real work starts. These five rules apply to every tool in this guide.</p>
+
+  <div class="rule"><div class="rule-no">1</div><div>
+    <h3>Never share passwords by email</h3>
+    <p>Every platform in this guide has an invite or partner flow, so you stay in control and can revoke access at any time. If a shared login truly cannot be avoided, we exchange it through a password manager, never in plain text.</p>
+  </div></div>
+  <div class="rule"><div class="rule-no">2</div><div>
+    <h3>One address for everything</h3>
+    <p>Grant access to <b>accounts@sprintsandsneakers.com</b>. That address reaches your whole growth team at once, so access never depends on one person's account.</p>
+  </div></div>
+  <div class="rule"><div class="rule-no">3</div><div>
+    <h3>Grant the highest workable role</h3>
+    <p>Admin rights let us set up tracking, audiences and campaigns without waiting on extra permission rounds. You can always scale a role down later.</p>
+  </div></div>
+  <div class="rule"><div class="rule-no">4</div><div>
+    <h3>Only what applies to you</h3>
+    <p>Skip the tools you do not use. Your growth team confirms the exact list for your stack before or during the kickstart.</p>
+  </div></div>
+  <div class="rule"><div class="rule-no">5</div><div>
+    <h3>Stuck? We do it together</h3>
+    <p>Send a message in our shared Slack channel and we will walk through it with you on a call, screen share included. No access question is too small.</p>
+  </div></div>
+
+  <div class="keybox">
+    <h3>Key details you will need</h3>
+    <div class="keyrow"><span class="k">Our access e-mail</span><span class="v">accounts@sprintsandsneakers.com</span></div>
+    <div class="keyrow"><span class="k">Our Meta Business Portfolio ID</span><span class="v">187500493833634</span></div>
+    <div class="keyrow"><span class="k">Google Ads &amp; Microsoft Advertising</span><span class="v">You send us your account ID, we send the request</span></div>
+  </div>
+
+  <div class="ftr">
+    <span>Sprints &amp; Sneakers</span>
+    <img src="assets/logo-solo-lime.svg" alt="">
+    <span class="pgnum">02</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 3 · CHECKLIST ═══════════ -->
+<div class="page">
+  <div class="hdr">
+    <span class="l">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em>Access checklist</em></span>
+  </div>
+  <div class="eyebrow light-eyebrow">Your overview</div>
+  <h2 class="section">The access checklist</h2>
+  <p class="section-intro">Tick the tools off as you go. Each one links to a numbered section with exact steps. Most take under five minutes. Not sure whether a tool applies to you? Ask your growth team, they know your stack.</p>
+
+  <table class="check">
+    <tr><th style="width:8mm;"></th><th>Tool</th><th>What you do</th><th style="width:14mm;">Guide</th></tr>
+    <tr class="cat"><td colspan="4">Analytics &amp; Measurement</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Google Analytics 4</b></td><td>Add our e-mail as Administrator</td><td class="sec">1.1</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Google Tag Manager</b></td><td>Add our e-mail as Admin, with Publish rights</td><td class="sec">1.2</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Google Search Console</b></td><td>Add our e-mail with Full permission</td><td class="sec">1.3</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Hotjar / Microsoft Clarity</b></td><td>Invite our e-mail as Admin</td><td class="sec">1.4</td></tr>
+    <tr class="cat"><td colspan="4">Advertising</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Google Ads</b></td><td>Send us your customer ID, accept our request</td><td class="sec">2.1</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Meta Ads</b></td><td>Add us as partner with our Business Portfolio ID</td><td class="sec">2.2</td></tr>
+    <tr><td><span class="box"></span></td><td><b>LinkedIn</b></td><td>Add page admin + Account Manager in Campaign Manager</td><td class="sec">2.3</td></tr>
+    <tr><td><span class="box"></span></td><td><b>TikTok Ads</b></td><td>Invite us in Business Center, assign the ad account</td><td class="sec">2.4</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Microsoft Advertising</b></td><td>Send us your account number, accept our request</td><td class="sec">2.5</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Other ad platforms</b></td><td>Pinterest, Snapchat, Reddit: invite our e-mail as admin</td><td class="sec">2.6</td></tr>
+    <tr class="cat"><td colspan="4">Website &amp; CMS</td></tr>
+    <tr><td><span class="box"></span></td><td><b>WordPress</b></td><td>Create an Administrator user for our e-mail</td><td class="sec">3.1</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Shopify</b></td><td>Send us your collaborator code, approve our request</td><td class="sec">3.2</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Other platforms</b></td><td>Invite our e-mail as admin, or loop in your developer</td><td class="sec">3.3</td></tr>
+    <tr class="cat"><td colspan="4">E-mail, CRM &amp; Automation</td></tr>
+    <tr><td><span class="box"></span></td><td><b>HubSpot</b></td><td>Add our e-mail with full marketing access</td><td class="sec">4.1</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Klaviyo</b></td><td>Add our e-mail as Admin or Manager</td><td class="sec">4.2</td></tr>
+    <tr><td><span class="box"></span></td><td><b>Mailchimp</b></td><td>Invite our e-mail as Admin</td><td class="sec">4.3</td></tr>
+    <tr><td><span class="box"></span></td><td><b>ActiveCampaign</b></td><td>Add our e-mail with admin rights</td><td class="sec">4.4</td></tr>
+  </table>
+
+  <div class="note" style="margin-top:7mm;"><b>Using a tool that is not listed?</b> Great, tell your growth team. The same principle always applies: invite accounts@sprintsandsneakers.com through the platform's own user management, with the highest workable role.</div>
+
+  <div class="ftr">
+    <span>Sprints &amp; Sneakers</span>
+    <img src="assets/logo-solo-black.svg" alt="">
+    <span class="pgnum">03</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 4 · ANALYTICS 1 ═══════════ -->
+<div class="page">
+  <div class="hdr">
+    <span class="l">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em>Analytics &amp; Measurement</em></span>
+  </div>
+  <span class="pill">Section 1</span>
+  <h2 class="section" style="margin-top:12px;"><span class="no">01</span>Analytics &amp; Measurement</h2>
+  <p class="section-intro">Everything we do starts with reliable data. These four tools tell us what visitors actually do, so decisions run on evidence instead of gut feeling.</p>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">1.1</span><span class="tool-name">Google Analytics 4</span></div>
+    <p class="tool-need">We need: <b>Administrator</b> (Editor is the workable minimum) &middot; takes ± 2 minutes</p>
+    <ol class="steps">
+      <li>Go to <span class="mono">analytics.google.com</span> and click <b>Admin</b> (the gear, bottom left).</li>
+      <li>Open <b>Account access management</b>. Account level gives us all properties in one go; property level works too.</li>
+      <li>Click the <b>+</b> button and choose <b>Add users</b>.</li>
+      <li>Enter <span class="mono">accounts@sprintsandsneakers.com</span>, select the <b>Administrator</b> role and click <b>Add</b>.</li>
+    </ol>
+    <div class="note"><b>No GA4 property yet?</b> No problem, we set it up for you. Grant us Tag Manager and website access and we take it from there.</div>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">1.2</span><span class="tool-name">Google Tag Manager</span></div>
+    <p class="tool-need">We need: <b>Admin</b> on the account, <b>Publish</b> on the container &middot; takes ± 2 minutes</p>
+    <ol class="steps">
+      <li>Go to <span class="mono">tagmanager.google.com</span> and open your container.</li>
+      <li>Open the <b>Admin</b> tab and click <b>User Management</b> in the Account column.</li>
+      <li>Click <b>+</b>, then <b>Add users</b>, and enter <span class="mono">accounts@sprintsandsneakers.com</span>.</li>
+      <li>Set account permission to <b>Admin</b> and container permission to <b>Publish</b>, then save.</li>
+    </ol>
+    <div class="note"><b>No Tag Manager yet?</b> We create the container and deliver the code snippet for your site. One line to your developer and it is live.</div>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">1.3</span><span class="tool-name">Google Search Console</span></div>
+    <p class="tool-need">We need: <b>Full</b> permission &middot; takes ± 2 minutes</p>
+    <ol class="steps">
+      <li>Go to <span class="mono">search.google.com/search-console</span> and select your property.</li>
+      <li>Open <b>Settings</b> in the left menu, then <b>Users and permissions</b>.</li>
+      <li>Click <b>Add user</b>, enter <span class="mono">accounts@sprintsandsneakers.com</span> and choose <b>Full</b>.</li>
+    </ol>
+    <div class="note"><b>No verified property yet?</b> We verify it together via Tag Manager or a DNS record, five minutes on a call.</div>
+  </div>
+
+  <div class="ftr">
+    <span>Sprints &amp; Sneakers</span>
+    <img src="assets/logo-solo-black.svg" alt="">
+    <span class="pgnum">04</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 5 · ANALYTICS 2 + ADS INTRO ═══════════ -->
+<div class="page">
+  <div class="hdr">
+    <span class="l">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em>Analytics &amp; Advertising</em></span>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">1.4</span><span class="tool-name">Hotjar or Microsoft Clarity</span></div>
+    <p class="tool-need">We need: <b>Admin</b> &middot; behavior recordings and heatmaps &middot; takes ± 2 minutes</p>
+    <ol class="steps">
+      <li><b>Hotjar:</b> go to Settings, open <b>Organization &gt; Members</b>, click <b>Invite members</b> and add <span class="mono">accounts@sprintsandsneakers.com</span> as <b>Admin</b>.</li>
+      <li><b>Microsoft Clarity:</b> open your project, go to <b>Settings &gt; Team</b>, click <b>Add team member</b> and add <span class="mono">accounts@sprintsandsneakers.com</span> as <b>Admin</b>.</li>
+    </ol>
+    <div class="note"><b>Neither one installed?</b> Clarity is free. We happily set it up through Tag Manager once we have access there.</div>
+  </div>
+
+  <div style="margin-top:10mm;">
+    <span class="pill">Section 2</span>
+    <h2 class="section" style="margin-top:12px;"><span class="no">02</span>Advertising</h2>
+    <p class="section-intro">Your ad accounts are where budget meets results. For Google and Microsoft you send us an ID and we send the request, so you never touch a permission screen. For the social platforms you add us as a partner from your side.</p>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">2.1</span><span class="tool-name">Google Ads</span></div>
+    <p class="tool-need">We need: to link your account to our manager account (MCC) &middot; you send one ID, we do the rest</p>
+    <ol class="steps">
+      <li>Find your <b>customer ID</b>: click the profile icon in the top right of Google Ads. It looks like <span class="mono">123-456-7890</span>.</li>
+      <li>Send the ID to your S&amp;S contact through Slack or e-mail. Just the ID, never login details.</li>
+      <li>We send a link request from our manager account. You get a notification in Google Ads and by e-mail.</li>
+      <li>Accept it under <b>Admin &gt; Access and security &gt; Managers</b>. Done.</li>
+    </ol>
+    <div class="note"><b>Creating a fresh account?</b> Set the currency and time zone with care: Google locks both permanently after creation. Skip the campaign wizard, we build the campaigns.</div>
+  </div>
+
+  <div class="ftr">
+    <span>Sprints &amp; Sneakers</span>
+    <img src="assets/logo-solo-black.svg" alt="">
+    <span class="pgnum">05</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 6 · META + LINKEDIN ═══════════ -->
+<div class="page">
+  <div class="hdr">
+    <span class="l">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em>Advertising</em></span>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">2.2</span><span class="tool-name">Meta Ads (Facebook &amp; Instagram)</span></div>
+    <p class="tool-need">We need: <b>partner access</b> to your Business Portfolio assets &middot; our Business Portfolio ID: <b>187500493833634</b></p>
+    <ol class="steps">
+      <li>Go to <span class="mono">business.facebook.com</span> and open <b>Settings</b> of your Business Portfolio.</li>
+      <li>Under <b>Users</b>, click <b>Partners</b>, then <b>Add</b> and choose <b>Give a partner access to your assets</b>.</li>
+      <li>Enter our Business Portfolio ID: <span class="mono">187500493833634</span>.</li>
+      <li>Select the assets that apply and grant <b>full control</b> per asset: your Facebook Page, ad account(s), pixel / datasets, catalog(s) and Instagram account.</li>
+      <li>Click <b>Save changes</b>. We confirm from our side as soon as it lands.</li>
+    </ol>
+    <div class="note"><b>No Business Portfolio yet?</b> Create one at business.facebook.com with your business e-mail (not a personal profile), add your Page and ad account, then run the steps above. This keeps your ads independent from any individual's Facebook account, which protects you and us.</div>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">2.3</span><span class="tool-name">LinkedIn (Page + Campaign Manager)</span></div>
+    <p class="tool-need">We need: <b>page admin</b> on your company page and <b>Account Manager</b> on the ad account</p>
+    <ol class="steps">
+      <li>LinkedIn ties admin roles to personal profiles. Your S&amp;S contact sends you a connection request first.</li>
+      <li><b>Page:</b> open your company page as super admin, go to <b>Settings &gt; Manage admins</b> and add your S&amp;S contact as <b>Super admin</b> or <b>Content admin</b>.</li>
+      <li><b>Campaign Manager:</b> open your ad account, click the account name, then <b>Manage access</b>.</li>
+      <li>Click <b>Add user to account</b> and add your S&amp;S contact as <b>Account Manager</b>.</li>
+    </ol>
+    <div class="note"><b>Billing is on you.</b> Add a payment method under Billing center yourself. Without billing details LinkedIn will not deliver a single impression.</div>
+  </div>
+
+  <div class="ftr">
+    <span>Sprints &amp; Sneakers</span>
+    <img src="assets/logo-solo-black.svg" alt="">
+    <span class="pgnum">06</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 7 · TIKTOK + MICROSOFT ═══════════ -->
+<div class="page">
+  <div class="hdr">
+    <span class="l">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em>Advertising</em></span>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">2.4</span><span class="tool-name">TikTok Ads</span></div>
+    <p class="tool-need">We need: <b>Admin</b> in your Business Center plus <b>Ad account admin</b> &middot; takes ± 3 minutes</p>
+    <ol class="steps">
+      <li>Go to <span class="mono">business.tiktok.com</span> and open your Business Center.</li>
+      <li>Under <b>Users &gt; Members</b>, click <b>Invite member</b> and add <span class="mono">accounts@sprintsandsneakers.com</span> as <b>Admin</b>.</li>
+      <li>Assign your ad account to the new member with <b>Ad account admin</b> permission and confirm.</li>
+    </ol>
+    <div class="note"><b>Prefer a partner link?</b> That works too: under <b>Partners</b>, add us with our Business Center ID. Ask your S&amp;S contact for the ID.</div>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">2.5</span><span class="tool-name">Microsoft Advertising (Bing)</span></div>
+    <p class="tool-need">We need: to manage your account from our agency account &middot; you send one number, we do the rest</p>
+    <ol class="steps">
+      <li>In Microsoft Advertising, open <b>Settings &gt; Accounts &amp; Billing</b> and copy your <b>account number</b> (looks like <span class="mono">X1234567</span>).</li>
+      <li>Send it to your S&amp;S contact through Slack or e-mail.</li>
+      <li>We send a management request. Accept it via the link in the e-mail you receive, or under <b>Settings &gt; Requests</b>.</li>
+    </ol>
+    <div class="note"><b>No account yet?</b> Often we can import your Google Ads setup into Microsoft in one afternoon. Ask your growth team whether the channel is worth it for your audience first.</div>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">2.6</span><span class="tool-name">Other ad platforms (Pinterest, Snapchat, Reddit)</span></div>
+    <p class="tool-need">We need: <b>admin-level access</b> through the platform's own business or ads manager</p>
+    <ol class="steps">
+      <li><b>Pinterest:</b> in your business account, go to <b>Settings &gt; Account access</b>, invite <span class="mono">accounts@sprintsandsneakers.com</span> with Admin access to the ad account.</li>
+      <li><b>Snapchat:</b> in Business Manager, go to <b>Members</b>, invite <span class="mono">accounts@sprintsandsneakers.com</span> as Business Admin and assign the ad account.</li>
+      <li><b>Reddit:</b> in Ads Manager, open your business settings, invite <span class="mono">accounts@sprintsandsneakers.com</span> with admin permissions.</li>
+    </ol>
+    <div class="note"><b>Exploring a new channel together?</b> Perfect. Set up the account with a business e-mail (never a personal profile), then invite us before you build anything. We take it from there.</div>
+  </div>
+
+  <div class="ftr">
+    <span>Sprints &amp; Sneakers</span>
+    <img src="assets/logo-solo-black.svg" alt="">
+    <span class="pgnum">07</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 8 · WEBSITE & CMS ═══════════ -->
+<div class="page">
+  <div class="hdr">
+    <span class="l">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em>Website &amp; CMS</em></span>
+  </div>
+  <span class="pill">Section 3</span>
+  <h2 class="section" style="margin-top:12px;"><span class="no">03</span>Website &amp; CMS</h2>
+  <p class="section-intro">Landing pages, pixels, experiments and conversion fixes all happen on your website. With the right role we ship improvements ourselves instead of adding tickets to your developer's backlog.</p>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">3.1</span><span class="tool-name">WordPress</span></div>
+    <p class="tool-need">We need: our own <b>Administrator</b> user &middot; takes ± 2 minutes</p>
+    <ol class="steps">
+      <li>Log in to your WordPress admin and go to <b>Users &gt; Add New User</b>.</li>
+      <li>Enter <span class="mono">accounts@sprintsandsneakers.com</span> as the e-mail, pick any username, and set the role to <b>Administrator</b>.</li>
+      <li>Tick <b>Send the new user an e-mail about their account</b>. We set our own password through that link, so no password ever travels by mail.</li>
+    </ol>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">3.2</span><span class="tool-name">Shopify</span></div>
+    <p class="tool-need">We need: <b>collaborator access</b> &middot; does not use one of your staff seats</p>
+    <ol class="steps">
+      <li>Find your <b>collaborator request code</b>: in Shopify admin go to <b>Settings &gt; Users &gt; Security</b> and copy the 4-digit code.</li>
+      <li>Send the code to your S&amp;S contact. Sharing the code gives us nothing yet, it only lets us send you a request.</li>
+      <li>We submit a collaborator request from our Shopify Partner account.</li>
+      <li>Approve it under <b>Settings &gt; Users</b> (filter on Requests) and confirm the permissions.</li>
+    </ol>
+  </div>
+
+  <div class="tool">
+    <div class="tool-head"><span class="tool-no">3.3</span><span class="tool-name">Other platforms (Webflow, Wix, Lightspeed, custom)</span></div>
+    <p class="tool-need">We need: <b>admin-level access</b> through the platform's own user management</p>
+    <ol class="steps">
+      <li>Invite <span class="mono">accounts@sprintsandsneakers.com</span> as admin through the platform's team or user settings.</li>
+      <li>Custom-built website? Connect us with your developer in the shared Slack channel and we agree on a workable setup together.</li>
+    </ol>
+  </div>
+
+  <div class="ftr">
+    <span>Sprints &amp; Sneakers</span>
+    <img src="assets/logo-solo-black.svg" alt="">
+    <span class="pgnum">08</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 9 · EMAIL & CRM ═══════════ -->
+<div class="page">
+  <div class="hdr">
+    <span class="l">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em>E-mail, CRM &amp; Automation</em></span>
+  </div>
+  <span class="pill">Section 4</span>
+  <h2 class="section" style="margin-top:12px;"><span class="no">04</span>E-mail, CRM &amp; Automation</h2>
+  <p class="section-intro">Your e-mail list is the channel you own. Whichever platform you use, the pattern is the same: invite our address through user management with an admin role.</p>
+
+  <div class="two-col">
+    <div class="tool">
+      <div class="tool-head"><span class="tool-no">4.1</span><span class="tool-name">HubSpot</span></div>
+      <p class="tool-need">We need: <b>full marketing access</b> (Super admin works fastest)</p>
+      <ol class="steps">
+        <li>Go to <b>Settings &gt; Users &amp; Teams</b> and click <b>Create user</b>.</li>
+        <li>Add <span class="mono">accounts@sprintsandsneakers.com</span>.</li>
+        <li>Grant full access to the Marketing tools, or Super admin if you prefer one clean role.</li>
+      </ol>
+    </div>
+    <div class="tool">
+      <div class="tool-head"><span class="tool-no">4.2</span><span class="tool-name">Klaviyo</span></div>
+      <p class="tool-need">We need: <b>Admin</b> or <b>Manager</b></p>
+      <ol class="steps">
+        <li>Click your account name, then <b>Settings &gt; Users</b>.</li>
+        <li>Click <b>Add new user</b> and enter <span class="mono">accounts@sprintsandsneakers.com</span>.</li>
+        <li>Select the <b>Admin</b> or <b>Manager</b> role and send the invite.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="tool">
+      <div class="tool-head"><span class="tool-no">4.3</span><span class="tool-name">Mailchimp</span></div>
+      <p class="tool-need">We need: <b>Admin</b></p>
+      <ol class="steps">
+        <li>Click your profile icon and go to <b>Account &amp; billing &gt; Settings &gt; Users</b>.</li>
+        <li>Click <b>Invite a user</b> and enter <span class="mono">accounts@sprintsandsneakers.com</span>.</li>
+        <li>Choose the <b>Admin</b> role and send the invite.</li>
+      </ol>
+    </div>
+    <div class="tool">
+      <div class="tool-head"><span class="tool-no">4.4</span><span class="tool-name">ActiveCampaign</span></div>
+      <p class="tool-need">We need: <b>admin rights</b></p>
+      <ol class="steps">
+        <li>Go to <b>Settings &gt; Users</b> (bottom left).</li>
+        <li>Click <b>Add a user</b> and enter <span class="mono">accounts@sprintsandsneakers.com</span>.</li>
+        <li>Add the user to the <b>Admin</b> group and save.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:2mm;"><b>Different e-mail or CRM platform?</b> Same recipe: user management, our address, admin role. Mention it to your growth team so we tick it off on our side too.</div>
+
+  <div class="ftr">
+    <span>Sprints &amp; Sneakers</span>
+    <img src="assets/logo-solo-black.svg" alt="">
+    <span class="pgnum">09</span>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 10 · CLOSER ═══════════ -->
+<div class="page dark">
+  <div class="hdr" style="border-bottom-color:var(--lime); color:#757575;">
+    <span class="l" style="color:#FFF;">Sprints &amp; Sneakers</span>
+    <span class="r">Tooling Access Guide &middot; <em style="color:var(--lime);">What happens next</em></span>
+  </div>
+
+  <div style="margin-top:28mm;">
+    <div class="eyebrow">Almost there</div>
+    <h1 class="display" style="font-size:34pt;">That's it.<br><em>Let's grow.</em></h1>
+    <p class="cover-sub" style="margin-top:8mm;">Access sounds like paperwork, but it is the single biggest predictor of a fast start. Partners who complete this checklist in week one see their audit, strategy and first experiments land <b>weeks earlier</b>.</p>
+  </div>
+
+  <div class="next">
+    <div class="stepcard">
+      <div class="n">1</div>
+      <h3>You grant access</h3>
+      <p>Work through the checklist on page 3. Most tools take less than five minutes.</p>
+    </div>
+    <div class="stepcard">
+      <div class="n">2</div>
+      <h3>We verify everything</h3>
+      <p>Within two working days we confirm each tool and flag anything missing in our shared Slack channel.</p>
+    </div>
+    <div class="stepcard">
+      <div class="n">3</div>
+      <h3>The real work starts</h3>
+      <p>Audit, strategy and the first experiments, powered by your data instead of assumptions.</p>
+    </div>
+  </div>
+
+  <div class="keybox" style="margin-top:12mm;">
+    <h3>Questions?</h3>
+    <div class="keyrow"><span class="k">Fastest</span><span class="v">Your shared Slack channel</span></div>
+    <div class="keyrow"><span class="k">E-mail</span><span class="v">hello@sprintsandsneakers.com</span></div>
+    <div class="keyrow"><span class="k">Web</span><span class="v">sprintsandsneakers.com</span></div>
+  </div>
+
+  <div class="ftr">
+    <span>sprintsandsneakers.com</span>
+    <img src="assets/logo-solo-lime.svg" alt="">
+    <span class="pgnum">10</span>
+  </div>
+</div>
+
+</body>
+</html>
