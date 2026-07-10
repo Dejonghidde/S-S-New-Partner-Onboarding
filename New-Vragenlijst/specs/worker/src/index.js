@@ -27,6 +27,7 @@ export default {
       if (path === '/api/upload/init' && request.method === 'POST') return await initUpload(request, env);
       if (path === '/api/upload/chunk' && request.method === 'PUT') return await uploadChunk(request, env);
       if (path === '/api/submit' && request.method === 'POST') return await submit(request, env);
+      if (path === '/api/internal/drive-folder' && request.method === 'POST') return await internalCreateFolder(request, env);
       return J({ error: 'not found', path }, 404);
     } catch (e) {
       return J({ error: String((e && e.message) || e) }, 500);
@@ -77,6 +78,26 @@ async function submit(request, env) {
   const title = ('Onboarding questionnaire' + tag + ' — ' + (company || name || 'partner')).slice(0, 180);
   const doc = await createAnswersDoc(env, folderId, title, html || '<p>(no answers submitted)</p>');
   return J({ ok: true, folderId, doc: { id: doc.id, name: doc.name, link: doc.webViewLink } });
+}
+
+// ── Internal: create a Drive folder via the service account (called from Make, no OAuth) ──
+async function internalCreateFolder(request, env) {
+  if (!env.MAKE_INTERNAL_KEY || request.headers.get('X-Internal-Key') !== env.MAKE_INTERNAL_KEY) {
+    return J({ error: 'unauthorized' }, 401);
+  }
+  const { name, parentId } = await request.json();
+  if (!name || !parentId) return J({ error: 'name and parentId required' }, 400);
+  const at = await getAccessToken(env);
+  const resp = await fetch(
+    'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true&fields=id,name,webViewLink',
+    {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + at, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, parents: [parentId], mimeType: 'application/vnd.google-apps.folder' }),
+    }
+  );
+  if (!resp.ok) return J({ error: 'folder create failed', status: resp.status, detail: await resp.text() }, 502);
+  return J(await resp.json());
 }
 
 // ── Folder routing (the ?c token IS the partner project folder id) ──

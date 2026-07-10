@@ -16,5 +16,6 @@ ROOT_FOLDER_ID = "11ncxYJfj7JL_8b3GX1vrBYfUt6FUo9uU"
 # Where files go when the token resolves to nothing valid (safety net; never lost).
 FALLBACK_FOLDER_ID = "11ncxYJfj7JL_8b3GX1vrBYfUt6FUo9uU"
 
-# Secret (set via: wrangler secret put GOOGLE_SA_KEY):
-#   GOOGLE_SA_KEY = full service-account JSON key
+# Secrets (set via: wrangler secret put <NAME>):
+#   GOOGLE_SA_KEY      = full service-account JSON key
+#   MAKE_INTERNAL_KEY  = shared secret for POST /api/internal/drive-folder (Make calls only, ticket 02)
