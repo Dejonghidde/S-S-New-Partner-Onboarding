@@ -29,6 +29,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 9 | Interactieve onboarding-portal / toegang-afvinklijst | Nieuw (uitbreiding op Cloudflare-vragenlijst) | - | Open — idee, valideren (buiten v1, zie spec) |
 | 10 | Spec v1 goedgekeurd; accounts@-interim vervallen | spec/spec.md + tickets/ | 🔴 Kader voor alles | Gedaan (2026-07-10) |
 | 11 | Live 3059444 blijft ongemoeid tijdens de bouw; alles eerst in kopie 6226897 | Make (live 3059444 + V2 6226897), tickets 00/01 | 🔴 Veiligheidsregel | Besloten (2026-07-10) |
+| 12 | V1-herbouw neergezet: 3 nieuwe inactieve scenario's + Worker-uitbreiding + config/registry | Make, Cloudflare Worker, V1-spreadsheet, Monday | 🔴 Hoofdlevering | Gebouwd (2026-07-11), activatie = cutover met go |
 
 ---
 
@@ -164,3 +165,21 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 **Waar:** `spec/spec.md` (beslislog, Definition of Done, fasering) en `tickets/` (uitvoering).
 
 **Status:** Gedaan (2026-07-10). Uitvoering loopt via de tickets.
+
+---
+
+## 12. V1-herbouw neergezet (2026-07-11): drie nieuwe inactieve scenario's
+
+**Wat er staat (niets is geactiveerd; activatie = cutover, ticket 10, met expliciete go van Hidde):**
+
+- **Make-scenario `6525431` "New partner onboarding V1 (generiek)"** (inactief): één generieke growth-route die teamverschillen uit de Teamconfig-tab leest, aparte functioneel-bevroren Rho-route, fallback-route bij onbekende teamnaam (DM-melding, geen stille halve run), 18 onerror-handlers met partnernaam en echte oorzaak, nul GPT-modules (vervangen door deterministische formules), partner-e-mailadres 1-op-1 uit het form, B2B/B2C-splitsing (Monday-template `239400674`/`239420131`/fallback `188077189`, juiste vragenlijst-link `/b2b?c=` vs `/?c=`, type-label in teamnotificaties), zachte poort (ontbrekende intake-velden zichtbaar in melding, statusbericht en registry), playbook-stap bestaat niet meer, nieuwe kickstart-link (punt 2 hierboven daarmee uitgevoerd in V1), registry-rij per partner, Monday-statuskolommen bijgewerkt, partnermail in NL of EN met tijdpad en drie links.
+- **Make-scenario `6525439` "Onboarding V1 - vragenlijst binnen"** (inactief): custom webhook `3377014`; de Worker pingt bij elke vragenlijst-inzending; zet registry op "binnen", Monday-kolom Vragenlijst op "Binnen" plus antwoorden-link, en meldt het in het interne teamkanaal. Webhook zonder registry-match geeft een DM-melding.
+- **Make-scenario `6525442` "Onboarding V1 - reminders"** (inactief): dagelijks 09:00 op werkdagen; open checklist-items (access, kickstart, LastPass, extern kanaal, Monday-board) ouder dan 3 dagen geven een reminder in het interne teamkanaal.
+- **Cloudflare Worker `ss-onboarding-api`** (live, gedeployed): nieuwe interne endpoints `drive-folder`/`drive-copy`/`drive-share` op de service-account (Drive-acties zonder persoonsgebonden OAuth), webhook-ping bij submit, quarantainemap `17Vu9hd7l4QAObt0ggoIV7Q-dxThTRxzI` voor kapotte `?c`-links (root blijft leeg), en publieke endpoints lekken geen ruwe Google-fouten meer.
+- **V1-spreadsheet `1FQjIGn8-tMU4ZE9-hiu0RT_xWeKEAdq6EI4OXvg9Gcw`**: tab Teamconfig (6 teams: Drive-parent, Monday folder/lead/teamlabel, subscribers, Slack-invites, teamlead-DM) en tab Registry (30 kolommen, dekt de hele spec 3.5-checklist plus gereserveerde maturity-kolom). Bewuste afwijking van de spec: apart spreadsheet in plaats van tabs in de live beheersheet (guardrail blokkeerde schrijven aan de gedeelde live-sheet; samenvoegen kan desgewenst bij de cutover).
+- **Monday Client overview (3337611330)**: 4 nieuwe kolommen: Vragenlijst (`color_mm55t9hn`), Onboarding pakket (`color_mm55bhm1`), Access & kickstart (`color_mm551f8`), Vragenlijst antwoorden (`link_mm55b40b`).
+- **Eenmalig**: DPA-template gekopieerd naar `0. Onboarding templates (V1)` (`1DfGHjemTeJbtrPXjkjOYfA8ZkPRUPyOn`) zodat de service-account hem kan lezen; DPA-kopie per partner landt voortaan in de partnerprojectmap in plaats van de Leadership-drive (bewuste V1-afwijking).
+
+**Bewuste keuzes van Hidde die hierin verwerkt zijn:** bestaande connecties hergebruiken (Slack `2655290`, Monday `2541989`, mail `2870801`/`3156710`, sheets `8884641`); foutmeldingen als DM naar Hidde (`D0ATPSA2GAX` via `6773974`); Monday-boardtemplate per partner_type in plaats van per team.
+
+**Status:** Gebouwd (2026-07-11). Restpunten en handmatige acties: zie tickets/README.md en het eindrapport in de sessie.
