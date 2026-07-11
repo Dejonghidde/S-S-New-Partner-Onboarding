@@ -15,7 +15,10 @@ routes = [
 ROOT_FOLDER_ID = "11ncxYJfj7JL_8b3GX1vrBYfUt6FUo9uU"
 # Where files go when the token resolves to nothing valid (safety net; never lost).
 FALLBACK_FOLDER_ID = "11ncxYJfj7JL_8b3GX1vrBYfUt6FUo9uU"
+# Invalid ?c tokens land here, visibly, instead of silently in the root (spec 3.6).
+QUARANTINE_FOLDER_ID = "17Vu9hd7l4QAObt0ggoIV7Q-dxThTRxzI"
 
 # Secrets (set via: wrangler secret put <NAME>):
 #   GOOGLE_SA_KEY      = full service-account JSON key
-#   MAKE_INTERNAL_KEY  = shared secret for POST /api/internal/drive-folder (Make calls only, ticket 02)
+#   MAKE_INTERNAL_KEY  = shared secret for POST /api/internal/* (Make calls only, ticket 02)
+#   MAKE_WEBHOOK_URL   = Make custom webhook that receives the "questionnaire submitted" ping (ticket 06)

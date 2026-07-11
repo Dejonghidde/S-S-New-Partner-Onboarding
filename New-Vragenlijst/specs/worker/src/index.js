@@ -19,18 +19,24 @@ const J = (obj, status = 200) =>
   new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json', ...CORS } });
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
     const path = new URL(request.url).pathname;
+    const internal = path.startsWith('/api/internal/');
     try {
       if (path === '/api/health') return J({ ok: true, saConfigured: !!env.GOOGLE_SA_KEY });
       if (path === '/api/upload/init' && request.method === 'POST') return await initUpload(request, env);
       if (path === '/api/upload/chunk' && request.method === 'PUT') return await uploadChunk(request, env);
-      if (path === '/api/submit' && request.method === 'POST') return await submit(request, env);
+      if (path === '/api/submit' && request.method === 'POST') return await submit(request, env, ctx);
       if (path === '/api/internal/drive-folder' && request.method === 'POST') return await internalCreateFolder(request, env);
+      if (path === '/api/internal/drive-copy' && request.method === 'POST') return await internalCopyFile(request, env);
+      if (path === '/api/internal/drive-share' && request.method === 'POST') return await internalShare(request, env);
       return J({ error: 'not found', path }, 404);
     } catch (e) {
-      return J({ error: String((e && e.message) || e) }, 500);
+      // Public endpoints must never leak raw Google error details to the browser.
+      console.error('worker error', path, String((e && e.message) || e));
+      if (internal) return J({ error: String((e && e.message) || e) }, 500);
+      return J({ error: 'internal error' }, 500);
     }
   },
 };
@@ -71,20 +77,43 @@ async function uploadChunk(request, env) {
   return J({ error: 'chunk failed', status: resp.status, detail: await resp.text() }, 502);
 }
 
-async function submit(request, env) {
+async function submit(request, env, ctx) {
   const { token = '', name = '', company = '', html = '', kind = '' } = await request.json();
-  const folderId = await resolveFolder(env, token || '');
+  const { folderId, quarantined } = await resolveFolderInfo(env, token || '');
   const tag = kind ? ' (' + kind + ')' : '';
   const title = ('Onboarding questionnaire' + tag + ' — ' + (company || name || 'partner')).slice(0, 180);
   const doc = await createAnswersDoc(env, folderId, title, html || '<p>(no answers submitted)</p>');
+  // Close the loop: tell Make the answers are in (spec 3.6). Fire-and-forget; a
+  // webhook failure must never block the partner's submit.
+  if (env.MAKE_WEBHOOK_URL) {
+    const ping = fetch(env.MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'questionnaire_submitted',
+        folderId,
+        quarantined,
+        company,
+        name,
+        kind: kind || 'b2c',
+        docId: doc.id,
+        docName: doc.name,
+        docLink: doc.webViewLink,
+      }),
+    }).catch((e) => console.error('webhook ping failed', String((e && e.message) || e)));
+    if (ctx && ctx.waitUntil) ctx.waitUntil(ping);
+    else await ping;
+  }
   return J({ ok: true, folderId, doc: { id: doc.id, name: doc.name, link: doc.webViewLink } });
 }
 
-// ── Internal: create a Drive folder via the service account (called from Make, no OAuth) ──
+// ── Internal endpoints: Drive actions via the service account (called from Make, no OAuth) ──
+function internalAuthorized(request, env) {
+  return env.MAKE_INTERNAL_KEY && request.headers.get('X-Internal-Key') === env.MAKE_INTERNAL_KEY;
+}
+
 async function internalCreateFolder(request, env) {
-  if (!env.MAKE_INTERNAL_KEY || request.headers.get('X-Internal-Key') !== env.MAKE_INTERNAL_KEY) {
-    return J({ error: 'unauthorized' }, 401);
-  }
+  if (!internalAuthorized(request, env)) return J({ error: 'unauthorized' }, 401);
   const { name, parentId } = await request.json();
   if (!name || !parentId) return J({ error: 'name and parentId required' }, 400);
   const at = await getAccessToken(env);
@@ -100,10 +129,63 @@ async function internalCreateFolder(request, env) {
   return J(await resp.json());
 }
 
+// Copy a Drive file (template, DPA, assignment letter, …) into a partner folder.
+// Accepts a raw file id or a full Drive URL (the form fields hold URLs).
+async function internalCopyFile(request, env) {
+  if (!internalAuthorized(request, env)) return J({ error: 'unauthorized' }, 401);
+  const { fileId, url, name, parentId } = await request.json();
+  const id = fileId || driveIdFromUrl(url || '');
+  if (!id || !parentId) return J({ error: 'fileId (or url) and parentId required' }, 400);
+  const at = await getAccessToken(env);
+  const body = { parents: [parentId] };
+  if (name) body.name = name;
+  const resp = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(id)}/copy?supportsAllDrives=true&fields=id,name,webViewLink`,
+    {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + at, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }
+  );
+  if (!resp.ok) return J({ error: 'copy failed', status: resp.status, detail: await resp.text() }, 502);
+  return J(await resp.json());
+}
+
+// Share a Drive file/folder with a partner email, silently (no Google notification mail;
+// the single Brevo touchpoint carries the links instead — spec 3.4).
+async function internalShare(request, env) {
+  if (!internalAuthorized(request, env)) return J({ error: 'unauthorized' }, 401);
+  const { fileId, email, role = 'writer', notify = false } = await request.json();
+  if (!fileId || !email) return J({ error: 'fileId and email required' }, 400);
+  const at = await getAccessToken(env);
+  const resp = await fetch(
+    `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}/permissions?supportsAllDrives=true&sendNotificationEmail=${notify ? 'true' : 'false'}&fields=id,role,type,emailAddress`,
+    {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + at, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'user', role, emailAddress: email }),
+    }
+  );
+  if (!resp.ok) return J({ error: 'share failed', status: resp.status, detail: await resp.text() }, 502);
+  return J(await resp.json());
+}
+
+function driveIdFromUrl(url) {
+  const m =
+    url.match(/\/(?:d|folders)\/([a-zA-Z0-9_-]{20,})/) || url.match(/[?&]id=([a-zA-Z0-9_-]{20,})/);
+  return m ? m[1] : '';
+}
+
 // ── Folder routing (the ?c token IS the partner project folder id) ──
+// Invalid/missing tokens land in the quarantine folder, never silently in the root (spec 3.6).
+async function resolveFolderInfo(env, token) {
+  if (token && (await isUnderRoot(env, token, env.ROOT_FOLDER_ID))) {
+    return { folderId: token, quarantined: false };
+  }
+  return { folderId: env.QUARANTINE_FOLDER_ID || env.FALLBACK_FOLDER_ID, quarantined: true };
+}
 async function resolveFolder(env, token) {
-  if (token && (await isUnderRoot(env, token, env.ROOT_FOLDER_ID))) return token;
-  return env.FALLBACK_FOLDER_ID;
+  return (await resolveFolderInfo(env, token)).folderId;
 }
 
 // Walk the folder's parent chain; true if rootId is an ancestor (or the folder itself).
