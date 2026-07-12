@@ -30,6 +30,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 10 | Spec v1 goedgekeurd; accounts@-interim vervallen | spec/spec.md + tickets/ | 🔴 Kader voor alles | Gedaan (2026-07-10) |
 | 11 | Live 3059444 blijft ongemoeid tijdens de bouw; alles eerst in kopie 6226897 | Make (live 3059444 + V2 6226897), tickets 00/01 | 🔴 Veiligheidsregel | Besloten (2026-07-10) |
 | 12 | V1-herbouw neergezet: 3 nieuwe inactieve scenario's + Worker-uitbreiding + config/registry | Make, Cloudflare Worker, V1-spreadsheet, Monday | 🔴 Hoofdlevering | Gebouwd (2026-07-11), activatie = cutover met go |
+| 13 | Ticket 08 (Brevo-mail) on hold; V1 blijft voorlopig op Sharif/Gino's Gmail | Make-scenario's 6525431/6525442 (mail-modules) | - | On hold (2026-07-12) — wacht op management-goedkeuring voor stabiel adres |
 
 ---
 
