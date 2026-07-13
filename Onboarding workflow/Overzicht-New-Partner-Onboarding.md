@@ -2,35 +2,37 @@
 type: overzicht
 project: New Partner Onboarding
 status: In uitvoering
-fase: Define / verbeteren
+fase: Bouwen / verbeteren
 accountable: Hidde
-bijgewerkt: 2026-07-09
+bijgewerkt: 2026-07-13
 tags: [onboarding, workflow, make, vragenlijst, overzicht, operations]
 ---
 
 # New Partner Onboarding — Compleet overzicht
 
-Eén master-document dat alle sporen van het onboarding-project samenbrengt: het doel, waar we staan, de bevindingen, de openstaande vragen, de ideeën, de aanbevelingen en het plan. Dit is het startpunt; de diepte staat in de twee detaildocs:
+Eén master-document dat alle sporen van het onboarding-project samenbrengt: het doel, waar we staan, wat er gebouwd en gefixt is, de bevindingen, de openstaande vragen, de ideeën en het plan. Dit is het startpunt; de diepte staat in de detaildocs:
 
 - **[Briefing-Onboarding-Workflow-Verbeteren.md](Briefing-Onboarding-Workflow-Verbeteren.md)** — de opdracht, scope en waarde-lens.
-- **[Onboarding-Workflow-Analyse-en-Blueprint.md](Onboarding-Workflow-Analyse-en-Blueprint.md)** — de 0-meting, geverifieerd tegen de echte Make-scenario, met diagnose en verbeterrichtingen.
+- **[Onboarding-Workflow-Analyse-en-Blueprint.md](Onboarding-Workflow-Analyse-en-Blueprint.md)** — de 0-meting van de oude workflow.
+- **[Onboarding-Aanpassingen-Overzicht.md](Onboarding-Aanpassingen-Overzicht.md)** — het volledige, regel-voor-regel besluiten- en wijzigingenlog.
+- **[../Input:inspiratie/Benchmarkonderzoek-onboarding-andere-bedrijven.md](../Input:inspiratie/Benchmarkonderzoek-onboarding-andere-bedrijven.md)** — benchmarkonderzoek 9 bedrijven, 59 onderdelen, geprioriteerd.
+- **[../Input:inspiratie/Onboarding input leads.md](../Input:inspiratie/Onboarding input leads.md)** — de leads-uitvraag (Anjo, Sharif).
 
 ---
 
 ## 1. Het doel
 
-De hele reis van een nieuwe partner soepel, duidelijk en compleet maken: van getekend contract tot "partner klaar om te starten met growth hacking". Niet vanaf nul bouwen, maar de bestaande (deels geautomatiseerde) keten eerst consistent laten werken, dan effectiever, dan verbeteren op basis van praktijkinput.
+De hele reis van een nieuwe partner soepel, duidelijk en compleet maken: van getekend contract tot "partner klaar om te starten met growth hacking". Niet vanaf nul bouwen, maar de bestaande (deels geautomatiseerde) keten eerst consistent laten werken, dan effectiever, dan verbeteren op basis van praktijkinput en benchmarkonderzoek.
 
-De rode draad uit de partner-input: **de partner mist geen documenten, maar ritme en regie.** Het project moet vooral dat oplossen.
+De rode draad uit de partner-input: **de partner mist geen documenten, maar ritme en regie.** Dat blijft de kern, en het recente benchmarkonderzoek bevestigt dit onafhankelijk (zie sectie 10).
 
 ---
 
 ## 2. Scope
 
 - **Wel:** de volledige journey van getekend contract tot start growth hacking. De vernieuwde vragenlijst is één stap in dat geheel.
-- **Ruggengraat:** de bestaande Make-automation die Bart en Gijs voedt met partner-info.
-- **Niet nu:** een compleet nieuw systeem bouwen. We verbeteren wat er staat.
-- **Focus (Gijs-gesprek):** niveau-1 volledig, plus een gericht stuk van niveau-2. Niet de hele eerste maand willen fixen, maar de verbetering met de meeste impact op de partnerervaring.
+- **Ruggengraat:** een herbouwde Make-automation (V1), generiek per team in plaats van 6x gedupliceerd.
+- **Niet nu:** een compleet nieuw systeem bouwen. We verbeteren wat er staat, en breiden gericht uit met wat het benchmarkonderzoek en de leads aandragen.
 
 ---
 
@@ -38,14 +40,23 @@ De rode draad uit de partner-input: **de partner mist geen documenten, maar ritm
 
 ### Spoor A — De vragenlijst (grotendeels klaar en live)
 - **B2C** en **B2B** staan live op Cloudflare Pages: B2C op `onboarding.sprintsandsneakers.dev/`, B2B op `.../b2b`, per partner via `?c=<projectmap-id>`.
-- Opslag-pipeline werkt end-to-end: uploads en antwoorden gaan via een Cloudflare Worker met een Google **service-account** naar de juiste partnermap in Drive. Antwoorden worden een leesbaar Google Doc in diezelfde map.
-- De-slop copy-pass en de feedbackrondes van Gijs en Mira zijn verwerkt.
-- **Open op dit spoor:** hoe Make per partner de juiste B2C- vs B2B-link kiest.
+- Opslag-pipeline werkt end-to-end via een Cloudflare Worker met een Google **service-account** naar de juiste partnermap in Drive. Antwoorden worden een leesbaar Google Doc in diezelfde map.
+- De Worker is uitgebreid met interne Drive-endpoints (folder aanmaken, bestand kopiëren, delen) die Make nu gebruikt, en met een webhook-ping bij het inzenden van de vragenlijst (sluit de "vragenlijst binnen"-lus, zie spoor B).
+- **Nog open:** brandbook + tone-of-voice als verplicht onderdeel toevoegen (zie sectie 10/12, nieuwe eis vanuit de leads-uitvraag).
 
-### Spoor B — De Make-workflow (kern van het huidige werk)
-- **Live scenario:** `3059444` "New partner onboarding" (draait in productie).
-- **Sandbox:** `6226897` "New partner onboarding V2" (veilig testen, staat niet live).
-- Blokkade-fixes gebeuren in de live versie; grotere verbeteringen bouwen we in V2 en zetten we pas live als alles klopt.
+### Spoor B — De Make-workflow: van 0-meting naar V1-herbouw
+
+**Uitgangssituatie (tot 2026-07-10):** één live scenario `3059444`, met 6 bijna-identieke, uit elkaar gelopen team-routes, persoonsgebonden connecties en geen foutmelding. Zie sectie 7 voor de volledige 0-meting; **dit scenario wordt nooit aangeraakt zonder expliciete go per wijziging.**
+
+**V1-herbouw (2026-07-11 t/m nu):** drie nieuwe, generieke sandbox-scenario's, inactief, klaar voor cutover na e2e-test:
+
+| Scenario | ID | Functie | Status |
+|---|---|---|---|
+| New partner onboarding V1 (generiek) | `6525431` | Hoofdflow: trigger t/m partner-mail | Gebouwd, laatste stap (welkomstmail) wacht op handmatige module-toevoeging in Make (zie sectie 9) |
+| Onboarding V1 - vragenlijst binnen (webhook) | `6525439` | Vangt de Worker-webhook op zodra de vragenlijst binnen is | Gebouwd en gefixt |
+| Onboarding V1 - reminders | `6525442` | Herinneringen | Gebouwd, geen wijzigingen nodig gebleken |
+
+Zie sectie 8 voor wat er precies in `6525431` zit, en sectie 9 voor de belangrijkste fixes.
 
 ---
 
@@ -66,17 +77,17 @@ Spanning om te managen: Bart wil snelheid, Gijs wil volledigheid. De workflow mo
 
 ## 5. Aanpak-volgorde
 
-1. **Consistent werkend maken.** Eerst hard definiëren wat "consistent werkend" is, dan de dingen fixen die de keten laten omvallen.
-2. **Effectiever maken.** Vooral vanuit de partnerervaring: welke onderdelen, wat is het einddoel per onderdeel.
-3. **Verbeteren op input** van Bart, Gijs en de teamleads.
+1. **Consistent werkend maken.** ✅ Grotendeels gedaan in de V1-herbouw: generieke route i.p.v. 6x duplicatie, gedeelde connecties i.p.v. persoonsgebonden, foutmeldingen per stap (onerror-alerts naar Slack).
+2. **Effectiever maken.** In uitvoering: welkomstmail herontworpen (sectie 9), dynamisch teamcontact, tooling-access als echte per-partner kopie.
+3. **Verbeteren op input.** Net binnengehaald: benchmarkonderzoek + leads-uitvraag afgerond, wacht op prioritering (sectie 10/12).
 
-**Definitie "consistent werkend" (harde eis):** de automation levert voor elke getekende partner, ongeacht wie 'm invult en welk team, hetzelfde volledige en correcte pakket op, óf geeft een duidelijke melding als dat niet lukt. Geen enkele run valt om door één persoonsgebonden connectie.
+**Definitie "consistent werkend" (harde eis):** de automation levert voor elke getekende partner, ongeacht wie 'm invult en welk team, hetzelfde volledige en correcte pakket op, óf geeft een duidelijke melding als dat niet lukt. Geen enkele run valt om door één persoonsgebonden connectie. **Dit is met de V1-herbouw functioneel opgelost**, definitieve bevestiging volgt uit de e2e-test (sectie 12).
 
 ---
 
-## 6. Bevindingen: wat de workflow nu doet
+## 6. 0-meting: wat de oude workflow deed (vóór V1, referentie)
 
-Trigger: een Slack-form dat iemand van S&S invult bij een nieuwe partner. De antwoorden landen in een Google Sheet "Form Responses"; de workflow leest de rij en splitst op **Assigned team** in 6 bijna-identieke team-routes (Sigma, Phi, Gamma, Kappa, Rho, Alpha). Per partner regelt de flow:
+Trigger: een Slack-form dat iemand van S&S invult bij een nieuwe partner. De antwoorden landen in een Google Sheet "Form Responses"; de oude workflow las de rij en splitste op **Assigned team** in 6 bijna-identieke team-routes (Sigma, Phi, Gamma, Kappa, Rho, Alpha). Per partner regelde de flow:
 
 1. **Slack:** melding in kanaal *Allocatie* + DM naar de teamlead.
 2. **Monday:** tech-ticket, item in Client overview, en een nieuw board per partner uit template.
@@ -86,138 +97,103 @@ Trigger: een Slack-form dat iemand van S&S invult bij een nieuwe partner. De ant
 6. **Slack-kanalen:** intern `client-[partner]` en extern `external-[partner]-sprintsandsneakers`, statusbericht gepind.
 7. **Partner-e-mail** met links naar DPA, vragenlijst en shared drive folder.
 
-Handmatig ná de automation (nu nog los): kickstart-meeting, LastPass-map, partner uitnodigen in Slack/Monday, toegang tot kanalen, kennismakingsmeeting.
+Handmatig ná de automation (nog steeds los, ook na V1): kickstart-meeting, LastPass-map, kennismakingsmeeting.
 
 ---
 
-## 7. Bevindingen: wat er nu misgaat
+## 7. 0-meting: wat er misging, en wat de status nu is
 
-| # | Probleem | Ernst |
+| # | Probleem (0-meting) | Status na V1-herbouw |
 |---|----------|-------|
-| A | Keten valt om door **persoonsgebonden connecties** (draait op Sharifs persoonlijke Google/Monday/Slack). Wachtwoordrotatie trekt de OAuth-token in, scenario faalt met `AccountValidationError` en Make zet 'm uit. | Blokkade |
-| B | **Verwijderde Slack-accounts** van (oud-)teamleads zetten de automation stil. | Blokkade |
-| C | **Geen foutmelding.** Gaat het mis, dan gaat het stil mis; kan weken doorlopen. | Medium |
-| D | **6x team-duplicatie (drift).** De routes zijn losse kopieën die uit elkaar zijn gelopen. Rho is bewust anders (recruitment). | Medium |
-| E | **Orphaned/dode modules** (losse test-/restant-branches). | Laag |
-
-**Geverifieerd over de documenten:**
-- **Strategy Playbook** = de 2025-versie, voor alle teams gelijk, geen B2B/B2C-splitsing. Update nodig.
-- **Growth Funnel** = ook één versie voor iedereen.
-- **DPA** wordt wél gekopieerd (bron in Finance & Legal).
-- **Assignment letter + Handover** worden NIET in de partnermap opgeslagen (wisselende bronnen, geen vast bestand).
-- De **pre-audit questionnaire in Drive is verouderd**; de echte vragenlijst staat op Cloudflare.
+| A | Keten viel om door **persoonsgebonden connecties** (Sharifs persoonlijke Google/Monday/Slack). Wachtwoordrotatie trok de OAuth-token in. | **Opgelost.** Drive loopt via service-account + Worker; Monday-connectie is de gedeelde `8950423`, niet meer persoonsgebonden. |
+| B | **Verwijderde Slack-accounts** van (oud-)teamleads zetten de automation stil. | **Grotendeels opgelost** door dynamische Teamconfig-lookup; 3 losse verouderde Slack-ID's in het sheet staan nog open (zie sectie 11). |
+| C | **Geen foutmelding.** Ging het mis, dan ging het stil mis. | **Opgelost.** Elke kritieke stap heeft een `onerror`-Slack-alert. |
+| D | **6x team-duplicatie (drift).** Losse kopieën die uit elkaar liepen. | **Opgelost.** Eén generieke route, teamdata komt uit het Teamconfig-sheet. Rho blijft bewust een eigen tak (recruitment). |
+| E | **Orphaned/dode modules.** | **N.v.t.** Nieuwe bouw heeft geen restanten. |
 
 ---
 
-## 8. Nieuwe richting uit het Gijs-gesprek (2026-07-09)
+## 8. V1 gebouwd: wat er nu in scenario 6525431 zit
 
-Kern: niet de hele eerste maand willen oplossen, maar **de verbetering met de meeste impact op de partnerervaring** eerst. Bart en Gijs denken mee over wat de ervaring écht verbetert. Alle onduidelijkheden (waar komt wat vandaan, waar wordt wat opgezet) zelf oplossen door er een strakke, duidelijke methode voor te maken.
+1. **Trigger:** Google Sheets watchRows op "Form Responses".
+2. **Form-velden + afgeleiden** (module 2): company, firstName, email, team, partnerType (B2B/B2C/regulier), taal (NL/EN), qPath (juiste vragenlijst-URL), templateId, companyQ (sanitized voor gebruik in namen/queries).
+3. **Tech-ticket** (Monday) + Slack-melding.
+4. **Teamconfig-lookup + aggregator** (modules 5/6): haalt per team de Drive-folder, Monday-workspace, Slack-kanalen en `monday_lead_user_id` op uit het Teamconfig-sheet.
+5. **Router:** groei-teams (Sigma/Alpha/Phi/Kappa/Gamma) vs. Rho (eigen tak, ongewijzigd) vs. fallback.
+6. **Drive:** projectmap + `[SHARED]`-submap aanmaken, DPA en Growth Funnel sheet kopiëren en delen, `[SHARED]`-map gedeeld met de partner.
+7. **Monday:** item in "Client overview" met dynamische Team- en Lead-kolommen, nieuw partnerboard uit template, teamleden als board-owners toegevoegd (`add_users_to_board`), statuskolommen bijgewerkt.
+8. **Slack:** intern + extern kanaal aangemaakt, teamleden uitgenodigd, statusbericht gepind.
+9. **Registry-sheet:** rij weggeschreven met alle links en status (RAW-formaat, geen datumcorruptie).
+10. **Partnermail:** sub-router NL/EN, momenteel de laatste stap die nog een handmatige aanvulling in Make nodig heeft (zie sectie 9).
+11. **Rho-tak** (modules 40-56): eigen, losse flow voor recruitment-onboarding, bewust niet aangeraakt bij de mail-herbouw.
 
-Concrete brokken uit dit gesprek:
-
-- **Playbook — eerst het nut bepalen.** Is versturen überhaupt nodig? Wat is het, wat is de meerwaarde, en als we het versturen: pas nadat het écht is ingevuld, niet als lege template.
-- **Begin van de onboarding komt vooral uit HubSpot.** Meenemen als bron bij het opnieuw inrichten van de start van de keten.
-- **Access-tooling — opnieuw checken op actuele data + rebranding.** Meer een 2026-vibe. (Sluit aan op de bekende klacht dat access te lang duurt.)
-- **DPA — misschien een iets nettere opmaak,** maar geen gekke dingen.
-
-Deze brokken zijn kandidaten voor niveau-2; welke prioriteit krijgt, hangt af van de leads-uitvraag (zie hieronder).
-
----
-
-## 9. De leads-uitvraag (concrete to-do)
-
-**Doel:** ophalen wat partners nodig hebben en wat S&S-mensen zelf nodig hebben tijdens de onboarding, om de verbeteringen te laten aansluiten op de praktijk. Antwoorden naast elkaar leggen, kijken waar de overlap zit, en daaruit concluderen wat we wel/niet oppakken.
-
-**Methode:** privé Slack-DM naar elke lead. Zelfde bericht voor iedereen (niet per persoon afgestemd). Kort en concreet, ik lever de tekst, Hidde stuurt zelf.
-
-**Definitief bericht:**
-
-> Hey [naam],
->
-> Ik ben de onboarding van nieuwe partners aan het verbeteren en heb daar nog wat input voor nodig, zodat het beter aansluit op de praktijkervaringen.
->
-> Zou je me kunnen helpen door aan te geven wat jouw kijk is op de knelpunten van de huidige onboarding, en wat je vanuit de partners hun perspectief weet?
->
-> Geef bijvoorbeeld je top 3 à 5 grootste punten per vraag:
->
-> 1. Waar hebben partners tijdens de onboarding het meest behoefte aan en/of de grootste problemen mee gehad?
-> 2. Wat heb je nodig om na de onboarding van een nieuwe partner daadwerkelijk je werk te kunnen doen? Dat mag iets zijn wat er nu al is, maar ook iets wat nog niet standaard geregeld is maar wel nodig.
-
-**Verwerking:** antwoorden bundelen per thema, overlap markeren, conclusie trekken over wat wel/niet in scope komt. Verwerken in dit overzicht en in de analyse/blueprint (sectie partner-ervaring, lopend log).
-
-**Status:** Ronde 2 binnen (2026-07-09): Anjo en Sharif. Verwerkt in `Onboarding-Workflow-Analyse-en-Blueprint.md` sectie 5. Nog wachten op de overige leads (Phi, Kappa, Rho, Alpha, Gamma waar nog niet gedekt).
+`6525439` vangt de Worker-webhook op zodra de vragenlijst binnen is en werkt de Monday-status + Registry bij. `6525442` verstuurt reminders en gebruikt geen van de gefixte connecties.
 
 ---
 
-## 10. Ideeën & aanbevelingen (verbeterrichtingen)
+## 9. Welkomstmail: herontwerp en status
 
-Opgehangen aan de drie waarden. Suggesties, nog te toetsen bij Bart, Gijs en de leads.
+De partnermail is dit spoor drie keer herzien op basis van concrete feedback, en staat nu op een professionele v3:
 
-**Sneller**
-- Partner en partner-contactpersonen zo vroeg mogelijk toegang geven (Slack, Monday, Drive). Access is een expliciete partner-klacht.
-- Snel waarde bieden via een directory van ~3 direct inzetbare agents/tools tijdens de onboarding (Sharif) — nader uit te werken.
+- Eyebrow "Onboarding gestart" weg, geen pijltjes/gedachtestreepjes, een concrete voortgangstrack (Contract getekend → Onboarding → Growth audit → Strategiesessie) i.p.v. een vage tijdlijn.
+- Vier acties met korte, zakelijke toelichting: DPA tekenen, vragenlijst invullen, gedeelde Drive-map, **toegang geven tot de eigen platforms van de partner** (niet: "welke tools wij gebruiken").
+- Dynamisch, per-team contact in de afsluiting (module 961 "Lead-contact per team": Sigma→Jorg, Alpha→Sharif, Phi→Anjo, Kappa→Walter, Gamma→Hidde als fallback), inclusief werkende `replyTo`.
+- De "toegang tot platforms"-gids wordt nu **per partner gekopieerd** (module 962 "Copy Tooling access") naar de gedeelde map, net als de DPA, i.p.v. één statische link.
+- Social-links (Facebook, Instagram, YouTube, TikTok) in de footer.
 
-**Grondiger**
-- Live compleetheids-check per partner op Monday: vinkjes per onderdeel die de workflow zelf aftikt.
-- Vragenlijst-lus sluiten: Worker seint bij inzending naar Make (met partner-id) → Slack-melding + Monday-status "ingevuld".
-- Foutmelding in Slack bij een mislukte run.
-- Vooraf klaarzetten wat we al weten (deels uit HubSpot).
-- Interactieve toegang-checklist i.p.v. statische lijst: klant vinkt per tool "heb ik niet" af en gaat door (Anjo) — twee leads noemen onafhankelijk dat klanten toegang verlenen niet snappen.
+**Status:** tekst en logica zijn klaar en geverifieerd; de daadwerkelijke wijziging in `6525431` (modules 961, 962, en de html/replyTo van modules 33/34) is **nog niet gepusht** — de blueprint is te groot geworden om in één keer veilig via de API te pushen, dus dit gaat handmatig in de Make-UI (instructies zijn al gegeven). Bestanden klaar om te plakken: `Welkomstmail-NL.md`, `Welkomstmail-EN.md`, en `Welkomstmail.html` (beide talen met tab-switch, ter controle) in deze map. Een goedkeuringsdemo (Template B.V. / Gerard Broekhuizen) en een PDF-export staan er ook, voor akkoord vragen aan derden.
 
-**Betere partner-ervaring**
-- Eén helder welkomstmoment i.p.v. losse mails/uitnodigingen, met roadmap + contactpersoon.
-- Communicatie op naam van de accountlead, verzonden vanaf een stabiel account (geen reauth-risico).
-- Bevestiging aan de partner zodra de vragenlijst binnen is, met de volgende stap.
-- Vaste contactpersoon of nette overdracht van context, i.p.v. dezelfde gesprekken meermaals voeren met wisselende personen (Sharif).
-- Gefaseerde oplevering van de growth audit i.p.v. één grote oplevering aan het eind, zodat de partner sneller een plan/resultaat ziet (Sharif).
-- Onboarding-workshops met de klant (Sharif).
+---
 
-**Bestanden upgraden (ervaring/gemak)**
-- Access-tooling, DPA, Assignment letter en Handover naar hetzelfde niveau tillen als de vernieuwde vragenlijst.
-- Overweeg een eigen onboarding-portal/frontend met checklist van te voltooien stappen + korte video's over het S&S-proces (Sharif) — overlapt met Anjo's toegang-afvink-idee; bouwt voort op de bestaande Cloudflare-vragenlijst-aanpak.
+## 10. Benchmarkonderzoek + leads-uitvraag: bevindingen (2026-07-10)
+
+De leads-uitvraag (sectie 12, oude planning) is binnen: Anjo en Sharif hebben gereageerd, zie `Onboarding input leads.md`. Daarnaast is een apart benchmarkonderzoek afgerond naar 9 vergelijkbare bedrijven (Hello Social, Superside, Springbok Agency, WebFX, KlientBoost, HubSpot, Superhuman, Asana, Seven Figure Agency), 59 ontdubbelde onboardingonderdelen, zie `Benchmarkonderzoek-onboarding-andere-bedrijven.md`.
+
+**Belangrijkste, 100%-vereiste bevinding uit de leads:** de partner moet **brandbook + tone-of-voice** aanleveren; dit ontbreekt nu volledig in de vragenlijst/automation en is nodig voor al het contentgerelateerde werk (content, ads, outbound). Dit staat nog niet gebouwd.
+
+**Bevestigd door beide bronnen onafhankelijk:** de partner mist geen documenten maar ritme en regie. Concreet ontbreekt nu:
+- één partnerzichtbare roadmap (taken, eigenaren, deadlines, status);
+- een vaste sales→delivery-overdracht als startvoorwaarde;
+- een benoemde accountlead + escalatieroute vóór het welkomstmoment (deels al gedekt door module 961);
+- een begeleide access-sprint (toegang is dé bevestigde vertraging, ook door Anjo/Sharif expliciet genoemd);
+- een gestructureerde kickstart met succescriteria, rollen en ritme;
+- een vast "volgende stap"-protocol;
+- een expliciete afronding/overgang naar de vaste sprintcadans.
+
+Deze zes punten zijn de P0-prioriteiten uit het benchmarkonderzoek (sectie 6 daarvan). Er is nog **geen besluit** genomen over welke hiervan in welke volgorde gebouwd worden — zie sectie 12.
 
 ---
 
 ## 11. Openstaande vragen & beslissingen
 
-**Consistent werkend**
-- Definitie op papier verifiëren bij Gijs; wat gaat er precies mis in de team-routes.
+**Genomen besluiten**
+- **Connecties:** service-account (Drive) + gedeelde Monday-connectie `8950423`. Slack blijft bewust persoonsgebonden (Sharif), zie ticket 02.
+- **Playbook:** de auto-copy-stap is geschrapt; een handmatige, latere levering blijft staan.
+- **Tooling Access:** de oude, verouderde en onbrand `.docx` wordt vervangen door een per-partner PDF-kopie (module 962); geen credential-sharing meer in de mail zelf.
+- **B2B/B2C:** het teamveld bepaalt de vragenlijst-link; bredere differentiatie is een aparte beslissing.
+- **Rho:** eigen recruitment-onboarding, blijft bewust anders, niet meegenomen in de mail-herbouw.
+- **Stabiel e-mailadres (ticket 08):** on hold, wacht op management-goedkeuring; V1 verstuurt voorlopig via Sharif's Gmail.
 
-**DPA**
-- Toegang tot het DPA-template in Finance & Legal (mist nu). Mag er een juridische update in? Alleen opmaak of ook inhoud?
-
-**Assignment letter + Handover**
-- Wie maakt/vult/verstuurt/bewaart, en waar komt het vandaan? Waarom wisselt het bestandstype? Willen we ze voortaan in de partnermap bewaren?
-
-**Tooling Access**
-- Welke e-mail hoort bij welke tool? (nu oude/niet-bestaande adressen)
-- Meta Ads: hoe voorkomen we koppeling aan één persoon?
-
-**Playbook**
-- Is versturen nodig, en zo ja pas na invullen? Splitsen naar B2B/B2C? (B2B-playbook bestaat al, moet opgeschoond; B2C nog niet.)
-
-**HubSpot**
-- Wat kunnen we precies uit HubSpot trekken om de start van de keten te voeden, en hoe koppelen we dat?
-
-**Partner-contactpersonen**
-- E-mailadressen uitvragen in het Slack-form, zodat ze klaarstaan voor Slack/Monday/Drive.
-
-**Vastliggende beslissingen**
-- **Connecties:** interim op `accounts@sprintsandsneakers.com`; echte fix in V2 is password-onafhankelijk (Google service-account, Brevo API-key, Monday API-token, Slack bot-token).
-- **B2B/B2C:** het teamveld bepaalt voorlopig alleen de vragenlijst-link; bredere differentiatie is een aparte beslissing.
-- **Rho:** eigen recruitment-onboarding, blijft bewust anders.
+**Nog open**
+- **Team Gamma mist een geldige Lead** (kapotte Monday-ID in Teamconfig); valt nu terug op Hidde. Nog 3 losse verouderde Slack-ID's in het Teamconfig-sheet staan ook nog open.
+- **Brandbook + tone-of-voice:** waar in de vragenlijst, verplicht upload/link-veld, en meenemen als hard-gate richting "growth-ready"? (spoor A, zie sectie 12)
+- **Prioritering van de zes P0-punten** uit het benchmarkonderzoek (sectie 10): welke worden een ticket, in welke volgorde?
+- **Tooling access-link:** nu een Google Doc; jij gaf ook een folder- en PDF-link door, definitieve keuze staat nog open.
 
 ---
 
 ## 12. Plan / volgende stappen
 
-1. **Leads-uitvraag versturen** (bericht staat klaar in sectie 9) en antwoorden verzamelen.
-2. **Overlap-analyse:** partner-behoeften en S&S-behoeften naast elkaar, conclusie wat wel/niet in scope.
-3. **Prioriteit bepalen** binnen de Gijs-brokken (Playbook, HubSpot-start, Access-tooling/rebranding, DPA) op basis van impact op partnerervaring.
-4. **Consistent werkend** afmaken in de live scenario (blokkades A en B), foutmelding (C) inbouwen.
-5. **Gekozen niveau-2-brok** uitwerken in V2 en pas live zetten als het klopt.
-6. Dit overzicht en de analyse/blueprint bijwerken met de nieuwe input.
+**Direct, klein:**
+1. Handmatig in Make: module 961 + 962 toevoegen, modules 33/34 bijwerken (instructies al gegeven, wacht op uitvoering).
+2. E2e-test door Hidde zelf; ik lees de executies na via de Make-API.
+3. Spec-compliance-review (nog niet gedaan, eerder overgeslagen).
+4. Cutover (ticket 10): V1-scenario's activeren, live scenario `3059444` uitzetten, met expliciete go.
+
+**Middellange termijn, prioritering nodig:**
+5. **Spoor A — brandbook + tone-of-voice** toevoegen aan de vragenlijst + Drive + hard-gate. Klein, concreet, snel te bouwen.
+6. **Spoor B — regielaag** uit het benchmarkonderzoek: roadmap, sales→delivery-overdracht, gestructureerde kickstart, vast volgende-stap-protocol, expliciete afronding. Groter, raakt spec.md, wordt uitgewerkt in nieuwe tickets zodra de prioritering (sectie 11) vaststaat.
 
 ---
 
-*Bronnen: memory-project (vragenlijst-status, Make-integratie, Gijs-feedback, AAARRR-funnel, workflow-connections-fix), Briefing-Onboarding-Workflow-Verbeteren.md, Onboarding-Workflow-Analyse-en-Blueprint.md, Gijs-gesprek 2026-07-09.*
+*Bronnen: memory-project (vragenlijst-status, Make-integratie, workflow-connections-fix, V1-rebuild-state, blueprint-size-limit), Onboarding-Aanpassingen-Overzicht.md, Benchmarkonderzoek-onboarding-andere-bedrijven.md, Onboarding input leads.md, Gijs-gesprek 2026-07-09.*

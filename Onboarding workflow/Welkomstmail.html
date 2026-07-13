@@ -1,25 +1,128 @@
-# Partnermail HTML (v3, on-brand)
-
-Voor modules "Send email to partner (NL)" (33) en "Send email to partner (EN)" (34) in scenario 6525431. **Niet gebruiken voor Rho/GLJ** (module 56 blijft ongewijzigd).
-
-**Status: nog NIET gepusht naar Make.** Dit bestand is de leesbare referentie zodat je kunt meelezen/goedkeuren; de daadwerkelijke wijziging in het scenario (nieuwe HTML in modules 33/34, plus een nieuwe module 961 "Lead-contact per team" die per team het juiste `leadName`/`leadEmail` bepaalt) wacht op jouw akkoord.
-
-**Wijzigingen t.o.v. v1** (verwerkte feedback):
-- Eyebrow "Onboarding gestart" verwijderd (voegde niets toe).
-- Geen pijltjes en geen gedachtestreepjes meer, ook niet in CTA-styling.
-- Vage "Nu/Deze week/Daarna"-tijdlijn vervangen door een concrete voortgangstrack (Contract getekend, Onboarding, Growth audit, Strategiesessie) met de huidige fase gemarkeerd.
-- Elke actie heeft nu een korte, zakelijke toelichting.
-- "Tooling access" toegevoegd als vierde actie: niet geframed als "welke tools wij gebruiken", maar als "geef ons toegang tot jullie platforms" (link: Google Doc, zie noot onderaan).
-- Subteksten ingekort en professioneler gemaakt (v2 klonk kinderachtig/overuitgelegd); geen verwijzing meer naar de bedrijfsnaam bij de gedeelde map.
-- "Vragen? Reageer gerust op deze mail" vervangen door het echte, per-team toegewezen contact (dynamisch via module 961: Sigma: Jorg, Alpha: Sharif, Phi: Anjo, Kappa: Walter, Gamma: jij als fallback). De `replyTo`-header van de mail staat ook op dit adres. Geen "jullie vaste contactpersoon"-frase meer.
-- Social-links (Facebook, Instagram, YouTube, TikTok) toegevoegd in de footer met de echte URL's.
-
-**Open punt:** de "toegang tot platforms"-link wijst nu naar de Google Doc die je doorgaf (`docs.google.com/document/d/1-dCRWI-.../edit`). Je gaf ook een Drive-folder en een PDF-link door; als je liever een van die twee gebruikt, is dat een eenregelige wissel in beide modules.
-
-## NL — module 33
-
-```html
 <!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welkomstmail — NL / EN</title>
+<style>
+:root{
+  --bg:#F2F2F2;
+  --panel:#FFFFFF;
+  --ink:#0A0A0A;
+  --sub:#5B5B5B;
+  --line:#E3E3E3;
+  --lime:#B2FA63;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:40px 24px 64px;
+}
+h1{
+  font-size:24px;
+  line-height:1.2;
+  font-weight:700;
+  margin:0 0 8px;
+}
+.lede{
+  color:var(--sub);
+  font-size:14px;
+  line-height:1.6;
+  max-width:640px;
+  margin:0 0 28px;
+}
+.tabs{
+  display:flex;
+  gap:4px;
+  border-bottom:1px solid var(--line);
+}
+.tab{
+  appearance:none;
+  border:none;
+  background:transparent;
+  color:var(--sub);
+  font-family:inherit;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:0.3px;
+  padding:10px 4px;
+  margin-right:22px;
+  cursor:pointer;
+  position:relative;
+}
+.tab:after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:-1px;
+  height:2px;
+  background:transparent;
+}
+.tab[aria-selected="true"]{color:var(--ink);}
+.tab[aria-selected="true"]:after{background:var(--lime);}
+.frame-card{
+  margin-top:20px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+.frame-holder{
+  background:var(--bg);
+  display:flex;
+  justify-content:center;
+}
+iframe{
+  width:664px;
+  max-width:100%;
+  height:1250px;
+  border:none;
+  display:block;
+  background:#F2F2F2;
+}
+.footnote{
+  margin-top:20px;
+  font-size:12.5px;
+  color:var(--sub);
+  line-height:1.7;
+  max-width:640px;
+}
+.footnote code{
+  background:#000000;
+  color:#FFFFFF;
+  border-radius:4px;
+  padding:1px 6px;
+  font-size:11.5px;
+}
+template{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Welkomstmail nieuwe partner</h1>
+  <p class="lede">Productieversie voor modules "Send email to partner (NL)" (33) en "Send email to partner (EN)" (34) in scenario 6525431. Geldt niet voor team Rho/GLJ (module 56).</p>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" id="tab-nl" role="tab" aria-selected="true" onclick="show('nl')">Nederlands</button>
+    <button class="tab" id="tab-en" role="tab" aria-selected="false" onclick="show('en')">English</button>
+  </div>
+
+  <div class="frame-card">
+    <div class="frame-holder">
+      <iframe id="preview" title="E-mail preview"></iframe>
+    </div>
+  </div>
+
+  <p class="footnote">De <code>{{...}}</code>-tokens zijn live Make-variabelen (bedrijfsnaam, voornaam, DPA-link, vragenlijstlink, mapLink, en het per-team toegewezen contact via module 961). Die tonen hier als platte tekst en worden pas ingevuld als Make de mail daadwerkelijk verstuurt.</p>
+</div>
+
+<template id="tpl-nl"><!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#F2F2F2;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2F2F2;">
@@ -149,12 +252,9 @@ Voor modules "Send email to partner (NL)" (33) en "Send email to partner (EN)" (
 </table>
 </body>
 </html>
-```
+</template>
 
-## EN — module 34
-
-```html
-<!DOCTYPE html>
+<template id="tpl-en"><!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#F2F2F2;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2F2F2;">
@@ -284,4 +384,16 @@ Voor modules "Send email to partner (NL)" (33) en "Send email to partner (EN)" (
 </table>
 </body>
 </html>
-```
+</template>
+
+<script>
+function show(lang){
+  document.getElementById('tab-nl').setAttribute('aria-selected', lang === 'nl');
+  document.getElementById('tab-en').setAttribute('aria-selected', lang === 'en');
+  var tpl = document.getElementById(lang === 'nl' ? 'tpl-nl' : 'tpl-en');
+  document.getElementById('preview').srcdoc = tpl.innerHTML;
+}
+show('nl');
+</script>
+</body>
+</html>

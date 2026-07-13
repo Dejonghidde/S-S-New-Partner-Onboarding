@@ -1,0 +1,55 @@
+- generic [active] [ref=f1e1]:
+  - img "Sprints & Sneakers" [ref=f1e2]
+  - text: Â
+  - 'heading "Welkom, {{2.company}}" [level=1] [ref=f1e3]'
+  - paragraph [ref=f1e4]: "Hi {{2.firstName}},"
+  - paragraph [ref=f1e5]:
+    - text: We kijken ernaar uit om met
+    - strong [ref=f1e6]: "{{2.company}}"
+    - text: samen te werken. Om de samenwerking goed te starten hebben we vier zaken van jullie nodig, hieronder toegelicht.
+  - paragraph [ref=f1e7]: Waar we nu staan
+  - text: Â
+  - paragraph [ref=f1e8]: Contract getekend
+  - text: Â
+  - paragraph [ref=f1e9]: Onboarding
+  - text: Â
+  - paragraph [ref=f1e10]: Growth audit
+  - text: Â
+  - paragraph [ref=f1e11]: Strategiesessie
+  - text: "1"
+  - link "Onderteken de verwerkersovereenkomst" [ref=f1e12] [cursor=pointer]:
+    - /url: "{{973.webViewLink}}"
+  - paragraph [ref=f1e13]: Legt de afspraken over gegevensverwerking vast conform de AVG. Voorwaarde om te kunnen starten.
+  - text: "2"
+  - 'link "Vertel ons over {{2.company}}" [ref=f1e14] [cursor=pointer]':
+    - /url: "{{2.qPath}}{{965.id}}"
+  - paragraph [ref=f1e15]: De antwoorden vormen de basis voor de eerste growth audit.
+  - text: "3"
+  - link "Bekijk jullie gedeelde Drive-map" [ref=f1e16] [cursor=pointer]:
+    - /url: "{{966.webViewLink}}"
+  - paragraph [ref=f1e17]: Hier wisselen we gedurende de samenwerking documenten, briefings en materiaal uit.
+  - text: "4"
+  - link "Geef ons toegang tot jullie platforms" [ref=f1e18] [cursor=pointer]:
+    - /url: "{{972.webViewLink}}"
+  - paragraph [ref=f1e19]: Deze gids beschrijft per platform hoe je ons toegang verleent, zodat we het werk voor jullie kunnen uitvoeren.
+  - paragraph [ref=f1e20]:
+    - text: "Heb je vragen? Neem contact op met {{961.leadName}} via"
+    - 'link "{{961.leadEmail}}" [ref=f1e21] [cursor=pointer]':
+      - /url: "mailto:{{961.leadEmail}}"
+    - text: .
+  - paragraph [ref=f1e22]: Tot snel,
+  - paragraph [ref=f1e23]: Team Sprints & Sneakers
+  - text: Â
+  - paragraph [ref=f1e24]: Sprints & Sneakers B.V. Â· Duivendrechtsekade 80B, 1096 AH Amsterdam
+  - paragraph [ref=f1e25]:
+    - link "Facebook" [ref=f1e26] [cursor=pointer]:
+      - /url: https://www.facebook.com/sprintsandsneakers
+    - text: Â·
+    - link "Instagram" [ref=f1e27] [cursor=pointer]:
+      - /url: https://www.instagram.com/sprintsandsneakers
+    - text: Â·
+    - link "YouTube" [ref=f1e28] [cursor=pointer]:
+      - /url: https://www.youtube.com/@sprintsandsneakers
+    - text: Â·
+    - link "TikTok" [ref=f1e29] [cursor=pointer]:
+      - /url: https://www.tiktok.com/@sprintsandsneakers

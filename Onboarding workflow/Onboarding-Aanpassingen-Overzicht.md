@@ -3,7 +3,7 @@ type: aanpassingenlijst
 project: New Partner Onboarding
 status: In uitvoering
 accountable: Hidde
-bijgewerkt: 2026-07-10
+bijgewerkt: 2026-07-13
 ---
 
 # Onboarding — Aanpassingen die gedaan moeten worden
@@ -31,6 +31,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 11 | Live 3059444 blijft ongemoeid tijdens de bouw; alles eerst in kopie 6226897 | Make (live 3059444 + V2 6226897), tickets 00/01 | 🔴 Veiligheidsregel | Besloten (2026-07-10) |
 | 12 | V1-herbouw neergezet: 3 nieuwe inactieve scenario's + Worker-uitbreiding + config/registry | Make, Cloudflare Worker, V1-spreadsheet, Monday | 🔴 Hoofdlevering | Gebouwd (2026-07-11), activatie = cutover met go |
 | 13 | Ticket 08 (Brevo-mail) on hold; V1 blijft voorlopig op Sharif/Gino's Gmail | Make-scenario's 6525431/6525442 (mail-modules) | - | On hold (2026-07-12) — wacht op management-goedkeuring voor stabiel adres |
+| 14 | Experience-laag (deel 2 van de spec): granulaire Monday-subitems, kickstart-standaardformat, begeleide access-sprint, doorlooptijd-doelen | spec/spec.md deel 2 + nieuwe tickets 11-14 | 🔴 Volgende hoofdlevering na V1-cutover | In review bij Hidde (2026-07-13) |
 
 ---
 
@@ -66,11 +67,9 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 
 **Waarom:** dit wordt momenteel niet duidelijk uitgevraagd in de onboarding, waardoor het vaak vergeten wordt of simpelweg niet binnenkomt. Het is echter cruciaal: zonder tone-of-voice en brandbook kan het team ná de onboarding niet direct on-brand aan de slag (content, campagnes, communicatie namens de partner).
 
-**Waar (voorstel, nog te bevestigen):**
-- Als expliciete upload-vraag onder de bestaande "assets"-categorie in de onboarding-vragenlijst (B2C + B2B) — deze ondersteunt al file-uploads via de Cloudflare Worker naar de Drive-projectmap van de partner, dus dit is een kleine toevoeging, geen nieuwe infrastructuur.
-- Als los, zichtbaar checklist-item in de interne teamstatus/-notificatie ("Brandbook/tone-of-voice: aanwezig/ontbreekt"), zodat het net als playbook/funnel/DPA niet stilzwijgend gemist kan worden.
+**Waar:** opgenomen als onderdeel van de Experience-laag (spec/spec.md deel 2, Blok A): een los subitem "Brandbook + tone-of-voice" op het Monday-partner-item, plus een bevestigingsoptie in de vragenlijst-assetssectie ("we hebben (nog) geen brandbook/tone-of-voice") zodat afwezigheid zichtbaar is in plaats van stil.
 
-**Status:** Open — toe te voegen.
+**Status:** In uitvoering via ticket 11 (spec/spec.md deel 2).
 
 ---
 
@@ -80,9 +79,9 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 
 **Waarom:** audit (2026-07-09) bevestigde meerdere concrete gebreken: geen S&S-huisstijl (kaal Word-standaard, logo rendert kapot), kapotte inhoudsopgave (sectie 3.2 mist doordat 'ie niet als Heading is gestyled), tegenstrijdige instructies (tekst zegt `accounts@`, screenshot toont `hello@` voor HubSpot-toegang), persoonsafhankelijkheid (Gijs' persoonlijke e-mail als instructie voor toegang op ~7 advertentieplatformen), de instructie om wachtwoorden via e-mail te delen (beveiligingsrisico) bij meerdere tools, een dode tool (Google Optimize, sinds september 2023 offline door Google), verouderde merknamen (Twitter i.p.v. X, Bing Ads i.p.v. Microsoft Advertising), en kopieerfouten (dubbele stapnummers). Onafhankelijk bevestigd door de leads-uitvraag: zowel Anjo als Sharif noemen dat klanten toegang verlenen vaak niet snappen (zie Onboarding-Workflow-Analyse-en-Blueprint.md sectie 5, Ronde 2).
 
-**Waar:** `Documenten Onboarding/Tooling Access Guide - [klantnaam] [maak kopie] .docx`
+**Waar:** `Documenten Onboarding/Tooling Access Guide - [klantnaam] [maak kopie] .docx`. Opgenomen als onderdeel van de Experience-laag (spec/spec.md deel 2, Blok C): volledige herschrijving, 1-op-1 gekoppeld aan de toegang-subitems uit Blok A.
 
-**Status:** Open — scope van de fix (volledige herschrijving vs. gerichte fixes op de risicovolle onderdelen) nog te bepalen.
+**Status:** In uitvoering via ticket 14 (spec/spec.md deel 2).
 
 ---
 
@@ -184,3 +183,15 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 **Bewuste keuzes van Hidde die hierin verwerkt zijn:** bestaande connecties hergebruiken (Slack `2655290`, Monday `2541989`, mail `2870801`/`3156710`, sheets `8884641`); foutmeldingen als DM naar Hidde (`D0ATPSA2GAX` via `6773974`); Monday-boardtemplate per partner_type in plaats van per team.
 
 **Status:** Gebouwd (2026-07-11). Restpunten en handmatige acties: zie tickets/README.md en het eindrapport in de sessie.
+
+---
+
+## 14. Experience-laag: zichtbare status, kickstart-standaard en begeleide access-sprint
+
+**Wat:** een tweede bouwgolf bovenop de V1-ruggengraat, omdat een eerste smalle toevoeging (alleen het brandbook/tone-of-voice-statusveld) op zichzelf te weinig meerwaarde bleek te hebben. Drie bouwstenen: (A) de bundelkolom "Access & kickstart" op het Monday-board wordt losse, granulaire subitems per handmatig checklist-item; (B) een vast kickstart-standaardformat met handover als startvoorwaarde; (C) de Tooling Access Guide herschreven en gekoppeld aan de toegang-subitems. Alle drie sturen op een kort, consistent tijdpad (kickstart binnen 3-5 werkdagen, toegang compleet binnen 3 werkdagen, "klaar om te growth-hacken" binnen 7-10 werkdagen) in plaats van de huidige dagen-tot-weken zonder vast ritme.
+
+**Waarom:** rechtstreeks uit het benchmarkonderzoek (regie/zichtbaarheid is de meest gedeelde succesfactor bij 8 van de 9 onderzochte bedrijven) en de leads-input (Anjo: toegang mist altijd iets; Sharif: trajecten beginnen ongecontroleerd).
+
+**Waar:** `spec/spec.md`, Deel 2 (sectie 11-18). Uitvoering via nieuwe tickets 11 t/m 14.
+
+**Status:** In review bij Hidde (2026-07-13). Niet starten met de tickets tot akkoord op de spec.

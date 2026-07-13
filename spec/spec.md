@@ -172,3 +172,126 @@ De sleutel die alles verbindt is de **Drive-folder-id** van de partnermap. Spoor
 | Wie kan er naast Hidde deployen op tools@ (wrangler); komt er CI/CD | Hidde | Vóór oplevering (continuïteit) |
 | Kwantitatieve drempels bevestigen: 15 min meldnorm, 15 min pakketnorm, reminder-termijn access (voorstel: 3 werkdagen) | Hidde | Bij spec-akkoord |
 | Git-historie bevat het oude Monday-token via de blueprint-exports: na rotatie onschadelijk, maar besluit of de exports uit de historie moeten | Hidde | Na rotatie |
+
+---
+
+# Deel 2: Experience-laag (tweede bouwgolf)
+
+---
+status: In review bij Hidde (opgesteld 2026-07-13). Nog niet goedgekeurd; niet starten met tickets voor dit deel tot akkoord.
+opgesteld: 2026-07-13, brainstormsessie met Claude Fable 5
+basis: Benchmarkonderzoek-onboarding-andere-bedrijven.md, Onboarding inspiraties.md, Input:inspiratie/Onboarding input leads.md, Onboarding-Aanpassingen-Overzicht.md (open punten 3 en 4), plus verificatie van het live Monday-board (Client overview, 3337611330)
+vervangt niet: Deel 1 hierboven blijft ongewijzigd en leidend voor de ruggengraat (V1); dit deel bouwt erop voort
+---
+
+## 11. Doel en aanleiding
+
+Deel 1 (hierboven) legt de betrouwbare ruggengraat: geen stille uitval, één correct pakket per partner, een gesloten vragenlijst-lus. Een eerste voorstel om daarna alleen een klein statusveld en wat mailcopy toe te voegen (brandbook/tone-of-voice) bleek op zichzelf te dun: het loste geen van de bewezen partnerpijn echt op. Het benchmarkonderzoek (9 bedrijven, 59 ontdubbelde onderdelen) en de leads-input (Anjo, Sharif) wijzen allebei naar dezelfde hefboom: niet meer documenten, maar **zichtbare regie en een kort, voorspelbaar tijdpad**. Vandaag duurt de onboarding dagen tot weken zonder vast ritme; dat is wat dit deel aanpakt.
+
+Twee kernklachten uit de leads-uitvraag sturen de scope direct:
+- **Anjo:** toegang mist altijd wel iets, waardoor audit en strategie vertragen; klanten kijken niet goed genoeg naar de toegangenlijst.
+- **Sharif:** trajecten beginnen vaker ongecontroleerd en niet volgens opdrachtbrief; het team moet echt geforceerd altijd dezelfde stappen in dezelfde volgorde nemen.
+
+## 12. Scope: drie bouwstenen
+
+### 12.1 Blok A — Zichtbare status & ritme
+
+Het Monday-board "Client overview" (3337611330) heeft vandaag één bundelstatuskolom "Access & kickstart" (Working on it/Done/Stuck/To do/Partially Done) voor alle handmatige onboardingstappen samen. Dat toont dát er iets speelt, niet wélk onderdeel vastzit.
+
+- Elk handmatig item wordt een los, bewaakt Monday-subitem onder het partner-item (het board heeft de native Subitems-kolom al, ongebruikt voor onboarding):
+  1. Partner toegevoegd aan extern Slack-kanaal
+  2. Partner toegevoegd aan Monday-board
+  3. Kickstart-meeting ingepland
+  4. LastPass-toegangsmap aangemaakt
+  5. Brandbook + tone-of-voice binnen (of expliciet gemeld als "niet aanwezig")
+  6. Ontbrekende info/toegang — alleen aangemaakt als de zachte-poort-melding uit deel 1 iets mist
+- De bestaande bundelkolom "Access & kickstart" blijft staan als samenvattend overzicht op basis van de subitems, zodat het board zowel in één oogopslag als in detail leesbaar blijft.
+- De al gebouwde reminder-automation (ticket 07, scenario 6525442) scant voortaan per subitem in plaats van op de ene bundelkolom, met dezelfde 3-werkdagen-drempel.
+- **Volgende-stap-protocol:** elk bericht aan de partner (welkomstmail, vragenlijst-bevestiging, kickstart-uitnodiging) eindigt met een vaste alinea: wat gebeurt nu, wie is eigenaar, wanneer hoort de partner weer iets.
+- **Accountlead als vaste eigenaar:** de sign-off-regel in de welkomstmail wordt aangescherpt van "bij vragen, neem contact op met…" naar een expliciete eigenaarschapszin voor de hele onboarding.
+- **Gestaffelde escalatie:** een subitem dat na de eerste reminder (dag 3) nog openstaat, escaleert bij een tweede gemiste termijn (dag 5) van de teamlead-DM naar een directe melding aan Hidde.
+
+### 12.2 Blok B — Kickstart-standaardisatie
+
+Dit lost Sharifs kernklacht rechtstreeks op: geen geïmproviseerde kickstarts meer, maar een vast format dat altijd hetzelfde vastlegt.
+
+- Een vast kickstart-format gekoppeld aan het partner-item (hergebruik van Monday/Drive, geen nieuwe tool), verplicht ingevuld door de accountlead tijdens de kickstart-meeting:
+  - Succescriteria voor déze onboarding (wanneer is déze partner specifiek "klaar om te growth-hacken")
+  - Rollen en contactpersonen aan beide kanten
+  - Communicatieritme (frequentie en kanaal)
+  - De eerste-waardemijlpaal met een datum
+- **Handover als startvoorwaarde:** dit is een menselijk proces-gate, geen nieuwe automation-blokkade (de zachte-poort-keuze uit deel 1, beslissing 8, blijft voor de flow zelf ongewijzigd van kracht). De accountlead bevestigt de kickstart-meeting pas nadat assignment letter en handover niet meer als "ontbreekt" gemarkeerd staan, tenzij Hidde of de accountlead dat bewust overrulet.
+- **Dag-0 kickstart-scheduling:** de welkomstmail bevat een directe manier om de kickstart in te plannen, in plaats van te wachten tot iemand er later handmatig achteraan gaat. De exacte vorm (Google Calendar-afspraaklink vs. drie voorgestelde tijdsloten) is een technische keuze voor de bouwfase, geen scope-beslissing.
+
+### 12.3 Blok C — Begeleide access-sprint
+
+Dit lost Anjo's kernklacht rechtstreeks op: toegang wordt geen statische PDF die de partner zelfstandig moet doorlopen.
+
+- De Tooling Access Guide wordt herschreven (dit was al open punt 4 in `Onboarding-Aanpassingen-Overzicht.md`, hier geconcretiseerd binnen deze fase): S&S-huisstijl, werkende inhoudsopgave, geen persoonsgebonden instructies, geen instructie om wachtwoorden via e-mail te delen, actuele toolnamen, dode tools (Google Optimize) eruit.
+- De toegangen uit de guide worden 1-op-1 dezelfde items als de subitems uit Blok A: geen los document meer, maar een bewaakte checklist met eigenaar en termijn.
+- Doel: toegang compleet binnen 3 werkdagen na form-submit (teamkant, dus hard te sturen — in tegenstelling tot de vragenlijst, die partner-afhankelijk blijft en dus een zachte richttermijn houdt, conform de zachte-poort-keuze uit deel 1).
+
+## 13. Doorlooptijd-doelen
+
+De automation levert het pakket al binnen 15 minuten (deel 1-norm). De dagen-tot-weken-vertraging zit dus volledig aan de menselijke kant. Deze tabel is het concrete tegenwicht: een kort, consistent tijdpad in plaats van een variabele doorlooptijd zonder vast ritme.
+
+| Fase | Doel | Eigenaar |
+|---|---|---|
+| Kickstart voorstelbaar/inplanbaar | Dag 0, direct in de welkomstmail | Automation |
+| Kickstart vindt plaats | Binnen 3 tot 5 werkdagen na form-submit | Accountlead |
+| Toegang compleet (Slack, Monday, tooling) | Binnen 3 werkdagen na form-submit | Accountlead, bewaakt via Blok A |
+| Vragenlijst binnen | Richttermijn 3 werkdagen (zachte poort, partner-afhankelijk) | Partner, genudged |
+| Onboarding "klaar om te growth-hacken" | Binnen 7 tot 10 werkdagen totaal | Systeem meet, team levert |
+
+Deze getallen zijn een concept-startpunt (zie open vragen 18); ze worden na de eerste testpartners bijgesteld, niet blind vastgezet.
+
+## 14. Wat dit deel niet doet (bewust buiten scope)
+
+- **Interactieve onboarding-portal** (Anjo/Sharif's idee: eigen frontend met afvink-checklist en procesuitleg). Expliciete keuze van Hidde (2026-07-13): interne regie eerst. De portal bouwt later voort op de bestaande Cloudflare-vragenlijst-infrastructuur, maar verdient een eigen scherpe spec.
+- Rolgerichte training in de S&S-werkwijze (benchmark P1-9).
+- Het volledige meetkader op vijf kernuitkomsten inclusief NPS/CSAT-nulmeting (benchmark P1-10). De tijdsdoelen in sectie 13 zijn wel een lichte, directe meting; een volledige meetopzet is dat niet.
+- Partnercontext vastleggen als blijvend organisatiegeheugen (benchmark P1-11).
+- P2-experience-ideeën: menselijke overdrachtsvideo, persoonlijk gebaar of geschenk, advocacy-moment.
+- Definitie van de maturity scan (blijft de open vraag uit deel 1, ongewijzigd).
+- HubSpot-koppeling (blijft latere fase, ongewijzigd).
+
+## 15. Aannames en keuzes (beslislog, deel 2)
+
+| # | Keuze | Reden |
+|---|---|---|
+| E1 | Granulaire Monday-subitems in plaats van de bundelkolom | De bundelkolom verbergt precies welk onderdeel vastzit — dat was de kern van de oorspronkelijke vraag naar een statusoverzicht. |
+| E2 | Geen nieuwe tool voor het kickstart-format; hergebruik Monday/Drive | Dit is procesdiscipline, geen technisch probleem; nieuwe infrastructuur zou de kickstart-standaardisatie onnodig vertragen. |
+| E3 | Handover als expliciete startvoorwaarde vóór kickstart-bevestiging | Voorkomt dat het team een kickstart doet zonder de opdrachtbrief-context — Sharifs kernklacht rechtstreeks aangepakt. |
+| E4 | Tijdsdoelen zijn hard aan de teamkant, zacht aan de partnerkant | Teamacties zijn direct stuurbaar; partneracties (vragenlijst) blijven van de partner afhankelijk. Spec-beslissing 8 (zachte poort, deel 1) blijft van kracht. |
+| E5 | Gestaffelde escalatie: dag 3 naar teamlead, dag 5 naar Hidde | Zonder een tweede trap blijft een gemiste eerste reminder net zo stil als de situatie die deel 1 al oploste voor Make-run-fouten. |
+| E6 | Portal blijft bewust uitgesteld | Expliciete keuze van Hidde (2026-07-13): interne regie eerst, portal is een aparte, grotere investering met een eigen spec. |
+
+## 16. Definition of Done (Experience-laag)
+
+1. Elk handmatig checklist-item (Slack-toegang, Monday-board, kickstart, LastPass, brand assets, ontbrekende info) staat als los, bewaakt subitem op het partner-board-item — niet meer als één bundelstatus.
+2. Een subitem dat 3 werkdagen openstaat geeft een reminder aan de eigenaar; staat het na nog eens 2 werkdagen (dag 5) nog open, dan escaleert het naar Hidde.
+3. De welkomstmail bevat een directe manier om de kickstart in te plannen, eindigt met een vaste "volgende stap + wie + wanneer"-alinea, en noemt de accountlead expliciet als vaste eigenaar van de hele onboarding.
+4. Een testpartner doorloopt een kickstart met het vaste format volledig ingevuld (succescriteria, rollen, ritme, eerste-waardemijlpaal-met-datum) en vastgelegd op het partner-item.
+5. De kickstart-meeting wordt niet bevestigd zolang assignment letter of handover als "ontbreekt" gemarkeerd staan, tenzij Hidde of de accountlead dat bewust overrulet.
+6. De Tooling Access Guide is herschreven (on-brand, werkende inhoudsopgave, geen persoonsgebonden instructies, geen wachtwoorden-via-mail-instructie, actuele toolnamen) en 1-op-1 gekoppeld aan de toegang-subitems uit punt 1.
+7. Een steekproef van 3 testpartners haalt de tijdsdoelen uit sectie 13, of een afwijking heeft een zichtbare, gemelde reden.
+
+## 17. Fasering / vervolgtickets
+
+| # | Ticket | Blok | Bouwt voort op |
+|---|---|---|---|
+| 11 | Granulaire Monday-subitems + reminder-uitbreiding | A | Ticket 07 (Monday-status + reminders) |
+| 12 | Mailcopy: volgende-stap-protocol, accountlead-eigenaarschap, dag-0 kickstart-scheduling-link | A/B | De nog niet goedgekeurde `Welkomstmail-NL.md`/`EN.md`-drafts |
+| 13 | Kickstart-standaardformat + handover-als-startvoorwaarde | B | Ticket 09 (form-verrijking) |
+| 14 | Tooling Access Guide herschrijven + koppelen aan subitems | C | Aanpassingenoverzicht-punt 4, ticket 11 |
+
+Zelfde regels als deel 1: aanpak in twee zinnen voorleggen en op groen licht wachten, één ticket per sessie, werkend werk vastleggen in git.
+
+## 18. Open vragen (deel 2)
+
+| Vraag | Wie | Wanneer nodig |
+|---|---|---|
+| Exacte scheduling-tool voor de dag-0 kickstart-link (Google Calendar-afspraaklink vs. voorgestelde tijdsloten) | Hidde | Bij ticket 12/13 |
+| Waar leeft het kickstart-format precies (Monday-doc, los Google Doc-template, tekst in het Monday-item) | Hidde | Bij ticket 13 |
+| Escalatie-ontvanger bevestigen: blijft dit Hidde, of een ander vast escalatiepunt | Hidde | Bij ticket 11 |
+| Tijdsdoelen uit sectie 13 zijn een concept-startpunt: bevestigen of bijstellen na de eerste testpartners | Hidde | Na eerste 3 testpartners |
