@@ -43,19 +43,21 @@ De spec (`spec/spec.md`, deel 1 goedgekeurd 2026-07-10, deel 2 in review) is opg
 
 ## Deel 2: het masterplan (tickets 11 t/m 19)
 
-Aanbevolen uitvoeringsvolgorde volgt de masterplan-fasen, niet de nummering: eerst 11 en 12 (fase 1), dan 15 en 16 (fase 2), dan 18 en 19 (fase 3), dan 13 en 14 (fase 4). Ticket 17 is gated en komt pas na drie bewezen research packs. Tickets 11, 12, 15 en 16 kunnen parallel aan de e2e-test van ticket 10 (ze bouwen in inactieve scenario's of lokaal).
+**Herziene prioriteit (besluit Hidde, 2026-07-14, vervangt de fase-volgorde hieronder):** eerst 13, dan 18, dan 19. Daarna pas 15+16+17 (vereisen een grotere research-agent/workflow-opzet). Ticket 12 voorlopig overslaan (geen impact/meerwaarde nu). Ticket 14 is al gedaan door Hidde zelf buiten deze tickets-flow om (nieuwe Tooling Access Guide, on-brand, inhoudelijk bijgewerkt, al gekoppeld in de live onboarding-workflow als de PDF die gekopieerd wordt).
+
+Oorspronkelijke aanbevolen uitvoeringsvolgorde volgde de masterplan-fasen, niet de nummering: eerst 11 en 12 (fase 1), dan 15 en 16 (fase 2), dan 18 en 19 (fase 3), dan 13 en 14 (fase 4). Ticket 17 is gated en komt pas na drie bewezen research packs. Tickets 11, 12, 15 en 16 kunnen parallel aan de e2e-test van ticket 10 (ze bouwen in inactieve scenario's of lokaal).
 
 | # | Ticket | Masterplan-fase | Afhankelijk van | Status |
 |---|---|---|---|---|
-| 11 | [Monday-subitems + reminders + escalatie](ticket-11-monday-subitems.md) | 1 | geen (activering met/na 10) | Gebouwd en getest in test-omgeving (2026-07-14); registry-sync en Rho-tak nog open; overzetten naar live resources is een apart poortje |
-| 12 | [Welkomstmail-copy: eigenaarschap + volgende stap](ticket-12-welkomstmail-copy.md) | 1 | copy-akkoord Bart/Gijs voor live | Open |
-| 13 | [Kickstart-standaard + handover-gate + dag-0 scheduling](ticket-13-kickstart-standaard.md) | 4 | 11, 12 | Open |
-| 14 | [Tooling Access Guide herschrijven + koppelen](ticket-14-tooling-access-guide.md) | 4 | 11, inhoud-akkoord Gijs/Bart | Open |
-| 15 | [Vragenlijst-sanering -50%](ticket-15-vragenlijst-sanering.md) | 2 | Bart-tabel (bindend), deploy met go | Open |
-| 16 | [Partner Research Pack v1](ticket-16-research-pack-v1.md) | 2 | 15 (zacht) | Open |
+| 11 | [Monday-subitems + reminders + escalatie](ticket-11-monday-subitems.md) | 1 | geen (activering met/na 10) | Gebouwd en getest in test-omgeving (2026-07-14); correctie na feedback Hidde: subitems horen op board 4197869424 (Tech backlog), niet Client overview, met Created/Deadline-kolommen en Hidde altijd als mede-eigenaar (zie sessielog); registry-sync en Rho-tak nog open |
+| 12 | [Welkomstmail-copy: eigenaarschap + volgende stap](ticket-12-welkomstmail-copy.md) | 1 | copy-akkoord Bart/Gijs voor live | Overgeslagen op verzoek Hidde (2026-07-14), geen impact nu |
+| 13 | [Kickstart-standaard + handover-gate + dag-0 scheduling](ticket-13-kickstart-standaard.md) | 4 | 11, 12 | 🔴 Prioriteit 1 (Hidde, 2026-07-14) |
+| 14 | [Tooling Access Guide herschrijven + koppelen](ticket-14-tooling-access-guide.md) | 4 | 11, inhoud-akkoord Gijs/Bart | Gedaan door Hidde zelf (buiten deze flow, gemeld 2026-07-14) |
+| 15 | [Vragenlijst-sanering -50%](ticket-15-vragenlijst-sanering.md) | 2 | Bart-tabel (bindend), deploy met go | Uitgesteld tot na 13/18/19 (Hidde, 2026-07-14) |
+| 16 | [Partner Research Pack v1](ticket-16-research-pack-v1.md) | 2 | 15 (zacht) | Uitgesteld tot na 13/18/19 (Hidde, 2026-07-14) |
 | 17 | [Research Pack v2: automatisch (GATED)](ticket-17-research-pack-automatisering.md) | 2 | 16: drie bewezen packs + go Hidde | Gated |
-| 18 | [HubSpot-spike](ticket-18-hubspot-spike.md) | 3 | HubSpot-leestoegang | Open |
-| 19 | [HubSpot-trigger bouwen](ticket-19-hubspot-trigger.md) | 3 | 18 + go Bart/Gijs | Open |
+| 18 | [HubSpot-spike](ticket-18-hubspot-spike.md) | 3 | HubSpot-leestoegang | 🔴 Prioriteit 2 (Hidde, 2026-07-14) |
+| 19 | [HubSpot-trigger bouwen](ticket-19-hubspot-trigger.md) | 3 | 18 + go Bart/Gijs | 🔴 Prioriteit 3 (Hidde, 2026-07-14) |
 
 ## Fase 5: de welkomstvideo van Bart (integratieplan, nog geen ticket)
 

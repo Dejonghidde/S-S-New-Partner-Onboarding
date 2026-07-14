@@ -32,3 +32,7 @@ Masterplan fase 4, stap 4.2 (pijlers P1 en P3). Spec deel 2, sectie 12.3 (Blok C
 
 ## Afhankelijk van
 Ticket 11 (subitems). Inhoudelijk akkoord Gijs/Bart voor het poortje.
+
+## Status: gedaan (gemeld door Hidde, 2026-07-14)
+
+Hidde heeft dit ticket zelf, buiten deze tickets-flow om, afgerond: nieuwe Tooling Access Guide, inhoudelijk bijgewerkt op de huidige situatie, in S&S-huisstijl. Het nieuwe document is al de PDF die de automation kopieert in de live onboarding-workflow. Niet door mij geverifieerd (geen eigen review/screenshots); vertrouwd op Hidde's melding.

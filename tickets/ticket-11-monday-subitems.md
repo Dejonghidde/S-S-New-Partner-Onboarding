@@ -64,3 +64,14 @@ Hidde gaf akkoord om door te bouwen, met de harde eis dat alles in een test-omge
 **Nog niet gedaan:** registry-sync (X/Y/AA/AB) vanuit de subitems. Bewust uitgesteld: de drie gebouwde scenario's dekken de kern van het ticket (subitems, reminders/escalatie, bundelkolom) en zijn stuk voor stuk getest; de sync is een kleine, losstaande toevoeging aan scenario 2 met dezelfde patronen (filterRows/updateRow) die al eerder gevalideerd zijn. Volgt als vervolgstap.
 
 **Voor Hidde om te bekijken:** de drie TEST-scenario's staan inactief klaar in Make (team 43614): `6557113`, `6557428`, `6557435`. Het testboard staat in de Gamma-map: <https://sprintsandsneakers.monday.com/boards/18421889561>. Nog te doen richting een echte livegang: (a) registry-sync toevoegen, (b) de drie scenario's ombouwen van test- naar echte resources (live Registry-sheet, Client overview-board 3337611330, teamlead-DM's i.p.v. altijd Hidde) — een poortje op zich, expliciet apart van deze testfase, (c) Rho-tak nog uitwerken (dit ticket dekte nu alleen de generieke/growth-route).
+
+## Correctie na feedback Hidde (2026-07-14)
+
+De subitems moeten NIET aan het Client overview-item hangen, maar aan het item dat module 3 van scenario 6525431 al aanmaakt op board **"#Operations - Tech backlog" (4197869424)**: item-naam `"{{company}} - onboarding"`, groep `topics`, veld "Ticket type" op label "Onboarding". Dit board heeft al een echte, in gebruik zijnde Subitems-board (`4303252229`, 621 items) met bevestigde kolommen (rechtstreeks uit de Monday-API, geen gok): `person` (Owner, people), `status` (Working on it/Done/Stuck), `date0` (**Created**), `date_mm5823e` (**Deadline**).
+
+Aanvullende eisen:
+- **Created** (`date0`) = startdatum van de onboarding (aanmaakdatum), niet leeg laten.
+- **Deadline** (`date_mm5823e`) = de al berekende due date (+3 werkdagen).
+- **Owner** (`person`) = de verantwoordelijke (teamlead/lead) **plus altijd Hidde de Jong (80896353)** erbij, zodat hij op deze twee Monday-kolommen zelf automations kan zetten (X dagen na Created nog niet Done → Slack-melding; Deadline binnen X dagen → melding).
+
+De module-configuratie voor deze aanpak is gevalideerd (`validate_module_configuration`: geldig) met de echte kolom-ID's van board 4303252229; nog niet opnieuw end-to-end getest tegen een testvariant van dit board (prioriteit ligt nu bij tickets 13/18/19). Bij het echte overzetten van test naar live (zie sessielog deel 2) dit gecorrigeerde doel-board gebruiken, niet Client overview.
