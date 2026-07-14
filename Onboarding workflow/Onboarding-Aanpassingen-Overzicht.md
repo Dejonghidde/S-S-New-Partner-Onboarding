@@ -33,7 +33,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 13 | Ticket 08 (Brevo-mail) on hold; V1 blijft voorlopig op Sharif/Gino's Gmail | Make-scenario's 6525431/6525442 (mail-modules) | - | On hold (2026-07-12) — wacht op management-goedkeuring voor stabiel adres |
 | 14 | Experience-laag (deel 2 van de spec): granulaire Monday-subitems, kickstart-standaardformat, begeleide access-sprint, doorlooptijd-doelen | spec/spec.md deel 2 + nieuwe tickets 11-14 | 🔴 Volgende hoofdlevering na V1-cutover | In review bij Hidde (2026-07-13) |
 | 15 | Masterplan opgesteld (einddoel + 6 fasen) op basis van Bart-feedback: vragenlijst -50% + research pack, HubSpot-trigger bij contract, welkomstvideo Bart | Onboarding workflow/Masterplan-New-Partner-Onboarding.md | 🔴 Kompas voor de volgorde | Opgesteld (2026-07-14), ter review bij Hidde |
-| 16 | Ticket 11: granulaire Monday-subitems (Blok A) — nieuw scenario "subitems aanmaken" ontworpen en gevalideerd; reminder-scenario 6525442-ombouw uitgewerkt op specniveau | Make (nieuw scenario, sandbox) + 6525442 | 🔴 Volgende hoofdlevering | Ontworpen en gevalideerd (2026-07-14), aanmaken geblokkeerd door permissieklassifier, go nodig van Hidde |
+| 16 | Ticket 11: granulaire Monday-subitems (Blok A) — drie scenario's (subitems aanmaken, reminders, bundelkolom-sync) gebouwd en getest in test-omgeving | Make (sandbox 6557113/6557428/6557435) + test-board/-sheet | 🔴 Volgende hoofdlevering | Gebouwd en getest (2026-07-14); registry-sync + Rho-tak open; overzetten naar live is apart poortje |
 
 ---
 
@@ -229,8 +229,13 @@ Daarnaast legt het masterplan zes restpunten vast uit de analyse van de actuele 
 
 **Blokkade:** het aanmaken van het nieuwe scenario in Make is door de ingebouwde permissieklassifier geweigerd, ook al zou het scenario inactief blijven staan: de trigger en acties verwijzen naar de live Registry-sheet en het live Client overview-board, en dat leest de classifier als een wijziging aan gedeelde, externe systemen waarvoor vooraf expliciet akkoord nodig is. Het volledig uitgewerkte en tegen Make's eigen schema/RPC-validators geteste blueprint staat klaar in de sessie-scratchpad; zodra Hidde akkoord geeft kan het in enkele minuten worden aangemaakt (door mij via de MCP-tools, of door Hidde zelf via "Import Blueprint" in de Make-designer).
 
-**Open vraag voor Hidde:** akkoord om het nieuwe scenario "subitems aanmaken" (inactief) aan te maken, en akkoord om daarna scenario 6525442 om te bouwen naar de subitem-scan? Beide blijven inactief tot een expliciete go voor activering, conform het sessieprotocol.
+**Update 2026-07-14, na akkoord Hidde:** gebouwd en getest, volledig in een test-omgeving (Hidde's eis: geen echte documenten, Slack-kanalen of Monday-boards). Test-Registry-sheet (kopie, `1N1xmkqbVH9ajx6HR9wwT-z-1CwkP4UX9dFVeO-ZgN88`), test-Monday-board (`18421889561`, in de Gamma-map), en alle testberichten als DM naar Hidde. Drie werkende, inactieve scenario's in Make (team 43614): `6557113` (subitems aanmaken), `6557428` (reminders), `6557435` (bundelkolom-sync). Alle drie end-to-end getest met echte runs (niet alleen schema-gevalideerd):
+- Subitems aanmaken: getest met complete én onvolledige intake; 5 resp. 6 subitems, eigenaar en due date kloppend. Tijdens het testen bleek de auto-gegenereerde Subitems-board de kolommen `person`/`date0` te gebruiken (niet `person`/`datum` zoals eerder ingeschat op basis van andere boards) — gecorrigeerd vóór oplevering.
+- Bundelkolom-sync: alle drie standen (To do, Partially Done, Done) bevestigd door subitems handmatig op Done te zetten tussen testruns.
+- Reminders: draait foutloos; de 3-/5-dagen-drempel zelf kon niet end-to-end getest worden (Monday's `created_at` van een subitem is niet terug te zetten via de API).
 
-**Status:** Ontworpen en gevalideerd (2026-07-14). Aanmaken/bouwen wacht op akkoord.
+**Openstaand:** registry-sync (kolommen X/Y/AA/AB) is nog niet gebouwd (bewust uitgesteld, geen risico voor de kern van het ticket) en de Rho-tak is nog niet uitgewerkt. Overzetten van test- naar live resources (echte Registry-sheet, Client overview-board 3337611330, teamlead-DM's i.p.v. Hidde) is een volgende stap met een eigen poortje.
+
+**Status:** Gebouwd en getest in test-omgeving (2026-07-14). Zie sessielog deel 2 in `tickets/ticket-11-monday-subitems.md` voor het volledige testverslag.
 
 **Status:** Opgesteld (2026-07-14), ter review bij Hidde.
