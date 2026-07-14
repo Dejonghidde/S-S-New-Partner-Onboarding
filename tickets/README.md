@@ -1,28 +1,78 @@
-# tickets/ : de brokken werk
+# tickets/ : de brokken werk plus het sessieprotocol
 
-De spec (`spec/spec.md`, goedgekeurd 2026-07-10) is opgeknipt in de tickets hieronder (werkwijze fase 3, template T5). Elk ticket is een brok die je in één schone sessie bouwt en verifieert.
+De spec (`spec/spec.md`, deel 1 goedgekeurd 2026-07-10, deel 2 in review) is opgeknipt in tickets. Het masterplan (`Onboarding workflow/Masterplan-New-Partner-Onboarding.md`, 2026-07-14) bepaalt het einddoel, de fasen en de volgorde. Dit bestand is de instructie-manual voor elke uitvoerende Claude Code-sessie.
 
-## Regels
-- Een ticket per sessie, sessie schoon starten.
-- Voor je bouwt: aanpak in twee zinnen voorleggen en wachten op groen licht (staat per ticket onder "Aanpak").
-- Bouw in sandbox `6226897`. Raak het live scenario `3059444` nooit aan zonder expliciete go per wijziging (geldt voor tickets 00 en 01).
-- Elk ticket heeft een "klaar wanneer" met toetsbare checks. Werkend werk vastleggen in git.
-- Besluiten en live-wijzigingen loggen in `Onboarding workflow/Onboarding-Aanpassingen-Overzicht.md`.
+## Sessieprotocol (voor elke sessie die een ticket oppakt)
 
-## Volgorde en status
+**Bij de start van de sessie:**
+1. Start schoon (een ticket per sessie).
+2. Lees in deze volgorde: het ticket zelf, de masterplan-fase waar het bij hoort, en de spec-secties die het ticket noemt. Lees niet meer dan nodig.
+3. Check de status-tabellen hieronder en `Onboarding workflow/Onboarding-Aanpassingen-Overzicht.md` op besluiten die na het schrijven van het ticket zijn genomen.
+
+**Autonomie (besluit Hidde, 2026-07-14, vervangt de eerdere twee-zinnen-regel voor tickets 11 en hoger):**
+- Bouw, test en ontwerp zelfstandig. Leg de aanpak niet vooraf ter goedkeuring voor; maak ontwerpkeuzes zelf op basis van de aanbevelingen in het ticket en log ze.
+- Een poortje (expliciete go van Hidde vooraf) blijft verplicht bij: (a) elke wijziging aan een actief/live Make-scenario of het activeren of deactiveren van een scenario, (b) alles wat partner-facing live gaat (vragenlijst-deploy naar Cloudflare, mail-wijzigingen in een actief scenario, het bronbestand van de Tooling Access Guide vervangen), (c) elke verzending naar een partner of extern kanaal, (d) elke wijziging in HubSpot, (e) alles wat een ticket zelf onder "Poortjes" noemt.
+- Loop je vast op een besluit dat echt bij Hidde ligt: leg de vraag met je aanbeveling vast, werk verder aan wat wel kan, en meld het aan het einde.
+
+**Vaste guardrails (ongewijzigd):**
+- Het live scenario `3059444` nooit aanraken; bouwen gebeurt in de inactieve V1-scenario's (`6525431`, `6525439`, `6525442`) of nieuwe inactieve scenario's.
+- Blueprint-JSON-exports in de repo nooit bewerken om een fix te simuleren; dat zijn snapshots.
+- Credentials via geautoriseerde MCP-sessies; nooit om tokens vragen.
+- Copy: Nederlands (of Engels waar de deliverable dat vraagt), geen em-dashes, geen pijl-tekens, geen AI-slop. Partner-facing deliverables via de `ss-brand-style` skill, met screenshots ter controle.
+
+**Bij het einde van de sessie:**
+1. Werkend werk committen (kleine commits, duidelijke boodschap).
+2. Status bijwerken: de tabel hieronder en, bij besluiten of wijzigingen, `Onboarding-Aanpassingen-Overzicht.md`.
+3. Eindrapport aan Hidde: wat af is (met bewijs: testruns, screenshots), welke ontwerpkeuzes gemaakt zijn, wat openstaat en welke poortjes wachten op go.
+
+## Deel 1: de ruggengraat (tickets 00 t/m 10)
 
 | # | Ticket | Afhankelijk van | Status |
 |---|---|---|---|
-| 00 | [Echte foutmelding in live](ticket-00-live-foutmelding.md) | go per wijziging | Sandbox klaar (6226897), live-toepassing bij cutover |
-| 01 | [Playbook-kopieerstap schrappen](ticket-01-live-playbook-schrappen.md) | go per wijziging | Sandbox klaar (6226897), live-toepassing bij cutover |
-| 02 | [Spike: service-account + bot-scopes](ticket-02-spike-service-account-en-scopes.md) | geen | Bewezen (Drive via Worker/SA), Slack blijft bewust persoonsgebonden (Sharif) |
+| 00 | [Echte foutmelding in live](ticket-00-live-foutmelding.md) | go per wijziging | Sandbox klaar, live-toepassing bij cutover |
+| 01 | [Playbook-kopieerstap schrappen](ticket-01-live-playbook-schrappen.md) | go per wijziging | Sandbox klaar, live-toepassing bij cutover |
+| 02 | [Spike: service-account + bot-scopes](ticket-02-spike-service-account-en-scopes.md) | geen | Bewezen |
 | 03 | [Teamconfig- en registry-tabs](ticket-03-teamconfig-en-registry-tabs.md) | 02 (zacht) | Klaar |
-| 04 | [Generieke route e2e, één team](ticket-04-generieke-route-een-team.md) | 02, 03 | Gebouwd + gereviewed in 6525431, e2e-test nog te doen (Hidde) |
-| 05 | [Uitrol alle teams + Rho](ticket-05-uitrol-alle-teams-en-rho.md) | 04 | Meegebouwd in 6525431 (generieke route dekt alle teams + Rho-tak), e2e-test nog te doen |
-| 06 | [Webhook-lus Worker + Make](ticket-06-webhook-lus-worker-en-make.md) | 03, wrangler-toegang | Gebouwd (Worker + 6525439), e2e-test nog te doen |
-| 07 | [Monday-status + reminders](ticket-07-monday-status-en-reminders.md) | 04/05, 06 | Gebouwd (kolommen + 6525442), e2e-test nog te doen |
-| 08 | [Brevo-mail](ticket-08-brevo-mail.md) | 05, Brevo-domeinauth | On hold: Hidde kiest voor huidige Gmail (Sharif/Gino), management-goedkeuring nodig voor stabiel adres |
-| 09 | [Form-verrijking](ticket-09-form-verrijking.md) | 03, 04 | Kolommen K+L toegevoegd; E/F verplicht maken in Slack-form nog open |
-| 10 | [Cutover + DoD-verificatie](ticket-10-cutover-en-dod-verificatie.md) | alles, go | Nog niet gestart, wacht op e2e-test + go |
+| 04 | [Generieke route e2e, een team](ticket-04-generieke-route-een-team.md) | 02, 03 | Gebouwd, e2e-test nog te doen (Hidde) |
+| 05 | [Uitrol alle teams + Rho](ticket-05-uitrol-alle-teams-en-rho.md) | 04 | Meegebouwd, e2e-test nog te doen |
+| 06 | [Webhook-lus Worker + Make](ticket-06-webhook-lus-worker-en-make.md) | 03 | Gebouwd, e2e-test nog te doen |
+| 07 | [Monday-status + reminders](ticket-07-monday-status-en-reminders.md) | 04/05, 06 | Gebouwd, e2e-test nog te doen |
+| 08 | [Brevo-mail](ticket-08-brevo-mail.md) | 05, Brevo-domeinauth | On hold (Gmail blijft, management-besluit nodig) |
+| 09 | [Form-verrijking](ticket-09-form-verrijking.md) | 03, 04 | Deels; E/F verplicht maken loopt mee als R6 in ticket 10 |
+| 10 | [Cutover + DoD-verificatie + restpunten R1-R6](ticket-10-cutover-en-dod-verificatie.md) | alles, go | Nog niet gestart; bevat nu ook de blueprint-restpunten |
 
-Tickets 00 en 01 (live-stabilisatie) kunnen parallel aan de bouwlijn 02 t/m 10. Ticket 06 kan parallel aan 04/05 zodra 03 klaar is.
+## Deel 2: het masterplan (tickets 11 t/m 19)
+
+Aanbevolen uitvoeringsvolgorde volgt de masterplan-fasen, niet de nummering: eerst 11 en 12 (fase 1), dan 15 en 16 (fase 2), dan 18 en 19 (fase 3), dan 13 en 14 (fase 4). Ticket 17 is gated en komt pas na drie bewezen research packs. Tickets 11, 12, 15 en 16 kunnen parallel aan de e2e-test van ticket 10 (ze bouwen in inactieve scenario's of lokaal).
+
+| # | Ticket | Masterplan-fase | Afhankelijk van | Status |
+|---|---|---|---|---|
+| 11 | [Monday-subitems + reminders + escalatie](ticket-11-monday-subitems.md) | 1 | geen (activering met/na 10) | Open |
+| 12 | [Welkomstmail-copy: eigenaarschap + volgende stap](ticket-12-welkomstmail-copy.md) | 1 | copy-akkoord Bart/Gijs voor live | Open |
+| 13 | [Kickstart-standaard + handover-gate + dag-0 scheduling](ticket-13-kickstart-standaard.md) | 4 | 11, 12 | Open |
+| 14 | [Tooling Access Guide herschrijven + koppelen](ticket-14-tooling-access-guide.md) | 4 | 11, inhoud-akkoord Gijs/Bart | Open |
+| 15 | [Vragenlijst-sanering -50%](ticket-15-vragenlijst-sanering.md) | 2 | Bart-tabel (bindend), deploy met go | Open |
+| 16 | [Partner Research Pack v1](ticket-16-research-pack-v1.md) | 2 | 15 (zacht) | Open |
+| 17 | [Research Pack v2: automatisch (GATED)](ticket-17-research-pack-automatisering.md) | 2 | 16: drie bewezen packs + go Hidde | Gated |
+| 18 | [HubSpot-spike](ticket-18-hubspot-spike.md) | 3 | HubSpot-leestoegang | Open |
+| 19 | [HubSpot-trigger bouwen](ticket-19-hubspot-trigger.md) | 3 | 18 + go Bart/Gijs | Open |
+
+## Fase 5: de welkomstvideo van Bart (integratieplan, nog geen ticket)
+
+Bart neemt een welkomstvideo op (hij vroeg zelf om een reminder). Zo wordt hij verwerkt zodra hij er is:
+
+- **Wat:** een generieke video van 60 tot 90 seconden: welkom, gezicht geven aan S&S, en wat de partner de eerste twee weken kan verwachten. Generiek genoeg voor elke partner (geen namen), zodat een opname lang meegaat.
+- **Waar:** als blok in de welkomstmail, tussen de intro en de vier acties: thumbnail met afspeelknop die linkt naar de video. De placeholder-plek wordt in ticket 12 al gereserveerd als commentaarblok in de HTML.
+- **Hosting:** unlisted YouTube heeft de voorkeur (licht in de mail, afspeelstatistieken, geen Drive-rechtenproblemen bij partners buiten het domein); Drive is het alternatief.
+- **Wanneer verstuurd:** geen aparte mail; de video zit in het bestaande dag-0 welkomstmoment. Optioneel later ook pinnen in het externe Slack-kanaal zodra de partner daar zit.
+- **Acties nu:** (1) Bart de briefing sturen (doel, lengte, toon, dat hij niets partner-specifieks noemt) en een reminder zetten; (2) zodra de video er is: mini-ticket voor het mailblok (NL en EN, klikbaar getest), livegang met go want partner-facing.
+- **Blokkeert niets:** de mail werkt zonder video; het blok wordt toegevoegd zodra de video er is.
+
+## Fase 6: meten en bijsturen (hoofdlijnen)
+
+Vanaf de cutover, voor de eerste drie tot vijf partners, zonder nieuwe tooling:
+
+- **Zes metingen per partner:** tijd van start tot welkomstmail; tijd tot kickstart gepland en gehouden; tijd tot toegang compleet; tijd tot vragenlijst binnen; tijd tot growth-ready (alle subitems groen); en handmatig: hoe vaak de partner iets dubbel moest aanleveren of uitleggen.
+- **Bron:** registry-timestamps, Monday-subitems en maildatums; een simpel meetblad (tab in de V1-spreadsheet) volstaat.
+- **Daarna:** reviewronde met Bart en Gijs: tijdsdoelen uit spec deel 2 sectie 13 bevestigen of bijstellen, tweede reductieronde op de vragenlijst (Barts "nog eens heel kritisch kijken"), en de eerstvolgende investering kiezen (kandidaten: portal, Brevo, maturity scan, HubSpot-velden verrijken).
+- Wordt een eigen ticket zodra de eerste partner door de nieuwe flow is.

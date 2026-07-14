@@ -21,7 +21,8 @@ We volgen de methode in `docs/Werkwijze-AI-Digitale-Systemen-Bouwen.md` (8 fasen
 ## Werkafspraken
 - Lees eerst `spec/` en `Onboarding workflow/Contextdossier-Onboarding-Herontwerp.md` voordat je bouwt.
 - Feiten zoek je zelf op (repo, MCP-connectors, web). Keuzes leg je aan mij voor.
-- Voor je bouwt: vertel in twee zinnen je aanpak en wacht op groen licht. Teach-back voor grote stappen.
+- Voor tickets 11 en hoger geldt het autonome sessieprotocol in `tickets/README.md` (besluit 2026-07-14): bouw en ontwerp zelfstandig, log je keuzes; poortjes (mijn go vooraf) alleen bij live/actieve scenario's, partner-facing livegang, externe verzending en HubSpot-wijzigingen. De twee-zinnen-regel hieronder geldt alleen nog voor werk buiten die tickets.
+- Voor je bouwt (buiten tickets 11+): vertel in twee zinnen je aanpak en wacht op groen licht. Teach-back voor grote stappen.
 - Bouw een ticket per keer, in een schone sessie. Leg werkend werk vast in git (kleine commits).
 - Local-first. Zet niets naar buiten zonder mijn akkoord. Poortje voor live.
 - Make: bouw en test in sandbox `6226897`. Raak het live scenario `3059444` nooit aan zonder mijn expliciete go per wijziging.
