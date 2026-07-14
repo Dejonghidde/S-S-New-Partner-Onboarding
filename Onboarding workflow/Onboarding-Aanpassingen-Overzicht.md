@@ -32,6 +32,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 12 | V1-herbouw neergezet: 3 nieuwe inactieve scenario's + Worker-uitbreiding + config/registry | Make, Cloudflare Worker, V1-spreadsheet, Monday | 🔴 Hoofdlevering | Gebouwd (2026-07-11), activatie = cutover met go |
 | 13 | Ticket 08 (Brevo-mail) on hold; V1 blijft voorlopig op Sharif/Gino's Gmail | Make-scenario's 6525431/6525442 (mail-modules) | - | On hold (2026-07-12) — wacht op management-goedkeuring voor stabiel adres |
 | 14 | Experience-laag (deel 2 van de spec): granulaire Monday-subitems, kickstart-standaardformat, begeleide access-sprint, doorlooptijd-doelen | spec/spec.md deel 2 + nieuwe tickets 11-14 | 🔴 Volgende hoofdlevering na V1-cutover | In review bij Hidde (2026-07-13) |
+| 15 | Masterplan opgesteld (einddoel + 6 fasen) op basis van Bart-feedback: vragenlijst -50% + research pack, HubSpot-trigger bij contract, welkomstvideo Bart | Onboarding workflow/Masterplan-New-Partner-Onboarding.md | 🔴 Kompas voor de volgorde | Opgesteld (2026-07-14), ter review bij Hidde |
 
 ---
 
@@ -195,3 +196,19 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 **Waar:** `spec/spec.md`, Deel 2 (sectie 11-18). Uitvoering via nieuwe tickets 11 t/m 14.
 
 **Status:** In review bij Hidde (2026-07-13). Niet starten met de tickets tot akkoord op de spec.
+
+---
+
+## 15. Masterplan: einddoel, zes fasen, Bart-feedback verwerkt
+
+**Wat:** overkoepelend masterplan met het einddoel (partner binnen 10 werkdagen na contract growth-ready, met minimale partnerinspanning, volledige bewaking en vertrouwen vanaf dag 0) en zes fasen vanaf de huidige V1-automation. Verwerkt drie nieuwe punten uit de feedback van Bart (2026-07-13):
+
+1. **Vragenlijst minstens 50% korter.** Alles wat S&S zelf kan achterhalen gaat eruit (sectie 0 en 1 volledig, account profile grotendeels, Q4/Q5 research, tech & tracking via detectie) en verhuist naar een "Partner Research Pack" per partner (AI-research plus menselijke check, in de partnermap). Barts besluiten per sectie staan als bindende richtlijnentabel in het masterplan, stap 2.1.
+2. **Onboarding afvuren bij tekenen contract.** HubSpot-deal-trigger naast het bestaande Slack-form (spike eerst, form blijft fallback). Fase 3 in het masterplan.
+3. **Welkomstvideo van Bart.** Bart wil een video opnemen voor in de onboarding; actiepunt met briefing en reminder staat in fase 5 van het masterplan. Herinnering aan Bart is expliciet gevraagd door Bart zelf.
+
+Daarnaast legt het masterplan zes restpunten vast uit de analyse van de actuele blueprint-export (o.a. disabled kopieerroutes voor assignment letter/handover, hardcoded Monday-boardtemplate die de B2B/B2C-variabele negeert, share-notificaties nog aan): verificatielijst voor de cutover.
+
+**Waar:** `Onboarding workflow/Masterplan-New-Partner-Onboarding.md`. De spec (deel 1 en 2) blijft leidend voor wat er per bouwgolf gebouwd wordt; het masterplan bepaalt volgorde en prioriteit.
+
+**Status:** Opgesteld (2026-07-14), ter review bij Hidde.
