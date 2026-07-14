@@ -29,5 +29,15 @@ Masterplan fase 3, stap 3.2 (pijlers P1 en P4). Bouwt exact op het beslisdocumen
 - [ ] Slack-form werkt ongewijzigd; sales-instructie van vijf regels ligt er.
 - [ ] Gelogd en gecommit; activering alleen met go.
 
+## Sessielog (2026-07-14): scaffold, vooruitlopend op ticket 18
+
+Dit ticket start formeel pas na het beslisdocument van ticket 18 én het akkoord van Bart/Gijs (die er in deze sessie niet zijn) — dus geen echte HubSpot-trigger aangesloten of geactiveerd. Wel alvast, in de test-omgeving, het niet-HubSpot-specifieke deel gebouwd en getest: de architectuur uit de opdracht ("HubSpot schrijft via Make een rij in dezelfde Form Responses-tab, met startedBy 'HubSpot'") is precies uitgetest.
+
+- Echte kolomstructuur van de live "Form Responses"-tab uitgelezen (alleen gelezen, niet gewijzigd): Company name, Partner - first name, Partner - email, Partner - phone number, Assigned team, Link to assignment letter, Link to handover, Project kickstart meeting planned?, Submitted By, Timestamp, Partner type, Taal partnercommunicatie.
+- TEST-kopie van die structuur aangemaakt (lege sheet, geen echte klantdata gekopieerd, bewust).
+- Scaffold-scenario gebouwd en getest: gesimuleerde HubSpot-velden (leeg waar HubSpot volgens de eerste steekproef geen bron heeft: team/letter/handover) worden weggeschreven als nieuwe rij met `Submitted By = HubSpot`, defaults voor partner_type/taal. Test-run geslaagd, rij correct weggeschreven en gecontroleerd.
+- **Dedupe-check nog niet automatisch getest**: het mechanisme (zoek Registry op bedrijfsnaam vóór het schrijven, meld in plaats van een tweede rij) is hetzelfde patroon als ticket 11's item-lookup en is dus technisch bewezen, maar de conditionele vertakking zelf (schrijf alleen als niet gevonden) is in deze sessie niet als aparte geteste module gebouwd — kost een router met telling, vergelijkbaar met de bundelkolom-sync uit ticket 11. Volgt zodra ticket 18 een echte trigger oplevert om op te bouwen.
+- Zodra het beslisdocument van ticket 18 er is (inclusief welke HubSpot-stage/pipeline en welke velden echt ontbreken) en Bart/Gijs akkoord geven: dit scaffold uitbreiden met de echte HubSpot-trigger-module en de dedupe-vertakking, en pas dan de "klaar wanneer"-punten hierboven afvinken.
+
 ## Afhankelijk van
 Ticket 18 (beslisdocument plus go van Bart/Gijs). Ticket 10 (cutover) voor activering op echte deals.

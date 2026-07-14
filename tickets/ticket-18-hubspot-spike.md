@@ -22,9 +22,21 @@ Masterplan fase 3, stap 3.1 (pijlers P1 en P4). Barts wens: "idealiter onboardin
 - Elke wijziging in HubSpot zelf (properties, workflows): niet in deze spike.
 
 ## Klaar wanneer
-- [ ] Beslisdocument compleet: veldmapping met steekproef-onderbouwing, triggerkeuze, dedupe-strategie, beheerder, go/no-go-advies.
-- [ ] Voorgelegd aan Bart/Gijs; hun reactie verwerkt of als open punt gelogd.
-- [ ] Gelogd en gecommit.
+- [x] Beslisdocument compleet: veldmapping met steekproef-onderbouwing, triggerkeuze, dedupe-strategie, beheerder, go/no-go-advies. Zie `Onboarding workflow/HubSpot-Trigger-Beslisdocument.md`.
+- [ ] Voorgelegd aan Bart/Gijs; hun reactie verwerkt of als open punt gelogd. Document staat klaar; het voorleggen zelf is aan Hidde (buiten mijn bereik in deze sessie).
+- [x] Gelogd en gecommit.
+
+## Sessielog (2026-07-14)
+
+HubSpot-leestoegang bleek wél beschikbaar (in tegenstelling tot de eerste inschatting): Make heeft meerdere geautoriseerde HubSpot-connecties in dit team, gebruikt voor het onderzoek (read-only: pipelines, property-lijsten, een steekproef van 7 recent gewonnen deals). Kernbevindingen (volledig in het beslisdocument):
+
+- Meerdere pipelines met een eigen closed-won-stage; "S&S NL - Sales Pipeline" (10598459, stage 10598465) is de hoofdkandidaat, scope-vraag voor Bart of KT ook meetelt.
+- Van de 11 intake-velden zijn er 4 structureel leeg vanuit HubSpot (assignment letter, handover, team, taal) en 2 deels onbetrouwbaar (partner_type, startedBy) — dit vangt de bestaande zachte-poort-aanpak al op.
+- Twee datakwaliteitsrisico's gevonden die niet in de opdracht werden gevraagd maar wel relevant zijn: een deal met een foutief gekoppelde company, en een testdeal ("DELETE") die gewoon in de echte closed-won-stage van de productiepipeline stond.
+- Triggerkeuze: HubSpot-workflow met webhook naar Make (preciezer dan Make's generieke `WatchCRMObjects`), vereist een HubSpot-wijziging (eigen poortje).
+- Voorwaardelijk go-advies, drie openstaande beslissingen voor Bart (zie document sectie 8).
+
+Vooruitlopend op ticket 19 is de niet-HubSpot-specifieke architectuur (rij schrijven in Form Responses met `Submitted By = HubSpot`) al gebouwd en getest in de test-omgeving — zie ticket 19's sessielog.
 
 ## Afhankelijk van
 HubSpot-leestoegang (via geautoriseerde sessie of iemand die meekijkt; geen tokens plakken). Geen bouw-afhankelijkheden.

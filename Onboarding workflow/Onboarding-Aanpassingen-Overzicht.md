@@ -21,7 +21,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 1 | Playbook auto-kopieerstap schrappen | Make (live 3059444 + V2 6226897) | - | Besloten, nog uit te voeren |
 | 2 | Kickstart-template link vervangen in Slack-bericht | Make Slack-module (live 3059444 + V2 6226897) | - | Open |
 | 3 | Tone-of-voice + brandbook expliciet uitvragen | Onboarding-vragenlijst / teamstatus | - | Open |
-| 4 | Tooling Access Guide document upgraden | Documenten Onboarding/Tooling Access Guide.docx | - | Open |
+| 4 | Tooling Access Guide document upgraden | Documenten Onboarding/Tooling Access Guide.docx | - | Gedaan door Hidde (gemeld 2026-07-14): on-brand, inhoudelijk bijgewerkt, al live gekoppeld |
 | 5 | Splitsing B2B & B2C in workflow | Make (playbook/funnel/Monday-boardtemplates) | - | Open |
 | 6 | Consistentie & structuur assignment letter + handover | HubSpot-form → Drive-projectmap | - | Open |
 | 7 | DPA — kleine opmaakverbetering | DPA-template (bron: Finance & Legal) | - | Open |
@@ -34,6 +34,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 14 | Experience-laag (deel 2 van de spec): granulaire Monday-subitems, kickstart-standaardformat, begeleide access-sprint, doorlooptijd-doelen | spec/spec.md deel 2 + nieuwe tickets 11-14 | 🔴 Volgende hoofdlevering na V1-cutover | In review bij Hidde (2026-07-13) |
 | 15 | Masterplan opgesteld (einddoel + 6 fasen) op basis van Bart-feedback: vragenlijst -50% + research pack, HubSpot-trigger bij contract, welkomstvideo Bart | Onboarding workflow/Masterplan-New-Partner-Onboarding.md | 🔴 Kompas voor de volgorde | Opgesteld (2026-07-14), ter review bij Hidde |
 | 16 | Ticket 11: granulaire Monday-subitems (Blok A) — drie scenario's (subitems aanmaken, reminders, bundelkolom-sync) gebouwd en getest in test-omgeving | Make (sandbox 6557113/6557428/6557435) + test-board/-sheet | 🔴 Volgende hoofdlevering | Gebouwd en getest (2026-07-14); registry-sync + Rho-tak open; overzetten naar live is apart poortje |
+| 17 | Tickets 13/18/19 op prioriteit van Hidde: kickstart-format + gate + kopieerstap (13), HubSpot-veldonderzoek + beslisdocument (18), HubSpot-naar-Form-Responses-scaffold (19) | Drive (kickstart-template), Make (sandbox), `Onboarding workflow/HubSpot-Trigger-Beslisdocument.md` | 🔴 Nieuwe prioriteit boven 12/14/15/16 | Grotendeels gedaan (2026-07-14), zie sectie 18 |
 
 ---
 
@@ -212,6 +213,8 @@ Daarnaast legt het masterplan zes restpunten vast uit de analyse van de actuele 
 
 **Waar:** `Onboarding workflow/Masterplan-New-Partner-Onboarding.md`. De spec (deel 1 en 2) blijft leidend voor wat er per bouwgolf gebouwd wordt; het masterplan bepaalt volgorde en prioriteit.
 
+**Status:** Opgesteld (2026-07-14), ter review bij Hidde.
+
 ---
 
 ## 16. Ticket 11: granulaire Monday-subitems (Blok A)
@@ -238,4 +241,20 @@ Daarnaast legt het masterplan zes restpunten vast uit de analyse van de actuele 
 
 **Status:** Gebouwd en getest in test-omgeving (2026-07-14). Zie sessielog deel 2 in `tickets/ticket-11-monday-subitems.md` voor het volledige testverslag.
 
-**Status:** Opgesteld (2026-07-14), ter review bij Hidde.
+**Correctie na feedback Hidde (2026-07-14):** de subitems moeten NIET aan het Client overview-item hangen, maar aan het item dat module 3 van scenario 6525431 al aanmaakt op board "#Operations - Tech backlog" (4197869424): item-naam `"{{company}} - onboarding"`, groep `topics`. Dit board heeft al een echte, in gebruik zijnde Subitems-board (`4303252229`, 621 items) met bevestigde kolommen (rechtstreeks uit de Monday-API): `person` (Owner, people), `status`, `date0` (Created), `date_mm5823e` (Deadline). Owner-kolom krijgt voortaan de verantwoordelijke (teamlead/lead) plus altijd Hidde de Jong (80896353) erbij. Module-configuratie gevalideerd tegen deze echte kolom-ID's; nog niet opnieuw end-to-end getest (prioriteit lag op tickets 13/18/19). Volledige toelichting in `tickets/ticket-11-monday-subitems.md`.
+
+---
+
+## 17. Tickets 13, 18, 19 (prioriteit Hidde, 2026-07-14)
+
+**Wat:** op verzoek van Hidde omgezet naar prioriteit boven 12/14/15/16 (die ofwel geen impact hebben nu, ofwel al gedaan zijn, ofwel een groter vervolgtraject vereisen).
+
+**Ticket 13 — kickstart-standaard:** on-brand kickstart-format-template aangemaakt in de echte gedeelde Drive-map "New Partner Onboarding" (naast DPA en Tooling Access Guide), met een verplicht startvoorwaarden-blok (assignment letter, handover, research pack, met overrule-optie) en de vijf vaste onderdelen (succescriteria, rollen, communicatieritme, eerste-waardemijlpaal, research-pack-aannames). Teamconfig-kolom `kickstart_scheduling_link` getest op een testkopie (echte sheet-wijziging geweigerd door de permissieklassifier, wacht op go). Kopieerstap (format → partnermap + Slack-melding) gebouwd en getest als los satellietscenario in de test-omgeving (4/4 geslaagde kopieën). Mail-koppeling en accountlead-instructie nog open (hangen af van ticket 12, nu overgeslagen).
+
+**Ticket 18 — HubSpot-spike:** volledig beslisdocument opgeleverd, `Onboarding workflow/HubSpot-Trigger-Beslisdocument.md`. HubSpot-leestoegang bleek beschikbaar via bestaande Make-connecties (in tegenstelling tot de eerste inschatting). Kernbevindingen: meerdere pipelines met eigen closed-won-stage (S&S NL - Sales Pipeline is de hoofdkandidaat); van de 11 benodigde intake-velden zijn er 4 structureel leeg in HubSpot (assignment letter, handover, team, taal) en 2 deels onbetrouwbaar (partner_type, startedBy) — opgevangen door de bestaande zachte-poort-aanpak; twee datakwaliteitsrisico's gevonden (foutieve company-koppeling, testdeal in de echte closed-won-stage); voorwaardelijk go-advies met drie openstaande beslissingen voor Bart. Nog te doen: voorleggen aan Bart/Gijs (buiten mijn bereik in deze sessie).
+
+**Ticket 19 — HubSpot-trigger bouwen:** formeel geblokkeerd tot ticket 18 is goedgekeurd door Bart/Gijs, dus geen echte trigger aangesloten of geactiveerd. Wel vooruitlopend getest: de aanbevolen architectuur ("HubSpot schrijft via Make een rij in de Form Responses-tab, met startedBy = HubSpot") werkt — een testrij met de bevestigde velden en lege waarden voor de bevestigde HubSpot-gaten is succesvol weggeschreven naar een testkopie van de Form Responses-structuur. Dedupe-vertakking (schrijf alleen als bedrijfsnaam nog niet in de Registry staat) is als ontwerp vastgelegd maar nog niet als aparte geteste module gebouwd.
+
+**Waar:** Drive (kickstart-template + testresources), Make (sandbox-scenario's, team 43614), `Onboarding workflow/HubSpot-Trigger-Beslisdocument.md`.
+
+**Status:** Grotendeels gedaan (2026-07-14). Volledige sessielogs in `tickets/ticket-13-kickstart-standaard.md`, `tickets/ticket-18-hubspot-spike.md`, `tickets/ticket-19-hubspot-trigger.md`.

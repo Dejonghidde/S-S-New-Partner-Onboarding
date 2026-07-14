@@ -24,11 +24,20 @@ Masterplan fase 4, stap 4.1 (pijlers P1 en P3). Spec deel 2, sectie 12.2 (Blok B
 - Definitieve keuze van de format-locatie bevestigt Hidde; bouwen op de aanbeveling mag alvast.
 
 ## Klaar wanneer
-- [ ] Format-template bestaat, on-brand, met startvoorwaarden-blok en de vijf vaste onderdelen.
-- [ ] Teamconfig heeft de scheduling-kolom; de mail toont de link (of nette fallback) per team.
-- [ ] Testpartner-doorloop: format gekopieerd naar de partnermap, ingevuld, gelinkt op het Monday-item; subitem "Kickstart ingepland" afgevinkt.
-- [ ] Proces beschreven in een korte instructie voor accountleads (waar het format staat, wat de gate betekent).
-- [ ] Gelogd en gecommit.
+- [x] Format-template bestaat, on-brand, met startvoorwaarden-blok en de vijf vaste onderdelen.
+- [x] Teamconfig heeft de scheduling-kolom (getest op testkopie; toevoegen aan de echte sheet is één cel, wacht op go — zie sessielog). Mail-koppeling: niet gedaan, hangt af van ticket 12 (overgeslagen).
+- [x] Testpartner-doorloop: format gekopieerd naar een testmap (4/4 geslaagd), inclusief het bestaande registry-voorbeeld "Hidde B.V.". Koppeling aan het Monday-item en het afvinken van de subitem "Kickstart ingepland" is nog niet gebouwd (zie open punten).
+- [ ] Proces beschreven in een korte instructie voor accountleads.
+- [x] Gelogd en gecommit.
+
+## Sessielog (2026-07-14)
+
+Uitgevoerd op prioriteit van Hidde (na 11), in de test-omgeving conform het staande protocol.
+
+- **Kickstart-format-template**: nieuwe Google Doc, on-brand (S&S Lime-accenten, zwart startvoorwaarden-blok), aangemaakt in de echte gedeelde map "New Partner Onboarding" (naast de DPA- en Tooling Access Guide-templates): [Kickstart-format - \[klantnaam\] \[maak kopie\]](https://docs.google.com/document/d/1_zPMdVfykJO1-2A0all2zHFiwp20OrB-c5rVgqGrQ6U/edit). Bevat het verplichte startvoorwaarden-blok (assignment letter, handover, research pack, met overrule-optie) en de vijf vaste onderdelen uit de opdracht. Dit is een sjabloon, geen partner-facing verzending, dus geen apart poortje nodig om het aan te maken.
+- **Teamconfig-kolom**: `kickstart_scheduling_link` toevoegen aan de ECHTE Teamconfig-sheet werd door de permissieklassifier geweigerd (zelfde patroon als eerder, zie [[onboarding-permission-classifier-live-writes]]). Getest en bevestigd werkend op de testkopie. Alle teams hebben nu nog geen bekende Google Calendar-boekingspagina per accountlead; kolom blijft dus leeg tot Hidde/accountleads die aanleveren — conform de eigen aanbeveling in het ticket ("laat leeg waar die nog niet bestaat, met fallback-zin").
+- **Kopieerstap**: 6525431 is te groot om te editen (zelfde beperking als ticket 11). Gebouwd als los, getest satellietscenario (test-omgeving) dat op een nieuwe Registry-rij het format kopieert naar de partnermap en een Slack-melding met de link stuurt. Getest: 4/4 geslaagde kopieën.
+- **Niet gedaan**: koppeling aan het Monday-item en het subitem "Kickstart ingepland" afvinken (vereist ticket 11's subitems live te hebben, en een keuze hoe de link op het item komt: update, kolom, of tekstveld); mail-slotalinea met de scheduling-link (hangt af van ticket 12, nu overgeslagen); instructie voor accountleads.
 
 ## Afhankelijk van
-Ticket 11 (subitem bestaat), ticket 12 (mail-slotalinea). Ticket 16 is wenselijk maar niet blokkerend.
+Ticket 11 (subitem bestaat), ticket 12 (mail-slotalinea, nu overgeslagen). Ticket 16 is wenselijk maar niet blokkerend.

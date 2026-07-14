@@ -51,13 +51,13 @@ Oorspronkelijke aanbevolen uitvoeringsvolgorde volgde de masterplan-fasen, niet 
 |---|---|---|---|---|
 | 11 | [Monday-subitems + reminders + escalatie](ticket-11-monday-subitems.md) | 1 | geen (activering met/na 10) | Gebouwd en getest in test-omgeving (2026-07-14); correctie na feedback Hidde: subitems horen op board 4197869424 (Tech backlog), niet Client overview, met Created/Deadline-kolommen en Hidde altijd als mede-eigenaar (zie sessielog); registry-sync en Rho-tak nog open |
 | 12 | [Welkomstmail-copy: eigenaarschap + volgende stap](ticket-12-welkomstmail-copy.md) | 1 | copy-akkoord Bart/Gijs voor live | Overgeslagen op verzoek Hidde (2026-07-14), geen impact nu |
-| 13 | [Kickstart-standaard + handover-gate + dag-0 scheduling](ticket-13-kickstart-standaard.md) | 4 | 11, 12 | 🔴 Prioriteit 1 (Hidde, 2026-07-14) |
+| 13 | [Kickstart-standaard + handover-gate + dag-0 scheduling](ticket-13-kickstart-standaard.md) | 4 | 11, 12 | Grotendeels gedaan (2026-07-14): format-template + gate live in Drive, kopieerstap getest in test-omgeving, Teamconfig-kolom klaar (echte sheet wacht op go); mail-koppeling en accountlead-instructie nog open |
 | 14 | [Tooling Access Guide herschrijven + koppelen](ticket-14-tooling-access-guide.md) | 4 | 11, inhoud-akkoord Gijs/Bart | Gedaan door Hidde zelf (buiten deze flow, gemeld 2026-07-14) |
 | 15 | [Vragenlijst-sanering -50%](ticket-15-vragenlijst-sanering.md) | 2 | Bart-tabel (bindend), deploy met go | Uitgesteld tot na 13/18/19 (Hidde, 2026-07-14) |
 | 16 | [Partner Research Pack v1](ticket-16-research-pack-v1.md) | 2 | 15 (zacht) | Uitgesteld tot na 13/18/19 (Hidde, 2026-07-14) |
 | 17 | [Research Pack v2: automatisch (GATED)](ticket-17-research-pack-automatisering.md) | 2 | 16: drie bewezen packs + go Hidde | Gated |
-| 18 | [HubSpot-spike](ticket-18-hubspot-spike.md) | 3 | HubSpot-leestoegang | 🔴 Prioriteit 2 (Hidde, 2026-07-14) |
-| 19 | [HubSpot-trigger bouwen](ticket-19-hubspot-trigger.md) | 3 | 18 + go Bart/Gijs | 🔴 Prioriteit 3 (Hidde, 2026-07-14) |
+| 18 | [HubSpot-spike](ticket-18-hubspot-spike.md) | 3 | HubSpot-leestoegang | Beslisdocument klaar (2026-07-14), ter review bij Bart/Gijs |
+| 19 | [HubSpot-trigger bouwen](ticket-19-hubspot-trigger.md) | 3 | 18 + go Bart/Gijs | Scaffold gebouwd en getest (2026-07-14) vooruitlopend op ticket 18; echte trigger + dedupe-vertakking wachten op go Bart/Gijs |
 
 ## Fase 5: de welkomstvideo van Bart (integratieplan, nog geen ticket)
 
