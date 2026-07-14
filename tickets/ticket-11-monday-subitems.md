@@ -36,3 +36,12 @@ Masterplan fase 1, stap 1.1 (pijler P3). Spec deel 2, sectie 12.1 (Blok A), besl
 
 ## Afhankelijk van
 Ticket 10 (cutover) hoeft niet af te zijn: bouwen kan in de inactieve scenario's. Activeren gaat mee met of na de cutover.
+
+## Sessielog (2026-07-14)
+
+Ontworpen en gevalideerd, nog niet aangemaakt in Make. Volledige onderbouwing, ontwerpkeuzes en blokkade staan in `Onboarding-Aanpassingen-Overzicht.md` sectie 16. Kort:
+
+- **Nieuw, los scenario "Onboarding V1 - subitems aanmaken"** in plaats van een uitbreiding van 6525431: dat scenario bleek 923.555 tekens (32.096 regels), te groot om in één API-call terug te sturen. Het nieuwe scenario luistert op nieuwe Registry-rijen, zoekt het Client overview-item op naam op en maakt de zes subitems aan (eigenaar + due date, zowel leesbaar in de naam als gestructureerd in kolommen "person"/"datum"). Blueprint volledig opgebouwd en getest tegen Make's schema-/RPC-validators (`validate_blueprint_schema`: geldig).
+- **Reminder-scenario 6525442**: ombouw naar subitem-scan, dag-5-escalatie naar Hidde, bundelkolom-sync en registry-sync (kolommen X/Y/AA/AB) uitgewerkt op specniveau (zie Aanpassingen-Overzicht), nog niet als blueprint gebouwd omdat de eerste blokkade dat zinloos maakte.
+- **Blokkade:** het aanmaken van het nieuwe scenario is geweigerd door de permissieklassifier (schrijft naar live Registry-sheet + live Client overview-board, ook al blijft het scenario inactief). Gevalideerde blueprint staat klaar in de sessie-scratchpad. Wacht op akkoord van Hidde om aan te maken (blijft daarna nog steeds inactief tot een aparte go voor activeren, conform sessieprotocol).
+- Klaar-wanneer-items zijn dus nog niet af te vinken: geen testpartner-run mogelijk zonder eerst het scenario te mogen aanmaken.

@@ -33,6 +33,7 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 | 13 | Ticket 08 (Brevo-mail) on hold; V1 blijft voorlopig op Sharif/Gino's Gmail | Make-scenario's 6525431/6525442 (mail-modules) | - | On hold (2026-07-12) — wacht op management-goedkeuring voor stabiel adres |
 | 14 | Experience-laag (deel 2 van de spec): granulaire Monday-subitems, kickstart-standaardformat, begeleide access-sprint, doorlooptijd-doelen | spec/spec.md deel 2 + nieuwe tickets 11-14 | 🔴 Volgende hoofdlevering na V1-cutover | In review bij Hidde (2026-07-13) |
 | 15 | Masterplan opgesteld (einddoel + 6 fasen) op basis van Bart-feedback: vragenlijst -50% + research pack, HubSpot-trigger bij contract, welkomstvideo Bart | Onboarding workflow/Masterplan-New-Partner-Onboarding.md | 🔴 Kompas voor de volgorde | Opgesteld (2026-07-14), ter review bij Hidde |
+| 16 | Ticket 11: granulaire Monday-subitems (Blok A) — nieuw scenario "subitems aanmaken" ontworpen en gevalideerd; reminder-scenario 6525442-ombouw uitgewerkt op specniveau | Make (nieuw scenario, sandbox) + 6525442 | 🔴 Volgende hoofdlevering | Ontworpen en gevalideerd (2026-07-14), aanmaken geblokkeerd door permissieklassifier, go nodig van Hidde |
 
 ---
 
@@ -210,5 +211,26 @@ Concrete actielijst van wijzigingen die nog doorgevoerd moeten worden aan de onb
 Daarnaast legt het masterplan zes restpunten vast uit de analyse van de actuele blueprint-export (o.a. disabled kopieerroutes voor assignment letter/handover, hardcoded Monday-boardtemplate die de B2B/B2C-variabele negeert, share-notificaties nog aan): verificatielijst voor de cutover.
 
 **Waar:** `Onboarding workflow/Masterplan-New-Partner-Onboarding.md`. De spec (deel 1 en 2) blijft leidend voor wat er per bouwgolf gebouwd wordt; het masterplan bepaalt volgorde en prioriteit.
+
+---
+
+## 16. Ticket 11: granulaire Monday-subitems (Blok A)
+
+**Wat:** twee bouwstukken, uitgewerkt volgens het autonome sessieprotocol (tickets/README.md).
+
+1. **Nieuw scenario "Onboarding V1 - subitems aanmaken"** (nog niet aangemaakt in Make, zie blokkade). Luistert op nieuwe rijen in de Registry-tab, zoekt het bijbehorende Client overview-item op naam op (GraphQL, board 3337611330, groep "New partners"), en maakt daaronder zes subitems aan: partner in extern Slack-kanaal, partner op Monday-board, kickstart-meeting, LastPass-toegangsmap, brandbook + tone-of-voice, en (alleen bij een onvolledige intake) ontbrekende intake-info. Eigenaar en due date (aanmaakdatum + 3 werkdagen, met een Ma-Vr-omrekening) staan zowel leesbaar in de subitemnaam als gestructureerd in de kolommen "person"/"datum" op de automatisch aangemaakte Subitems-board. Elke stap heeft een eigen foutmelding naar Hidde's DM, zelfde patroon als de rest van V1.
+2. **Ombouw reminder-scenario 6525442** (specniveau uitgewerkt, nog niet gebouwd): scant voortaan per subitem in plaats van de vijf registry-statuskolommen, met dezelfde 3-dagen-drempel als het bestaande scenario (kalenderdagen, geen echte werkdagenteller, bewust gelijk gehouden aan de huidige implementatie). Een subitem dat na de eerste reminder nog 2 dagen langer openstaat (dag 5) escaleert naar een directe DM aan Hidde in plaats van het teamkanaal. De bundelkolom "Access & kickstart" wordt na elke run bijgewerkt (To do/Partially Done/Done) op basis van de subitemstatussen. De registry-kolommen X, Y, AA, AB (partner-extern-kanaal, Monday-board, kickstart, LastPass) worden dagelijks vanuit de subitems gesynchroniseerd zodat de registry machinebron blijft voor fase 6 (meten). Kolom Z (tooling access) heeft in dit ticket geen subitem-tegenhanger en blijft dus buiten de sync, dat hoort bij ticket 14 (Tooling Access Guide).
+
+**Ontwerpkeuzes (zelfstandig gemaakt, met onderbouwing):**
+
+- Subitem-aanmaak als apart, event-gedreven scenario (trigger op nieuwe Registry-rij) in plaats van ingebouwd in het bestaande partner-runscenario 6525431: dat scenario is 923.555 tekens / 32.096 regels, ruim boven wat in één keer via de Make-API terug te sturen is (zelfde beperking als eerder vastgelegd voor 3059444/6226897, alleen bleek 6525431 zelf ook al te groot). Functioneel is het resultaat identiek ("na het aanmaken van het item maakt de flow de subitems aan"); technisch is het een los, klein scenario.
+- Kolom-ID's "person" (people) en "datum" (date) op de automatisch aangemaakte Subitems-board zijn niet vooraf getest (zie blokkade) maar wel onderbouwd: twee vergelijkbare klantboards in het account (Sigma - BSL, E Health Ventures) gebruiken exact deze twee kolom-ID's als account-standaardsjabloon. Mocht dit sjabloon toch afwijken, faalt alleen de kolomtoewijzing (met foutmelding naar Hidde); de subitem zelf en de leesbare eigenaar/due-date-tekst in de naam blijven altijd werken.
+- Rho-tak valt terug op het bestaande hardcoded lead-ID (29186877) als de Teamconfig-lookup niets oplevert, zelfde patroon als het bestaande scenario 6525431 voor Rho.
+
+**Blokkade:** het aanmaken van het nieuwe scenario in Make is door de ingebouwde permissieklassifier geweigerd, ook al zou het scenario inactief blijven staan: de trigger en acties verwijzen naar de live Registry-sheet en het live Client overview-board, en dat leest de classifier als een wijziging aan gedeelde, externe systemen waarvoor vooraf expliciet akkoord nodig is. Het volledig uitgewerkte en tegen Make's eigen schema/RPC-validators geteste blueprint staat klaar in de sessie-scratchpad; zodra Hidde akkoord geeft kan het in enkele minuten worden aangemaakt (door mij via de MCP-tools, of door Hidde zelf via "Import Blueprint" in de Make-designer).
+
+**Open vraag voor Hidde:** akkoord om het nieuwe scenario "subitems aanmaken" (inactief) aan te maken, en akkoord om daarna scenario 6525442 om te bouwen naar de subitem-scan? Beide blijven inactief tot een expliciete go voor activering, conform het sessieprotocol.
+
+**Status:** Ontworpen en gevalideerd (2026-07-14). Aanmaken/bouwen wacht op akkoord.
 
 **Status:** Opgesteld (2026-07-14), ter review bij Hidde.

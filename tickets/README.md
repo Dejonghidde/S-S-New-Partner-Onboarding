@@ -47,7 +47,7 @@ Aanbevolen uitvoeringsvolgorde volgt de masterplan-fasen, niet de nummering: eer
 
 | # | Ticket | Masterplan-fase | Afhankelijk van | Status |
 |---|---|---|---|---|
-| 11 | [Monday-subitems + reminders + escalatie](ticket-11-monday-subitems.md) | 1 | geen (activering met/na 10) | Open |
+| 11 | [Monday-subitems + reminders + escalatie](ticket-11-monday-subitems.md) | 1 | geen (activering met/na 10) | Ontworpen en gevalideerd (2026-07-14), aanmaken geblokkeerd door permissieklassifier, go nodig van Hidde |
 | 12 | [Welkomstmail-copy: eigenaarschap + volgende stap](ticket-12-welkomstmail-copy.md) | 1 | copy-akkoord Bart/Gijs voor live | Open |
 | 13 | [Kickstart-standaard + handover-gate + dag-0 scheduling](ticket-13-kickstart-standaard.md) | 4 | 11, 12 | Open |
 | 14 | [Tooling Access Guide herschrijven + koppelen](ticket-14-tooling-access-guide.md) | 4 | 11, inhoud-akkoord Gijs/Bart | Open |
