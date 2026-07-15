@@ -150,3 +150,17 @@ Geen kosten aan externe betaalde diensten (alleen publieke HTTP-fetches, curl va
 **Testresultaat (execution 97003, fallback-pad "niet gevonden in sheet"):** het volledige context-object bevat alle verplichte velden (`bedrijf`, `domein`, `type`, `paginas`, `footer_links`, `social_links`, `extra_domeinen`, `hubspot` als lege stub, `tagscan` met een echte sub-executie van de tagscan-workflow erin). Alleen het "niet gevonden in de sheet"-pad is empirisch getest (bewust: dit is het risicovollere pad omdat `alwaysOutputData` hier het verschil maakt); het "wel gevonden"-pad gebruikt dezelfde, eenvoudigere code (alleen een andere kolom lezen) en is wel gelezen maar niet apart met een eigen testrun geverifieerd. Ook is de `Kernpagina ophalen`-node door `test_workflow` gepind tot één vaste respons ongeacht hoeveel van de 3 kernpagina-URL's er werkelijk doorheen liepen, dus de meervoudige-kernpagina's-fan-out is structureel bewezen (Split Out leverde 3 items af) maar niet met 3 verschillende pagina-teksten in de uiteindelijke `paginas`-array; dat is een beperking van `test_workflow`'s pin-mechanisme, geen bekende fout in de workflow zelf.
 
 **Kosten:** geen (publieke HTTP-fetches, curl vanaf eigen omgeving, n8n-MCP-calls; Google Sheets-lookup en tagscan-sub-executie zijn gesimuleerd via pin data in deze testrun).
+
+---
+
+## Taak 4.1: Semrush-branch (2026-07-15)
+
+Op instructie Hidde direct doorgebouwd na taak 3 (taken 4 en 5 kregen prioriteit; HubSpot-tak blijft uitgesteld).
+
+**Bouw:** drie HTTP Request-nodes toegevoegd aan `SS Research - Fundament` (na "Context-object afronden"): "Semrush domain_ranks (overview)", "Semrush top keywords" (`domain_organic`, display_limit 50), "Semrush organische concurrenten" (`domain_organic_organic`, display_limit 10), gevolgd door Code-node "Semrush CSV parsen" die de drie CSV-responses (puntkomma-gescheiden) omzet naar rijen-objecten en een geschat unit-verbruik berekent. Resultaat komt onder sleutel `semrush` in het context-object, exact zoals taak 4's interface voorschrijft.
+
+**Credential:** er bestaat nog geen Semrush-credential in n8n (taak 0 checkte dit niet, toen was er nog geen Semrush-tak). De nodes verwijzen naar een generieke Query Auth-credential met de naam `Semrush API` (query-parameternaam `key`); dit moet Hidde zelf aanmaken in de n8n-UI met de sleutel die hij al in deze sessie deelde (zie hidde-actielijst.md, nieuw punt). Ik heb de sleutel zelf nergens overgenomen, conform de standing rule en de n8n-SDK-regel om nooit statische auth-waarden in node-parameters te zetten.
+
+**Test:** `test_workflow` met realistische, met de hand samengestelde CSV-pin-data (formaat en kolomnamen exact volgens Semrush's eigen API-documentatie-conventie: `Dn;Rk;Or;Ot;Ad;At` voor domain_ranks, `Ph;Po;Nq;Tr` voor domain_organic, `Dn;Cr;Np;Or` voor domain_organic_organic) voor alle drie de Semrush-nodes. Resultaat (execution 97006): CSV correct geparsed naar objecten per rij, `top_keywords` (3 rijen), `organische_concurrenten` (2 rijen), `geschat_verbruik_units: 15` correct berekend (10 + 3 + 2). Dit bewijst de parselogica; het bewijst niet dat de echte Semrush-API exact dit CSV-formaat teruggeeft of dat de credential/sleutel werkt, dat kan pas na de eenmalige verificatiecall die op de actielijst staat (stap 0.5).
+
+**Kosten:** geen (gesimuleerde data, geen echte API-call).
