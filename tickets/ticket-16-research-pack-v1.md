@@ -1,5 +1,7 @@
 # Ticket 16: Partner Research Pack v1 (template, research-opdracht, testrun)
 
+> **Status 2026-07-15:** de opdracht hieronder is de oorspronkelijke ticketomschrijving (vóór de brainstorm met Hidde). De huidige, leidende uitwerking staat in `Onboarding workflow/Uitwerking-Fase-2-Vragenlijst-en-Research-Pack.md` (ontwerp) en `Onboarding workflow/Stappenplan-Research-Workflow-n8n.md` (bouwplan, taak voor taak). Route gewijzigd van een losse research-opdracht naar een n8n-workflow; zie het ontwerpdocument voor de besluiten. Taak 0 en 1 van het stappenplan zijn gedaan; voortgang staat in `Onboarding workflow/research-workflow/LOG.md`. De "Opdracht" en "Klaar wanneer" hieronder zijn historisch en niet meer bindend.
+
 ## Doel van dit ticket
 Alles wat uit de vragenlijst is geschrapt komt voortaan uit een vast Partner Research Pack: een gestructureerd document per partner in de partnermap, gevuld door AI-research met bronvermelding en een menselijke check. V1 is een herhaalbaar proces, nog geen automatisering.
 
