@@ -2,59 +2,34 @@
 type: actielijst
 project: New Partner Onboarding
 ticket: 16 (research-workflow, voorbereidend op 15 en 17)
-status: Open, wacht op Hidde
+status: Beantwoord door Hidde (2026-07-15), zie vastgelegde keuzes hieronder
 bijgewerkt: 2026-07-15
 ---
 
 # Hidde-actielijst: Partner Research Workflow (n8n)
 
-Dit zijn de punten die alleen Hidde kan afhandelen: credentials aanmaken, keuzes bevestigen, toegang verifiëren. Sessies vragen nooit om tokens; credentials plakt Hidde altijd zelf in de n8n-UI. De sessie gebruikt daarna alleen de credential-referentie.
+Alle punten uit de eerste versie van dit bestand (taak 0) zijn door Hidde beantwoord op 2026-07-15. Dit bestand blijft staan als vastgelegde beslissing, niet als open vraag. Latere taken gebruiken de tabel hieronder letterlijk.
 
-## 1. Credentials aanmaken of bevestigen in n8n
+## Vastgelegde keuzes (antwoord Hidde, 2026-07-15)
 
-### Semrush API (ontbreekt)
-- Nodig voor: domain_ranks, top-50 organic keywords, organische concurrenten (taak 4).
-- Actie: API-key uit het Semrush Advanced-account ophalen en als nieuwe credential in n8n plakken.
-- Naam-suggestie: "SS Research - Semrush API".
+| Onderdeel | Te gebruiken | Bron/toelichting |
+|---|---|---|
+| Semrush API | Zelfde key als in workflow [z4qoXxd8yRG5HyXf](https://n8n.sprintsandsneakers.com/workflow/z4qoXxd8yRG5HyXf), node "2B - SEMrush Backlinks1" | Hidde heeft deze koppeling al opgezet in een andere workflow; key hergebruiken. Key zelf niet in de repo overnemen (staat alleen in n8n zelf), zie opmerking hieronder |
+| Apify API | Credential "Apify Account" | Bevestigd door Hidde, niet nieuw aanmaken |
+| OpenAI API | Credential "Sprints & Sneakers - Alpha - SEO agent" | Bevestigd door Hidde: bestaande credential hergebruiken, geen dedicated nieuwe |
+| Gemini / Google AI | Credential "Google Gemini(PaLM) Api account" | Bevestigd door Hidde: bestaande credential hergebruiken, geen dedicated nieuwe |
+| Google Drive | Credential "S&S N8N - Drive API" | Bevestigd door Hidde. Voor de Google Docs-node in taak 6 nog te checken of dezelfde credential volstaat of dat een aparte Docs-credential nodig is; geen actie nu |
+| Test-Drive-map | "Gamma - Hidde test map", folder-ID `19ujq_RJ39UoFhyuKGfShF1PF1p2O4J4N` ([link](https://drive.google.com/drive/folders/19ujq_RJ39UoFhyuKGfShF1PF1p2O4J4N)), pad Shared Drive/S&S - Projects/2. Current projects/6. Gamma/ | Nieuwe, door Hidde aangewezen map. Vervangt de ticket-02-spikemap uit de eerste versie van dit bestand; die kandidaat is niet meer relevant |
+| Naamgeving credentials | Niet aanpassen | Hidde: "niet doen, laten staan zoals het nu is". Mijn naamgevingsadvies (voorvoegsel "SS Research - ...") is dus niet van toepassing; bestaande, gedeelde credentials blijven ongewijzigd in gebruik |
+| MCP-zichtbaarheid workflows | Geen actie nodig | Hidde bevestigt: bewust zo (bestaande workflows van andere projecten hoeven niet MCP-zichtbaar); voor de workflow die wij bouwen zet Hidde zelf `availableInMCP` aan na aanmaak |
 
-### Apify API (bestaat mogelijk al, niet bevestigd)
-- Gevonden: "Apify Zeb API" en "Apify account" (beide type `apifyApi`), allebei vermoedelijk van een ander project.
-- Niet te verifiëren of een van beide hetzelfde token gebruikt als de Make-connectie "Integration Apify" (credentials tonen nooit secret-waarden).
-- Actie: bevestig of een bestaande credential hergebruikt mag worden, of maak een nieuwe aan met hetzelfde token als de Make-connectie "Integration Apify".
-- Naam-suggestie bij nieuw: "SS Research - Apify API".
+**Belangrijk over de Semrush-key:** Hidde heeft de sleutel in de sessie gedeeld (gekopieerd uit een bestaande, disabled node in een andere workflow). Die sleutel wordt hier bewust niet als tekst herhaald, om te voorkomen dat een API-key in git terechtkomt (zelfde risico als het bekende, al gelogde probleem met het hardcoded Monday-token uit 2021 in de Make-blueprints). Bij het bouwen van de Semrush-tak (taak 4) wordt dezelfde sleutel rechtstreeks in de n8n-node overgenomen (consistent met hoe de bestaande node het al doet), niet in een repo-bestand.
 
-### OpenAI API (bestaat al veelvuldig, niet dedicated)
-- Gevonden: 7+ credentials (onder andere "Marijn - OpenAi connection", "Zeb OpenAI API CRS", "Sprints & Sneakers - Alpha - SEO agent"), allemaal gekoppeld aan andere projecten of personen.
-- Nodig voor: de cross-checker (prompt 6, GPT-mini-klasse).
-- Actie: nieuwe dedicated credential aanmaken (voorkomt afhankelijkheid van een sleutel die een ander project kan intrekken of uitputten), of expliciet aanwijzen welke bestaande herbruikt mag worden.
-- Naam-suggestie bij nieuw: "SS Research - OpenAI API".
+## Nog te doen, geen blokkade (uitvoering hoort bij latere taken)
 
-### Gemini / Google AI (bestaat, niet dedicated)
-- Gevonden: "Google Gemini(PaLM) Api account" en "Google GeminiTNO" (beide `googlePalmApi`), lijken aan andere projecten gekoppeld.
-- Nodig voor: profiel-agent en markt-agent (Gemini Pro plus grounding), funnel-agent en visuele rubric (Gemini Flash).
-- Actie: nieuwe dedicated credential aanmaken, zodat het gratis grondings-quotum (5.000 grounded prompts per maand) niet gedeeld wordt met andere workflows.
-- Naam-suggestie: "SS Research - Gemini API".
+- **Semrush-verbruikscheck** (stap 0.5 / taak 4): eerst de goedkope testcall (domain_ranks, 1 regel, circa 10 units) draaien zodra de Semrush-tak gebouwd wordt.
+- **Google Docs-credential voor taak 6**: bevestigen of "S&S N8N - Drive API" ook de Docs-node dekt, of dat "Google - Accounts@sprintsandsneakers.com" (`googleDocsOAuth2Api`) nodig is. Geen actie nu, pas relevant bij de pack-doc-assemblage.
 
-### Google Drive/Docs met schrijfrechten op de testmap (waarschijnlijk niet nodig, bevestiging gevraagd)
-- Gevonden: "S&S N8N - Drive API" (`googleDriveOAuth2Api`), "Google Service Account account" (`googleApi`, generiek), "Google - Accounts@sprintsandsneakers.com" (`googleDocsOAuth2Api`).
-- Actie: bevestig welke van deze credentials schrijfrechten heeft op de testmap uit punt 2 hieronder, zodra die map vaststaat. Alleen als geen van deze voldoet: nieuwe credential aanmaken.
+## Inspiratie ontvangen (2026-07-15)
 
-## 2. Test-Drive-map bevestigen
-
-De testomgeving van ticket 11 (`Onboarding workflow/Onboarding-Aanpassingen-Overzicht.md` sectie 16) documenteert een test-Registry-sheet en een test-Monday-board, maar geen test-Drive-map.
-
-Kandidaat: map-id `1rizHNIfUqbI87whaLvlc_MqItvfHsdaA`, aangemaakt tijdens de spike van ticket 02 (2026-07-10) via de service-account-endpoint. Ik kon niet verifiëren of deze map nog bestaat of toegankelijk is: de Google Drive-tool gaf de foutmelding "ineligible to be used in generative AI contexts" terug, geen duidelijk bestaat- of bestaat-niet-antwoord.
-
-Actie: bevestig of deze map hergebruikt mag worden, of geef een nieuwe map-id door. Alle output van de proefruns (Research Pack-docs, prefill-JSON's, screenshots) gaat hierin, nooit in een echte partnermap.
-
-## 3. Semrush-verbruikscheck (ter info, geen actie nu)
-
-Zodra de Semrush-credential er is, draait taak 4 eerst een goedkope testcall (domain_ranks, 1 regel, ongeveer 10 units) om de key en het resterende saldo te verifiëren, voordat de grotere calls (top-50 keywords, concurrenten) draaien.
-
-## 4. Naamgevingsadvies (observatie, geen blokkerende actie)
-
-Dit n8n-account bevat 134 credentials, gedeeld over veel andere projecten en mensen (onder andere Zeb, Victor, Bobby, Marijn, Ray, GEO Agent, META Ads Agent, TNO Content). Er is geen consistente naamgeving voor dit project. Advies: geef elke nieuwe credential voor deze workflow een herkenbaar voorvoegsel, bijvoorbeeld "SS Research - ...", zodat ze niet verdwijnen tussen de rest en duidelijk gekoppeld blijven aan ticket 16.
-
-## 5. MCP-zichtbaarheid workflows (ter info, pas relevant vanaf taak 2)
-
-De drie bestaande workflows die matchen op "research" (Creative Research Agent Zeb, PA2 Research_Agent, keyword research SEMRUSH) staan alle drie op `availableInMCP: false`. Dit lijkt een instelling per workflow, niet een accountbrede blokkade. Bij het aanmaken van nieuwe workflows in latere taken: controleren met `get_workflow_details` of ze automatisch beschikbaar zijn via MCP; zo niet, moet dat mogelijk handmatig aangezet worden in de workflow-instellingen in de n8n-UI (zoals de globale randvoorwaarden van het stappenplan al voorschrijven).
+Hidde deelde een bestaande, werkende n8n-workflow "Growth Scan Website" ([workflow](https://n8n.sprintsandsneakers.com/workflow/hzgnmy7cw8g0sXPY), JSON-export in `Input:inspiratie/Growth Scan Website.json`) als mogelijke inspiratie. Relevante observaties staan in `LOG.md` onder "Inspiratie: bestaande Growth Scan-workflow"; geen van de huidige ontwerpbesluiten is hierdoor gewijzigd.

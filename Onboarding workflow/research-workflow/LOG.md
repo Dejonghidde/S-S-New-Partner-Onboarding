@@ -76,3 +76,25 @@ Zes bestanden aangemaakt in `Onboarding workflow/research-workflow/`, allemaal s
 - `testset-tagscan.md`: de vijf referentiesites voor de tag-scan-regressietest, nog zonder baseline-resultaten (die komen in taak 2). Twee sites (woocommerce.com voor WordPress/WooCommerce, webflow.com voor Webflow) zijn mijn eigen keuze omdat het stappenplan hiervoor geen concreet voorbeeld gaf; onderbouwing staat in het bestand zelf.
 
 Geen van deze bestanden is in deze taak tegen een echte n8n-workflow of externe API getest; dat gebeurt in latere taken. Beide JSON-bestanden gevalideerd met `jq empty` (geldige syntax). Kosten: geen (alleen bestanden schrijven en lezen).
+
+---
+
+## Tussenstap: antwoorden Hidde op de actielijst (2026-07-15)
+
+Hidde heeft alle punten uit `hidde-actielijst.md` beantwoord. Volledige tabel met te gebruiken credentials en de test-Drive-map staat nu in `hidde-actielijst.md`. Kort samengevat: bestaande credentials hergebruiken (Apify Account, Sprints & Sneakers - Alpha - SEO agent voor OpenAI, Google Gemini(PaLM) Api account, S&S N8N - Drive API), naamgevingsadvies vervalt (niet aanpassen), MCP-zichtbaarheid regelt Hidde zelf bij het aanmaken van onze workflow, en de test-Drive-map wordt "Gamma - Hidde test map" (folder-ID `19ujq_RJ39UoFhyuKGfShF1PF1p2O4J4N`).
+
+Hidde deelde ook een Semrush-key (uit een bestaande, disabled node in een andere workflow) rechtstreeks in de sessie. Die key is bewust niet in dit logboek of enig ander repo-bestand overgenomen: alleen in n8n zelf gebruiken, zodra taak 4 de Semrush-tak bouwt.
+
+### Inspiratie: bestaande "Growth Scan Website"-workflow
+
+Hidde deelde ter inspiratie een bestaande, werkende n8n-workflow (`hzgnmy7cw8g0sXPY`, JSON-export in `Input:inspiratie/Growth Scan Website.json`, 54 nodes). Dit is een ander soort scan (algemene growth/CRO-beoordeling met SEO en contactdata, niet partner-onboarding-research), maar met bruikbare parallellen. Bevindingen:
+
+- **Firecrawl** (`@mendable/n8n-nodes-firecrawl`, resource "Agent", operatie "agent", prompt "scrape the whole site") haalt in één call de volledige site op inclusief `homepage_content`. Mogelijk alternatief voor de ruwe HTTP-fetch plus handmatige link-extractie uit taak 3.1: robuuster (rendert JS, geeft schone content terug) maar waarschijnlijk duurder per run dan een kale fetch. Niet toegepast: het ontwerpdocument koos bewust "eerst het gratis fundament" (besluit 4); dit blijft een optie om aan Hidde voor te leggen bij taak 3, geen automatische wijziging.
+- **DataForSEO** (`n8n-nodes-dataforseo`) wordt in die workflow gebruikt voor keyword-data (get-keyword-ideas, get-ranked-keywords), als alternatief voor Semrush. Niet nodig nu (Semrush is akkoord), maar een bruikbare fallback-optie mocht Semrush ooit onvoldoende blijken.
+- **Multi-model aanpak bevestigd:** de workflow gebruikt zowel een OpenAI- als een Anthropic-agent voor "search"-taken (ChatGPT Search, Claude Search) naast elkaar. Bevestigt dat de multi-LLM-aanpak uit ons ontwerp (besluit 3) al eerder werkt binnen dit n8n-account. Onze eigen prompts blijven in het Nederlands en met de bron-plus-zekerheid-discipline; die andere workflow schrijft in het Engels en zonder brondwang, dus geen 1-op-1 kopieerbare prompts.
+- **Gestructureerde JSON-output-in-prompt** (het "Website beoordeling"-node, Claude Sonnet, vraagt expliciet om een vaste JSON-schema-structuur in de output) bevestigt hetzelfde patroon dat wij al gebruiken in `prompts.md` (prompt 2) en `prefill-schema-v1.json`.
+- **Supabase vector store** ("Growth strategy agent" met `vectorStoreSupabase`) is relevant, bestaand prior art voor de v2-kennisbank uit het ontwerpdocument sectie 8 (nog niet aan de orde, pas na de eerste gereviewde packs).
+- **Rapportage:** HTML-opbouw in een Code-node, dan `Convert to File` plus PDFco naar PDF, upload naar Drive. Ons eigen ontwerp kiest bewust voor een Google Doc als Product 1 (ontwerpdocument sectie 9); dit HTML/PDF-patroon is een alternatief dat pas relevant wordt als Hidde ooit van Doc naar PDF wil overstappen, geen wijziging nu.
+- **Trigger:** deze workflow draait op een Google Sheets-trigger (rowAdded, gepolld elke minuut). Relevant voor ticket 17 (automatische trigger, gated), niet voor nu (v1 blijft handmatig getriggerd, besluit uit het ontwerpdocument).
+
+Geen van deze observaties verandert een bestaand ontwerpbesluit; ze zijn genoteerd als opties voor latere taken/tickets.
