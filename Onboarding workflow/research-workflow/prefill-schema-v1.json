@@ -1,0 +1,24 @@
+{
+  "_comment": "Contract met de vragenlijst; veldnamen wijzigen alleen met versie-ophoging en log-entry.",
+  "version": "1.0",
+  "partner": "<slug>",
+  "generated_at": "<datum>",
+  "reviewed": false,
+  "fields": {
+    "tech_stack": {
+      "value": ["Shopify", "GTM", "GA4", "Meta Pixel", "Klaviyo", "Cookiebot"],
+      "source": "site-scan <domein> (laag 1+2)",
+      "confidence": "vastgesteld"
+    },
+    "active_ad_channels": {
+      "value": { "meta": 14, "google": true, "tiktok": 0, "linkedin": 0 },
+      "source": "Meta Ad Library, Google Ads Transparency",
+      "confidence": "vastgesteld"
+    },
+    "competitors": {
+      "value": ["MerkX", "MerkY", "MerkZ"],
+      "source": "Semrush-overlap plus web-research",
+      "confidence": "waarschijnlijk"
+    }
+  }
+}

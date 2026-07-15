@@ -69,10 +69,10 @@ Geen. Alleen leesacties via de n8n-MCP-tools en één (mislukte) Drive-metadata-
 Zes bestanden aangemaakt in `Onboarding workflow/research-workflow/`, allemaal statisch (geen n8n-koppeling in deze taak):
 
 - `prefill-schema-v1.json`: het pre-fill-contract met de vragenlijst, versie 1.0, exact overgenomen uit het ontwerpdocument sectie 9.
-- `patroonbibliotheek.json`: tag-scan-patronen (29 entries), exact overgenomen uit het stappenplan stap 1.2.
+- `patroonbibliotheek.json`: tag-scan-patronen (30 entries), letterlijk uit het stappenplan geëxtraheerd (regels 58-89 van `Stappenplan-Research-Workflow-n8n.md`) in plaats van overgetypt, om transcriptiefouten in de sterk ge-escapete regexpatronen te voorkomen. Gevalideerd met `jq empty`.
 - `pack-template.md`: de 11 secties van het Research Pack plus het aannames-slot en het reviewblok.
 - `prompts.md`: de zes agent-prompts (profiel, markt, funnel, visuele rubric, aannames-synthese, cross-checker), letterlijk overgenomen uit het stappenplan stap 1.4.
 - `beoordelingsrubric.md`: het beoordelingsformat voor Hidde per proefpack.
-- `testset-tagscan.md`: de vijf referentiesites voor de tag-scan-regressietest, nog zonder baseline-resultaten (die komen in taak 2).
+- `testset-tagscan.md`: de vijf referentiesites voor de tag-scan-regressietest, nog zonder baseline-resultaten (die komen in taak 2). Twee sites (woocommerce.com voor WordPress/WooCommerce, webflow.com voor Webflow) zijn mijn eigen keuze omdat het stappenplan hiervoor geen concreet voorbeeld gaf; onderbouwing staat in het bestand zelf.
 
-Geen van deze bestanden is in deze taak tegen een echte n8n-workflow of externe API getest; dat gebeurt in latere taken. Kosten: geen (alleen bestanden schrijven).
+Geen van deze bestanden is in deze taak tegen een echte n8n-workflow of externe API getest; dat gebeurt in latere taken. Beide JSON-bestanden gevalideerd met `jq empty` (geldige syntax). Kosten: geen (alleen bestanden schrijven en lezen).
