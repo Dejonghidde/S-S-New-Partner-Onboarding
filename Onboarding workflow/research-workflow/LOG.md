@@ -223,3 +223,57 @@ Op instructie Hidde ("ga door!") direct doorgebouwd na taak 4.1/4.2/4.3.
 - De cross-check-bevindingen worden nu alleen doorgegeven als los tekstveld (`openstaande_twijfels_crosscheck`), nog niet automatisch verwerkt in het `pack_concept` zelf (het ontwerp vraagt om "afzwakken waar mogelijk, rest als openstaande twijfels zichtbaar"); geautomatiseerde verwerking van de bevindingen is nog niet gebouwd, alleen het rauwe bevindingenverslag.
 
 **Kosten:** vijf echte LLM-aanroepen in execution 97067 (Gemini 3.1 Pro x3, Gemini 3.1 Flash-lite x1, GPT-5-mini x1). Geen tokenaantallen apart opgevraagd; gezien de promptgroottes (paar duizend tekens) naar verwachting enkele centen totaal. Geen Apify- of Semrush-kosten (gepind).
+
+---
+
+## Taak 4.4: LinkedIn-branch (2026-07-15)
+
+Op instructie Hidde ("nu direct actie ondernemen, zelfstandig en autonoom") direct doorgebouwd na taak 5, in plaats van de oorspronkelijke volgorde uit het stappenplan.
+
+**Actor-onderzoek:** via Apify's publieke store-API gezocht op "linkedin company"; gekozen `automation-lab/linkedin-company-scraper` (actorId `kH7li2wTed8S3VaiV`), inputschema opgehaald via `/builds/default` (`companyUrls`-array plus `maxCompanies`).
+
+**Bouw:** twee nodes tussen de ad-libraries-branch en de profiel-agent: "LinkedIn: bedrijfspagina zoeken" (HTTP POST naar Apify's REST-endpoint, `companyUrls` gevuld vanuit `social_links.linkedin` als die gevonden is, anders een lege array) en "LinkedIn-sleutel toevoegen" (Code-node die het resultaat parseert naar `linkedin_company`: over_ons, medewerkersaantal, sector, locatie, aantal_vacatures, met een eerlijke `gevonden: false`-tak als er geen LinkedIn-link op de site staat of de actor niets teruggaf).
+
+**Aansluiting op eerder gebouwde secties:** de profiel-agent-prompt (taak 5) had voor LinkedIn nog de hardcoded tekst "niet beschikbaar, branch niet gebouwd deze sessie" staan; deze is nu vervangen door de echte LinkedIn-tekst (over ons, medewerkersaantal, sector, locatie, vacatures). De `sectieBasisgegevens`-functie in de aannames-prompt (voorheen altijd "onbekend, HubSpot-tak overgeslagen") leest nu ook uit `linkedin_company` voor sector/medewerkersaantal/locatie, met alleen de contactpersonen nog als "onbekend" (die komen wel echt uit HubSpot, niet uit LinkedIn). De cross-check-brondata bevat nu ook `linkedin_company`.
+
+**Referentie-migratie:** de 7 plekken die eerder `$('Ad_channels-sleutel toevoegen')` als hun basis-context lazen (profiel-, markt-, funnel-agent-promptbouw, de latere screenshot- en aannames/cross-check/prefill-stappen) zijn omgezet naar `$('LinkedIn-sleutel toevoegen')`, zodat de LinkedIn-data overal meestroomt. Bevestigd via `grep` voor en na de wijziging (7 vervangen, de eigen interne referentie van de LinkedIn-node zelf niet aangeraakt).
+
+**Test:** `test_workflow` met realistische pin-data (footer-link naar `linkedin.com/company/mollie`, Apify-resultaat met over-ons-tekst, 1001-5000 medewerkers, Financial Services, Amsterdam, 12 vacatures). Resultaat (execution 97079): `linkedin_company` correct gevuld en zichtbaar in zowel het ruwe context-object als in de echte, live output van de profiel-agent ("Sector: Financial Services (Bron: LinkedIn)"). Geen node-fouten.
+
+**Kosten:** geen aparte LLM-aanroep voor deze branch zelf (alleen deterministische parsing); wel meegelift in dezelfde testrun als taak 4.6 (zie kosten daar).
+
+---
+
+## Taak 4.6: Screenshots-branch (2026-07-15)
+
+**Actor-onderzoek:** via Apify's publieke store-API gekozen `apify/screenshot-url` (actorId `rGCyoaKTKhyMiiTvS`, 6.178 gebruikers), inputschema (`urls`, `format`, `waitUntil`, `delay`, `viewportWidth`) opgehaald via `/builds/default`.
+
+**Bouw:** tien nodes tussen de funnel-agent en de (herschreven) visuele-rubric-stub: "Screenshots: urls bepalen" (home-URL plus eerste kernpagina, uit `paginas`), twee parallelle Apify-calls voor desktop (1440px) en mobiel (390px), "Screenshots: resultaten parsen" (bouwt een `screenshot_entries`-array), Split Out per entry, een HTTP-node die het PNG-bestand zelf ophaalt (`responseFormat: 'file'`), Google Drive-upload naar de test-map (credential "S&S N8N - Drive API", map "Gamma - Hidde test map"), Aggregate voor de Drive-links, een Merge (zelfde `includeUnpaired: true`-veiligheidspatroon als taak 2/3, voor het geval de upload-tak leeg blijft) en "Screenshots-sleutel toevoegen" die alles samenvat onder sleutel `screenshots` (aantal, gedownload met naam+link, en een `laag3_status`-veld).
+
+**Bewuste scope-grens (expliciet zichtbaar gemaakt, niet verzwegen):** de laag-3-fallback uit het ontwerp ("gaf de tagscan `niet_scanbaar`, pas de laag-1-patronen dan toe op de gerenderde HTML") kan met de gekozen actor niet: `apify/screenshot-url` levert alleen een PNG terug, geen gerenderde HTML/DOM. Voor een echte laag-3-fallback is een andere tool nodig (kandidaat: Firecrawl); dit staat als open punt in `screenshots.laag3_status` in plaats van stilzwijgend overgeslagen te worden.
+
+**Visuele-rubric-stub herschreven:** de stub uit taak 5 zei nog "geen screenshots beschikbaar deze sessie". Nu de screenshots wél gemaakt worden, is de stub-tekst bijgewerkt: hij meldt eerlijk dat de beelden zijn gemaakt en in Drive staan (met linkjes en aantal), maar dat de AI Agent-node zelf nog niet op vision-input is aangesloten. Reden: n8n's Agent-node heeft een `passthroughBinaryImages`-optie die suggereert dat losse binaire afbeeldingen automatisch als vision-input meegaan, maar dit gedrag (met name het combineren van twéé of meer losse binaire velden in één aanroep) is deze sessie niet geverifieerd. Een ongeteste multimodale koppeling laten doorgaan als "af" zou het risico geven op een stille, onopgemerkte fout; dat is bewust vermeden.
+
+**Test:** `test_workflow` met realistische pin-data (desktop- en mobiel-screenshot-URL's, een gepinde Drive-upload-respons om geen echte bestanden in Hiddes Drive-map te zetten tijdens het testen). Resultaat (execution 97079, gecombineerd met taak 4.4): `screenshot_entries` correct met 2 entries (desktop + mobiel); de upload/aggregate/merge-keten liep zonder fouten door (het pin-mechanisme van `test_workflow` geeft wel maar 1 gedownload-item terug ondanks 2 entries, omdat een gepind node-antwoord altijd hetzelfde vaste resultaat geeft ongeacht het aantal binnenkomende items; dit is een beperking van het testmechanisme, geen fout in de workflow). De visuele-rubric-stub tekst verscheen correct met het echte Drive-linkje erin.
+
+**Kosten:** geen aparte LLM-aanroep voor deze branch zelf. In dezelfde gecombineerde testrun (execution 97079/97083, taak 4.4 + 4.6) zes echte LLM-aanroepen voor de reeds bestaande agents (reviews-thema, profiel, markt, funnel, aannames, cross-check), verwaarloosbaar qua kosten. Geen Apify- of Drive-kosten (alle externe calls gepind).
+
+---
+
+## Taak 4.5: Socials-branch (2026-07-15)
+
+Laatste van de drie taak-4-branches; op instructie Hidde ("resterende taken oppakken en uitvoeren nu") direct doorgebouwd na 4.4 en 4.6.
+
+**Actor-onderzoek:** `apify/instagram-profile-scraper` (actorId `dSCLg0C3YEZ83HzYX`, 172.772 gebruikers) gekozen via Apify's publieke store-API; inputschema (`usernames`-array) en outputvelden (`followersCount`, `postsCount`, `latestPosts[]` met `caption`, `likesCount`, `commentsCount`, `timestamp`) bevestigd via de readme in `/builds/default`.
+
+**Scope-beperking (bewust, expliciet zichtbaar gemaakt):** het ontwerp vraagt "voor elk gevonden social-kanaal". Deze sessie is alleen Instagram gebouwd; TikTok, YouTube, X en LinkedIn-profielstatistieken (los van de LinkedIn-bedrijfspagina uit taak 4.4) zijn niet geïmplementeerd. Dit staat expliciet in de pack-sectie zelf ("Overige platforms: onbekend, niet gebouwd deze sessie"), niet stilzwijgend weggelaten. Daarnaast levert de gekozen actor maximaal de laatste 12 posts, niet de 25 uit het ontwerp; ook dit staat als expliciete `opmerking` in de output (kandidaat voor een latere sessie: `apify/instagram-post-scraper` erbij voor het volledige aantal).
+
+**Bouw:** zes nodes tussen de LinkedIn-branch en de profiel-agent: "Socials: Instagram-gebruikersnaam bepalen" (Code, haalt de gebruikersnaam uit `social_links.instagram` met een regex op de URL), "Socials: Instagram-profiel ophalen" (HTTP POST naar Apify), "Socials: Instagram-profiel parsen" (Code, de rekenkern), een AI Agent (Gemini Flash 2.5, zelfde model als de taak 4.3-reviews-thema-agent) die de captions clustert in onderwerpen, en "Socials-sleutel toevoegen" die alles samenvoegt onder sleutel `socials.instagram`.
+
+**Rekenkern (Code-node, geen LLM):** posts per week over de laatste 90 dagen (aantal posts binnen het venster gedeeld door 90/7 weken); regelmaat via de standaarddeviatie van de tijdsintervallen tussen opeenvolgende posts, vertaald naar "vast ritme" als de variatiecoëfficiënt (stdev gedeeld door gemiddelde) onder 0,6 blijft, anders "onregelmatig"; engagement-rate als gemiddelde interacties (likes plus comments) per post gedeeld door het aantal volgers, in procenten. Groei is altijd letterlijk "nog geen historie beschikbaar" (geen Social Blade-koppeling deze sessie, zoals het ontwerp voorschrijft als terugvaloptie).
+
+**Aansluiting op eerder gebouwde secties:** `sectieSocials` toegevoegd aan de aannames-prompt-Code-node (verving de hardcoded "onbekend, branch niet gebouwd"-regel voor sectie 6). Cross-check-brondata bevat nu ook `socials`. De 7 referenties naar de vorige laatste-branch-node zijn omgezet van `LinkedIn-sleutel toevoegen` naar `Socials-sleutel toevoegen` (zelfde referentie-migratiepatroon als taak 4.4, bevestigd via `grep` voor en na).
+
+**Test:** `test_workflow` met 4 realistische testcaptions/likes/comments/timestamps (2 weken uit elkaar, dus een zeer regelmatig ritme). Resultaat (execution 97083): `posts_per_week_laatste_90_dagen: 0.3`, `regelmaat: "vast ritme"` (correct: intervallen van steeds ~14 dagen), `engagement_rate_procent: 0.23` (rekenkundig correct: (458 totale interacties / 4 posts) / 50.000 volgers). De Gemini Flash-agent clusterde de 4 testcaptions correct in 4 herkenbare onderwerpen. Sectie 6 van het pack-concept en de volledige downstream-keten (profiel-, markt-, funnel-, aannames-, cross-check-agent) liepen zonder fouten door met deze nieuwe data erin verweven; de markt-agent-JSON-extractie (de taak-5-bugfix) bleef correct werken.
+
+**Kosten:** één echte Gemini Flash-aanroep voor de captions-clustering, plus de vijf reeds bestaande agent-aanroepen in dezelfde gecombineerde testrun (execution 97083); verwaarloosbaar. Geen Apify-kosten (call gepind).
