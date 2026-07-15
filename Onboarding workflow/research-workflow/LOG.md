@@ -98,3 +98,33 @@ Hidde deelde ter inspiratie een bestaande, werkende n8n-workflow (`hzgnmy7cw8g0s
 - **Trigger:** deze workflow draait op een Google Sheets-trigger (rowAdded, gepolld elke minuut). Relevant voor ticket 17 (automatische trigger, gated), niet voor nu (v1 blijft handmatig getriggerd, besluit uit het ontwerpdocument).
 
 Geen van deze observaties verandert een bestaand ontwerpbesluit; ze zijn genoteerd als opties voor latere taken/tickets.
+
+---
+
+## Taak 2: Sub-workflow "SS Research - Tagscan" (2026-07-15)
+
+**Workflow:** `SS Research - Tagscan`, id `LkH0bLVZVCaYInop`, [n8n-link](https://n8n.sprintsandsneakers.com/workflow/LkH0bLVZVCaYInop). Inactief (`active: false`), handmatig via Execute Workflow Trigger. `availableInMCP: true` (stond al aan bij aanmaak, geen actie van Hidde nodig geweest). Acht nodes: Start (Execute Workflow Trigger) → Fetch homepage (laag 1) → Code laag 1 → IF "GTM gevonden?" → (waar/onwaar) Fetch GTM-container (laag 2) → Code laag 2 → Merge (combine, combineByPosition, `includeUnpaired: true`) → Code "Output samenstellen".
+
+### Stap 2.1 en 2.2: bouw en aanmaak
+
+Gevolgd: `get_sdk_reference`, `get_suggested_nodes` (categorieën scraping_and_research, data_transformation), `search_nodes` voor elke nodetype, `get_node_types` met alle discriminators, code geschreven, `validate_workflow`, `create_workflow_from_code`. Patroonbibliotheek als constante in beide Code-nodes ingebed (niet dynamisch ingeladen, zoals voorgeschreven); de entry "Server-side GTM (indicatie)" is bewust buiten de generieke patroon-loop gehouden en apart geïmplementeerd (het patroon in het JSON-bestand is geen zuivere regex maar een regex-plus-mensentekst-hybride; de eigenlijke logica: een `/gtm.js?id=GTM-xxx`-loader die niet van googletagmanager.com komt).
+
+### Stap 2.3: regressietest op de 5 testsites
+
+Getest met `test_workflow` (pin data), niet met `execute_workflow`: dat laatste bleek de Execute Workflow Trigger niet te ondersteunen ("Only workflows with the following trigger nodes can be executed: Schedule Trigger, Webhook Trigger, Form Trigger, Chat Trigger, Manual Trigger"), een tool-beperking die het stappenplan niet kon voorzien. Om de scanlogica echt tegen levende sites te toetsen (test_workflow simuleert HTTP Request-nodes altijd) is de homepage-HTML en, waar relevant, de GTM-containerinhoud vooraf met curl opgehaald (zelfde user-agent als de node) en als pin data ingevoerd. Dit test de detectielogica tegen echte, actuele site-inhoud; het bewijst niet dat n8n's eigen HTTP Request-node vanaf het n8n-serveradres dezelfde respons krijgt (bijvoorbeeld bij IP-gebaseerde bot-detectie). Volledige, definitieve resultaten en twee tijdens het testen gevonden en gecorrigeerde fouten (GTM-patroon miste de standaard-snippet; Merge liet items vallen bij een lege tak) staan in `testset-tagscan.md`. Samengevat:
+
+| Site | Resultaat |
+|---|---|
+| coolblue.nl | Geen patronen (vermoedelijk SPA, tags laden na JS-executie), `niet_scanbaar: false` |
+| mrmarvis.nl | Cloudflare-blokkade (HTTP 403), `niet_scanbaar: true` |
+| woocommerce.com | GTM, WooCommerce, WordPress (laag 1); GA4 en Google Ads remarketing via container (laag 2) |
+| webflow.com | GTM, Webflow (laag 1); Google Ads remarketing via container (laag 2) |
+| mollie.com | Geen patronen (vermoedelijk ook SPA), `niet_scanbaar: false` |
+
+Toets aan de verwachting uit het stappenplan ("minstens 3 van de 5 sites GTM/GA4"): gehaald op 2 van de 5. De overige 3 zijn eerlijk verklaarbaar (2 vermoedelijke SPA's, 1 bot-blokkade) en geen defect in de scanlogica: op beide sites waar via een kale fetch iets te vinden was, werkte de detectie correct in zowel laag 1 als laag 2. Volledige onderbouwing en de letterlijke resultaten per site in `testset-tagscan.md`.
+
+**Aanbeveling voor een latere sessie (geen actie nu):** de patroonbibliotheek test Hotjar, Klaviyo, de oude Universal Analytics-property en het TikTok/LinkedIn/Pinterest/Snap-pixel alleen op laag 1 (directe HTML), niet op laag 2 (GTM-container). Bij woocommerce.com bleken Hotjar en Klaviyo wel degelijk aanwezig, maar uitsluitend via de GTM-container geladen, dus gemist. Zelfde soort gat als het GTM-patroon dat deze sessie al herstelde, maar voor andere tools; buiten scope van taak 2 om nu zelfstandig te verbreden, wel het signaleren waard voor wie de patroonbibliotheek verder verfijnt.
+
+### Stap 2.4: kosten
+
+Geen kosten aan externe betaalde diensten (alleen publieke HTTP-fetches, curl vanaf mijn eigen omgeving voor de testdata, en n8n-MCP-calls).

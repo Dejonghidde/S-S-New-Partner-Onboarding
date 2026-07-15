@@ -1,5 +1,5 @@
 [
-  {"tool": "Google Tag Manager", "categorie": "tagmanager", "laag": 1, "patroon": "googletagmanager\\.com/gtm\\.js\\?id=(GTM-[A-Z0-9]+)"},
+  {"tool": "Google Tag Manager", "categorie": "tagmanager", "laag": 1, "patroon": "googletagmanager\\.com/(?:gtm\\.js|ns\\.html)\\?id=(GTM-[A-Z0-9]+)"},
   {"tool": "GA4", "categorie": "analytics", "laag": 1, "patroon": "gtag/js\\?id=(G-[A-Z0-9]{6,})"},
   {"tool": "GA4 (via GTM-container)", "categorie": "analytics", "laag": 2, "patroon": "(G-[A-Z0-9]{6,})"},
   {"tool": "Universal Analytics (verouderd)", "categorie": "analytics", "laag": 1, "patroon": "(UA-[0-9]{4,}-[0-9]+)"},
