@@ -147,11 +147,11 @@
 
 **Interfaces:** consumeert het volledige context-object plus alle branch-resultaten; produceert `pack_concept` (markdown per sectie) en `prefill_concept` (JSON volgens `prefill-schema-v1.json`).
 
-- [ ] **Stap 5.1:** Bouw vier AI Agent-nodes (n8n AI Agent) met de prompts 1 tot en met 4 uit `prompts.md`, letterlijk overgenomen. Model-toewijzing: profiel-agent en markt-agent op Gemini Pro met Google Search grounding als tool; funnel-agent en visuele rubric op Gemini Flash (rubric met vision-input). Geef de profiel-agent en markt-agent de tagscan- en Semrush-resultaten als context mee (geen tools nodig voor wat er al ligt: data-doorstroom).
-- [ ] **Stap 5.2: Aannames-synthese.** Eén Gemini Pro-call met prompt 5 over het samengevoegde pack-concept.
-- [ ] **Stap 5.3: Cross-check.** Eén OpenAI-call (GPT-mini-klasse) met prompt 6. Verwerk de bevindingen automatisch waar het kan (label afzwakken) en neem de resterende bevindingen als "openstaande twijfels" op in het pack (zichtbaar voor de reviewer, nooit stilzwijgend weggelaten).
-- [ ] **Stap 5.4: Prefill-extractie.** Code-node die uit de branch-resultaten het prefill-JSON bouwt volgens het schema: `tech_stack` uit de tagscan (alleen laag 1 en 2, zekerheid vastgesteld), `active_ad_channels` uit 4.2 (alleen geverifieerde platformchecks), `competitors` uit de markt-agent (zekerheid zoals de agent die gaf). Niets anders komt in de prefill.
-- [ ] **Stap 5.5:** Testrun end-to-end op de nep-partner; controleer dat elke pack-sectie bronnen bevat, dat "onbekend" verschijnt waar data ontbrak, en dat het prefill-JSON valide is tegen het schema. LOG.md plus commit.
+- [x] **Stap 5.1:** Vier AI Agent-nodes gebouwd (profiel-agent, markt-agent op Gemini 3.1 Pro; funnel-agent op Gemini 3.1 Flash-lite). Google Search grounding niet geïmplementeerd (niet beschikbaar in de n8n Gemini-node v1.1); openstaand beslispunt op de actielijst. Visuele rubric vervangen door een stub (geen screenshots beschikbaar, taak 4.6 niet gebouwd); zie LOG.md "Taak 5".
+- [x] **Stap 5.2: Aannames-synthese.** Gemini 3.1 Pro-call gebouwd en getest; gaf 4 concrete, bruikbare aannames in het gevraagde 5-punts-format.
+- [x] **Stap 5.3: Cross-check.** OpenAI gpt-5-mini-call gebouwd en getest; vond echte kwaliteitsproblemen in de conceptoutput (zie LOG.md). Bevindingen komen nu als apart tekstveld door, nog niet automatisch verwerkt in het pack_concept zelf.
+- [x] **Stap 5.4: Prefill-extractie.** Gebouwd; een echte bug gevonden en gefixt tijdens het testen (JSON-extractie uit de markt-agent-output matchte gulzig het verkeerde haakjespaar), zie LOG.md.
+- [x] **Stap 5.5:** Volledige end-to-end testrun (execution 97067) met vijf echte, live LLM-aanroepen. Alle pack-secties bevatten bronnen, "onbekend" verschijnt correct waar branches niet gebouwd zijn (LinkedIn, socials, screenshots, HubSpot), prefill-JSON is valide en compleet na de fix. LOG.md bijgewerkt, commit volgt.
 
 ---
 

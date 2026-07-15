@@ -41,6 +41,16 @@ Alle punten uit de eerste versie van dit bestand (taak 0) zijn door Hidde beantw
 | Losse `Input:inspiratie/Growth Scan Website.json` | "nee hoeft niet meegenomen te worden!" | Blijft untracked, geen actie nodig |
 | Proefbedrijven taak 7 (stap 7.1) | Uitelkaar.nl, Boekenwereld, WONDR Experience | Vastgelegd hieronder, wordt pas gebruikt bij taak 7 |
 
+## Openstaand beslispunt: Google Search grounding voor de profiel- en markt-agent (na taak 5)
+
+Het ontwerp vraagt "Gemini Pro met Google Search grounding" voor de profiel-agent en markt-agent. De n8n-node voor Gemini Chat Model (`lmChatGoogleGemini`, v1.1) heeft geen grounding-parameter in de opgehaalde typedefinitie; native Gemini-grounding is dus niet beschikbaar via deze node-versie. Beide agents draaien nu zonder grounding, alleen op trainingskennis plus de meegegeven context; in de testrun (zie LOG.md "Taak 5") gaf dit nog steeds bruikbare, eerlijk gelabelde output, dus dit is geen blokkade, maar wel een kwaliteitsbeperking (geen actuele/live informatie).
+
+Opties:
+1. Niets doen: agents blijven zonder grounding werken (huidige staat).
+2. Een losse zoektool aan de agent hangen (SerpApi of Perplexity, beide via `get_suggested_nodes` als optie getoond); dit vereist een nieuwe, betaalde credential die nu nergens in het account bestaat (`list_credentials` gaf 0 resultaten voor beide). Ik maak deze keuze niet zelf omdat het een nieuwe doorlopende kostenpost is, geen eenmalige technische keuze.
+
+Mijn aanbeveling: optie 1 aanhouden tot na de eerste proefpack-beoordeling (taak 7); pas dan blijkt of het gebrek aan actuele web-informatie daadwerkelijk een probleem is in de praktijk.
+
 ## Taak 7: proefbedrijven (besluit Hidde, 2026-07-15)
 
 De drie proefbedrijven voor de eindtest (stap 7.1) staan al vast, ruim voordat taak 5 en 6 klaar zijn: **Uitelkaar.nl**, **Boekenwereld**, **WONDR Experience**. Geen verdere actie nodig tot taak 7 aan de beurt is.
