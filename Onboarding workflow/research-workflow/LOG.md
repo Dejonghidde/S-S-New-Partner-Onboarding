@@ -182,3 +182,19 @@ Op instructie Hidde direct doorgebouwd na taak 3 (taken 4 en 5 kregen prioriteit
 **Openstaand (geen blokkade):** de Apify-credential is bij het aanmaken van de workflow niet automatisch gekoppeld (in tegenstelling tot de Gemini-credential, die wel automatisch matchte op naam); Hidde kan dit met één klik controleren/koppelen in de node-UI voor een echte run. De Trustpilot-regex (JSON-LD-veldnamen, CSS-attribuutselector voor reviewblokken) is gebaseerd op Trustpilot's huidige paginastructuur; als Trustpilot hun markup wijzigt, moet deze regex worden bijgewerkt (zelfde soort onderhoudsrisico als elke scraper zonder officiële API).
 
 **Kosten:** één echte Gemini Flash-aanroep tijdens het testen (kort prompt, geen tokenaantal apart opgevraagd; verwaarloosbaar). Geen Apify- of Semrush-kosten (die calls waren gepind).
+
+---
+
+## Taak 4.2: Ad-libraries-branch (2026-07-15)
+
+**Actor-onderzoek:** geen bestaande Make-referentie voor deze branch, dus gezocht via Apify's publieke store-API (`GET https://api.apify.com/v2/store?search=...`, geen authenticatie nodig) en per kandidaat het echte inputschema opgehaald via `GET /v2/acts/{actorId}/builds/default` (het `exampleRunInput`-veld gaf alleen een generieke placeholder, het `inputSchema`-veld in de build wel de echte parameters). Gekozen op basis van het aantal gebruikers (grootste, actiefste actor, in lijn met stap 4.2's instructie): Meta/Facebook Ad Library: `curious_coder/facebook-ads-library-scraper` (actorId `XtaWFhbtfxyzqrFmd`, 33.739 gebruikers, ruim 10x de nummer twee). Google Ads Transparency: `solidcode/ads-transparency-scraper` (actorId `iRsL8PTQjmWC1SaPQ`, 1.130 gebruikers, grootste van de kandidaten).
+
+**Bouw:** vier nodes na de reviews-branch: "Ad-libraries: Meta zoeken" (HTTP POST naar Apify's REST-endpoint met een opgebouwde Facebook Ads Library-zoek-URL op bedrijfsnaam), "Ad-libraries: Meta parsen", "Ad-libraries: Google zoeken" (zoekt op domein, regio NL), "Ad-libraries: Google parsen", en "Ad_channels-sleutel toevoegen" die Meta, Google, TikTok en LinkedIn samenvoegt onder sleutel `ad_channels`.
+
+**Voorfilter zoals voorgeschreven:** Meta en Google worden altijd gecheckt. TikTok wordt alleen gecheckt als de tagscan een TikTok-pixel vond; in deze sessie is de TikTok-actor zelf niet geselecteerd of getest (nog te doen, expliciet gemarkeerd in de output onder `ad_channels.tiktok.opmerking` in plaats van stil weggelaten). LinkedIn heeft geen programmatische check (geen publieke API, zoals het ontwerp voorschrijft) en krijgt de vaste handmatige zoeklink.
+
+**Test:** `test_workflow` met realistische pin-data (2 actieve Meta-ads, 0 Google-ads, 0 TikTok-pixel in de tagscan). Resultaat (execution 97015): `ad_channels.meta` correct met `actief: true`, 2 voorbeeld-URL's; `ad_channels.google` correct met `actief: false`, 0 ads; `ad_channels.tiktok` correct niet gecheckt; `ad_channels.linkedin` met de vaste link. Dezelfde run testte ook de "niet gevonden"-paden van taak 4.3 nogmaals (Trustpilot 404, lege Google-reviews): de Gemini-agent gaf hier terecht en eerlijk aan geen thema's te kunnen afleiden zonder reviewdata, in plaats van iets te verzinnen, tweede echte, live Gemini-aanroep deze sessie.
+
+**Openstaand (geen blokkade, wel te verifiëren):** de exacte veldnamen in de Apify-output (`isActive`, `snapshotUrl`, `adCreativeUrl` e.d.) zijn gebaseerd op de gedocumenteerde inputschema's van de actors, niet op een echte outputrun (die kost geld en vereist de Apify-credential); de parse-code raadt met meerdere veldnaam-varianten (camelCase/snake_case) als vangnet, maar de eerste echte run moet dit bevestigen.
+
+**Kosten:** één extra echte Gemini Flash-aanroep tijdens het testen (verwaarloosbaar). Geen Apify-kosten (calls gepind).
