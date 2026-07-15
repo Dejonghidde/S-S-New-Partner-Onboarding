@@ -27,10 +27,24 @@ Alle punten uit de eerste versie van dit bestand (taak 0) zijn door Hidde beantw
 
 ## Nog te doen, geen blokkade (uitvoering hoort bij latere taken)
 
-- **Semrush-verbruikscheck** (stap 0.5 / taak 4): eerst de goedkope testcall (domain_ranks, 1 regel, circa 10 units) draaien zodra de Semrush-tak gebouwd wordt.
-- **Semrush-credential aanmaken in n8n (actie voor Hidde, blokkeert alleen de live/echte run, niet de bouw):** de Semrush-tak (taak 4.1) is gebouwd en gestructureerd getest met gesimuleerde CSV-data, maar heeft voor een echte call een generieke Query Auth-credential nodig, genaamd exact `Semrush API`, met als query-parameternaam `key` en als waarde de sleutel die je al eerder in deze sessie deelde (uit de disabled node in workflow z4qoXxd8yRG5HyXf). Ik zet zelf nooit een API-key in een n8n-node-parameter of in dit bestand (n8n-SDK-regel en projectregel); dat maakt dit de enige stap die alleen jij in de n8n-UI kan doen. Zodra de credential met deze exacte naam bestaat, hoeft er verder niets aangepast te worden aan de workflow zelf.
+- **Semrush-verbruikscheck** (stap 0.5 / taak 4): eerst de goedkope testcall (domain_ranks, 1 regel, circa 10 units) draaien zodra er een echte run gebeurt.
 - **Google Docs-credential voor taak 6**: bevestigen of "S&S N8N - Drive API" ook de Docs-node dekt, of dat "Google - Accounts@sprintsandsneakers.com" (`googleDocsOAuth2Api`) nodig is. Geen actie nu, pas relevant bij de pack-doc-assemblage.
+- **Handmatige credential-koppeling in de n8n-UI (structureel, niet per credential):** voor alle HTTP Request-nodes (Semrush x3, Apify x5, de twee kale site-fetches) koppelt de n8n-MCP-tool credentials nooit automatisch, ongeacht de naam; dat geldt voor elke node van dit type, telkens wanneer de workflow wordt bijgewerkt. Even in elke node de credential-dropdown controleren in de UI voordat een echte run gedraaid wordt.
+
+## Antwoorden Hidde op de actielijst-update (2026-07-15, na taak 4.1/4.2/4.3)
+
+| Onderdeel | Antwoord Hidde | Verwerkt |
+|---|---|---|
+| Semrush-credential | Aangemaakt: Query Auth, naam "SemRush API" (in n8n zelf geregistreerd als "Semrush API"), parameter "key", met de sleutel | Naam kwam al exact overeen met de referentie in de workflow (`newCredential('Semrush API')`); geen codewijziging nodig |
+| Apify-credential | "Apify account is goed!" | Bevestigd, geen wijziging |
+| Google Sheets-credential | Gebruik "Google Sheet Hidde-Ops" (niet de eerder zelf gekozen "Google sheets account - Google cloud project n8n") | Workflow bijgewerkt: `Partnerrij ophalen (Form Responses)`-node verwijst nu naar "Google Sheet Hidde-Ops" |
+| Losse `Input:inspiratie/Growth Scan Website.json` | "nee hoeft niet meegenomen te worden!" | Blijft untracked, geen actie nodig |
+| Proefbedrijven taak 7 (stap 7.1) | Uitelkaar.nl, Boekenwereld, WONDR Experience | Vastgelegd hieronder, wordt pas gebruikt bij taak 7 |
+
+## Taak 7: proefbedrijven (besluit Hidde, 2026-07-15)
+
+De drie proefbedrijven voor de eindtest (stap 7.1) staan al vast, ruim voordat taak 5 en 6 klaar zijn: **Uitelkaar.nl**, **Boekenwereld**, **WONDR Experience**. Geen verdere actie nodig tot taak 7 aan de beurt is.
 
 ## Inspiratie ontvangen (2026-07-15)
 
-Hidde deelde een bestaande, werkende n8n-workflow "Growth Scan Website" ([workflow](https://n8n.sprintsandsneakers.com/workflow/hzgnmy7cw8g0sXPY), JSON-export in `Input:inspiratie/Growth Scan Website.json`) als mogelijke inspiratie. Relevante observaties staan in `LOG.md` onder "Inspiratie: bestaande Growth Scan-workflow"; geen van de huidige ontwerpbesluiten is hierdoor gewijzigd.
+Hidde deelde een bestaande, werkende n8n-workflow "Growth Scan Website" ([workflow](https://n8n.sprintsandsneakers.com/workflow/hzgnmy7cw8g0sXPY), JSON-export in `Input:inspiratie/Growth Scan Website.json`) als mogelijke inspiratie. Relevante observaties staan in `LOG.md` onder "Inspiratie: bestaande Growth Scan-workflow"; geen van de huidige ontwerpbesluiten is hierdoor gewijzigd. Bestand blijft untracked (bevestigd door Hidde, 2026-07-15).
