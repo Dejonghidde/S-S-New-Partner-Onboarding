@@ -118,14 +118,14 @@
 
 ## Taak 3: Hoofd-workflow deel 1: "SS Research - Fundament"
 
-**Interfaces:**
-- Input (handmatige form-trigger): `bedrijfsnaam` (tekst), `domein` (tekst), `type` (dropdown B2B/B2C), `hubspot_zoeken` (ja/nee).
+**Interfaces (bijgewerkt tijdens de bouw, zie LOG.md "Taak 3" voor de volledige onderbouwing):**
+- ~~Input (handmatige form-trigger): `bedrijfsnaam` (tekst), `domein` (tekst), `type` (dropdown B2B/B2C), `hubspot_zoeken` (ja/nee).~~ Vervangen op instructie van Hidde: Manual Trigger + "Testinvoer"-node (`bedrijfsnaam_zoekterm`, `domein`, `type_override`) + een Google Sheets-lookup op de sheet "Form Responses" (`1a98wRYG9dMu2KG866xrd1VO3iSmv0Qw0wm9ZxqavtX8`, dezelfde bron als de Make-onboarding-automatisering) voor `bedrijfsnaam`/`type`. `domein` blijft handmatig (staat niet in de sheet). `hubspot_zoeken` vervalt: de HubSpot-tak (stap 3.2) is op instructie van Hidde overgeslagen voor nu.
 - Produceert het context-object dat alle latere branches gebruiken: `{"bedrijf", "domein", "type", "paginas": [{"url", "tekst"}], "footer_links": [], "social_links": {"instagram": null, "tiktok": null, "linkedin": null, "youtube": null, "x": null}, "extra_domeinen": [], "hubspot": {"company": {}, "notities_samenvatting": ""}, "tagscan": {}}`
 
-- [ ] **Stap 3.1:** Bouw (n8n-MCP-werkvolgorde): Form Trigger, HTTP Request home-pagina, Code-node link-extractie (footer-links, social-links per platform-domein, kandidaat-kernpagina's: URL's die matchen op `over|about|pricing|prijzen|producten|products|diensten|services`), HTTP Request-loop over maximaal 3 kernpagina's, Code-node tekst-extractie (strip HTML naar platte tekst, maximaal 8.000 tekens per pagina), Execute Workflow-node die de Tagscan-sub-workflow (taak 2) aanroept met domein plus extra domeinen uit de footer-links.
-- [ ] **Stap 3.2: HubSpot-tak (alleen lezen).** Als `hubspot_zoeken` ja is en er een HubSpot-credential bestaat: zoek de company op domein, haal de company-properties en de meest recente deal met notities op; vat de notities samen met één Gemini Flash-call (prompt: "Vat deze salesnotities zakelijk samen in maximaal 10 regels: propositie, doelgroep, budget-indicaties, pijnpunten, gemaakte afspraken. Alleen wat er letterlijk staat."). Geen credential of geen match: vul `hubspot` met lege waarden en ga door (nooit blokkeren).
-- [ ] **Stap 3.3:** `validate_workflow`, aanmaken, testrun met een van de 5 testsites als nep-partner. Verifieer dat het context-object alle velden bevat en de tagscan-resultaten erin zitten.
-- [ ] **Stap 3.4:** LOG.md plus commit.
+- [x] **Stap 3.1:** Gebouwd met het herontwerp hierboven. Workflow `SS Research - Fundament`, id `I6wPX5cUZcKjiugp`. Zie LOG.md voor het volledige nodeoverzicht.
+- [~] **Stap 3.2: HubSpot-tak.** Overgeslagen op expliciete instructie van Hidde tijdens de bouw ("sla deze hubspot stap over en ga door naar de belangrijkere nodes"). De `hubspot`-sleutel blijft gevuld met de lege standaardwaarde uit het ontwerp. Niet vergeten, bewust uitgesteld; kan in een latere sessie alsnog toegevoegd worden.
+- [x] **Stap 3.3:** `validate_workflow` en `create_workflow_from_code` doorlopen, twee testruns met `test_workflow` en echte, curl-opgehaalde inhoud van mollie.com als pin-data (nep-partner, want niet in de sheet: test van het fallback-pad). Context-object bevat alle velden inclusief een echte tagscan-sub-executie. Eén echte fout gevonden en gecorrigeerd tijdens het testen (`new URL` niet beschikbaar in de Code-node-sandbox), zie LOG.md.
+- [x] **Stap 3.4:** LOG.md bijgewerkt, commit volgt.
 
 ---
 

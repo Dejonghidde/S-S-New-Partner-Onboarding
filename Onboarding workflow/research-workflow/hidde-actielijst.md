@@ -28,6 +28,7 @@ Alle punten uit de eerste versie van dit bestand (taak 0) zijn door Hidde beantw
 ## Nog te doen, geen blokkade (uitvoering hoort bij latere taken)
 
 - **Semrush-verbruikscheck** (stap 0.5 / taak 4): eerst de goedkope testcall (domain_ranks, 1 regel, circa 10 units) draaien zodra de Semrush-tak gebouwd wordt.
+- **Semrush-credential aanmaken in n8n (actie voor Hidde, blokkeert alleen de live/echte run, niet de bouw):** de Semrush-tak (taak 4.1) is gebouwd en gestructureerd getest met gesimuleerde CSV-data, maar heeft voor een echte call een generieke Query Auth-credential nodig, genaamd exact `Semrush API`, met als query-parameternaam `key` en als waarde de sleutel die je al eerder in deze sessie deelde (uit de disabled node in workflow z4qoXxd8yRG5HyXf). Ik zet zelf nooit een API-key in een n8n-node-parameter of in dit bestand (n8n-SDK-regel en projectregel); dat maakt dit de enige stap die alleen jij in de n8n-UI kan doen. Zodra de credential met deze exacte naam bestaat, hoeft er verder niets aangepast te worden aan de workflow zelf.
 - **Google Docs-credential voor taak 6**: bevestigen of "S&S N8N - Drive API" ook de Docs-node dekt, of dat "Google - Accounts@sprintsandsneakers.com" (`googleDocsOAuth2Api`) nodig is. Geen actie nu, pas relevant bij de pack-doc-assemblage.
 
 ## Inspiratie ontvangen (2026-07-15)
