@@ -6,15 +6,11 @@ status: Nieuw blokkerend punt (2026-07-16), zie bovenaan
 bijgewerkt: 2026-07-16
 ---
 
-## Blokkade Stap 6.4 (2026-07-16): Drive-map niet gedeeld met de Docs-credential
+## Stap 6.4 opgelost (2026-07-16)
 
-Een echte testrun (execution 97232) probeerde een echt research-pack-document aan te maken in de test-Drive-map ("Gamma - Hidde test map", folder-ID `19ujq_RJ39UoFhyuKGfShF1PF1p2O4J4N`) met de credential "Google - Accounts@sprintsandsneakers.com" (type `googleDocsOAuth2Api`). Resultaat: 404 "File not found" op de folder-ID, wat bij Google's API meestal betekent dat het account geen toegang heeft tot die map, niet dat de map niet bestaat.
+De 404 uit execution 97232 bleek geen simpel "map niet gedeeld"-probleem (het delen van de map door Hidde loste het niet op; dezelfde 404 bleef optreden). Werkelijke oorzaak, gevonden via diagnose in plaats van gokken: de Google Docs-node ondersteunt geen Shared Drives (bekende n8n-bug, community-issue #14997) — de map zit in een Shared Drive, niet in iemands "Mijn Drive". Oplossing: "Pack-doc aanmaken" is herbouwd rond de Google Drive-node (`createFromText`, niet de Docs-node), die wel rechtstreeks in een Shared Drive-map kan schrijven. Onderweg ook nodig: de Google Docs API stond uit in het Google Cloud-project van de eerst gebruikte credential; Hidde's nieuwe credential "Hidde Drive" (met de API wel aan) loste dit op. Twee bugs in de eindresultaat-node zijn ook gevonden en gefixt tijdens het testen (`pack_doc_url` wees naar het verkeerde bestand, de prefill-bestandsnaam was "undefined"). Bevestigd werkend in execution 97299: een echt Google Doc en een echt prefill-JSON-bestand, beide correct in "Gamma - Hidde test map". Volledige toedracht in LOG.md.
 
-**Actie nodig van Hidde (kies één):**
-1. Deel de map "Gamma - Hidde test map" met het Google-account achter de credential "Google - Accounts@sprintsandsneakers.com", of
-2. Geef aan welke andere credential/account wel toegang heeft tot die map, zodat ik de Google Docs-node daarop kan zetten.
-
-Zodra dit is opgelost kan stap 6.4 (een echte end-to-end-run, met het document en het JSON-bestand handmatig gecontroleerd) alsnog gedraaid worden. De rest van taak 6 (kostenregel, documenttekst-opbouw, prefill-JSON-voorbereiding) is al structureel getest en werkt correct; alleen de daadwerkelijke Drive-schrijfactie is geblokkeerd.
+Geen actie meer nodig van Hidde voor deze blokkade. Wel staan er nu een paar "(PROEF)"-testdocumenten in de map; opschonen kan wanneer gewenst.
 
 # Hidde-actielijst: Partner Research Workflow (n8n)
 
