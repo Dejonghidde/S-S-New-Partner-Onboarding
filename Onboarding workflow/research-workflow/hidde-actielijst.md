@@ -2,9 +2,19 @@
 type: actielijst
 project: New Partner Onboarding
 ticket: 16 (research-workflow, voorbereidend op 15 en 17)
-status: Beantwoord door Hidde (2026-07-15), zie vastgelegde keuzes hieronder
-bijgewerkt: 2026-07-15
+status: Nieuw blokkerend punt (2026-07-16), zie bovenaan
+bijgewerkt: 2026-07-16
 ---
+
+## Blokkade Stap 6.4 (2026-07-16): Drive-map niet gedeeld met de Docs-credential
+
+Een echte testrun (execution 97232) probeerde een echt research-pack-document aan te maken in de test-Drive-map ("Gamma - Hidde test map", folder-ID `19ujq_RJ39UoFhyuKGfShF1PF1p2O4J4N`) met de credential "Google - Accounts@sprintsandsneakers.com" (type `googleDocsOAuth2Api`). Resultaat: 404 "File not found" op de folder-ID, wat bij Google's API meestal betekent dat het account geen toegang heeft tot die map, niet dat de map niet bestaat.
+
+**Actie nodig van Hidde (kies één):**
+1. Deel de map "Gamma - Hidde test map" met het Google-account achter de credential "Google - Accounts@sprintsandsneakers.com", of
+2. Geef aan welke andere credential/account wel toegang heeft tot die map, zodat ik de Google Docs-node daarop kan zetten.
+
+Zodra dit is opgelost kan stap 6.4 (een echte end-to-end-run, met het document en het JSON-bestand handmatig gecontroleerd) alsnog gedraaid worden. De rest van taak 6 (kostenregel, documenttekst-opbouw, prefill-JSON-voorbereiding) is al structureel getest en werkt correct; alleen de daadwerkelijke Drive-schrijfactie is geblokkeerd.
 
 # Hidde-actielijst: Partner Research Workflow (n8n)
 

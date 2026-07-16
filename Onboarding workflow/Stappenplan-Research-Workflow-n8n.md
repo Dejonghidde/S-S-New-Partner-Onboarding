@@ -157,10 +157,10 @@
 
 ## Taak 6: Assemblage en output
 
-- [ ] **Stap 6.1: Pack-doc.** Google Docs-node: maak een document in de test-Drive-map met naam `{{bedrijfsnaam}} | Research Pack | S&S (PROEF)`, gevuld vanuit `pack_concept` volgens `pack-template.md`, inclusief het lege reviewblok bovenaan en een slotregel met datum, workflow-versie en totale kosten van de run.
-- [ ] **Stap 6.2: Prefill-JSON.** Schrijf het JSON als bestand naar dezelfde test-Drive-map (naam `{{bedrijfsnaam}}-prefill-v1.json`). De koppeling met de Worker en de vragenlijst is bewust buiten scope (partner-facing, wacht op Hiddes beoordeling en go).
-- [ ] **Stap 6.3: Kostenregel.** Code-node die de gelogde kosten per branch optelt en in de LOG.md-structuur meegeeft (per run: Apify-kosten, Semrush-units, LLM-tokens, totaal in euro).
-- [ ] **Stap 6.4:** End-to-end-run op de nep-partner, doc en JSON handmatig openen en controleren, LOG.md plus commit.
+- [x] **Stap 6.1: Pack-doc.** Gebouwd: Google Docs create+update-nodes (credential "Google - Accounts@sprintsandsneakers.com", type bevestigd via `list_credentials`), documenttekst volgens `pack-template.md` (titel, partnerregel, datum, workflow-versie, kostenregel, leeg reviewblok, notatieregel, volledig pack-concept, slotregel). Structureel gevalideerd met gepinde test (execution 97226); echte artefactcreatie strandt op een Drive-rechtenprobleem (zie Stap 6.4).
+- [x] **Stap 6.2: Prefill-JSON.** Gebouwd: Convert to File (toJson) plus Google Drive-upload, zelfde patroon als de screenshot-upload uit taak 4.6, met echte datum in `generated_at` (niet meer de placeholder-tekst). Structureel gevalideerd, zelfde Drive-rechtenblokkade als 6.1 voor de echte upload.
+- [x] **Stap 6.3: Kostenregel.** Gebouwd met echte, opgezochte Apify FREE-tier-tarieven (Apify Store API, per 2026-07-16) op basis van de daadwerkelijk gevonden aantallen per branch; Semrush/screenshots/LLM-tokens expliciet en gelabeld buiten het eurototaal gehouden (geen valse precisie). Getest (execution 97226/97232): rekenkundig correcte uitkomst. Tijdens het testen ook een echte, latente taak-5-bug gevonden en gefixt (`openstaande_twijfels_crosscheck` kwam altijd leeg binnen door een verkeerde node-referentie), zie LOG.md.
+- [ ] **Stap 6.4:** Geblokkeerd: de Google Docs-credential heeft geen toegang tot de test-Drive-map (404 "File not found" bij een echte run, execution 97232). Wacht op Hidde: map delen met het account achter "Google - Accounts@sprintsandsneakers.com", of een andere credential aanwijzen. Zodra opgelost: echte end-to-end-run, doc en JSON handmatig openen en controleren.
 
 ---
 
