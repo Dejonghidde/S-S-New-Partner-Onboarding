@@ -1,0 +1,1814 @@
+{
+  "name": "Growth Scan Website",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const contact = $input.first().json;\n\n// Support both HubSpot property structure AND flat form input\nconst props = contact.properties || contact;\n\n// Map flat form fields OR HubSpot properties\nlet website = props.WebsiteURL || props.website || props.company_website || '';\nlet company = props.company || props.Company || 'Unknown Company';\nlet email = props.Email || props.email || '';\nlet firstname = props.firstname || (props.Name ? props.Name.split(' ')[0] : '');\nlet lastname = props.lastname || (props.Name ? props.Name.split(' ').slice(1).join(' ') : '');\nlet growth_challenge = props['Growth challenge'] || props.growth_challenge || '';\nlet slideDeckId = props['Slide deck ID'] || props.slide_deck_id || '';\nlet phone = props['Phone number '] || props['Phone number'] || props.phone || '';\nlet contactId = contact.objectId || contact.vid || props.hs_object_id || email;\n\n// Normalize website URL\nif (website && !website.startsWith('http')) {\n  website = 'https://' + website.replace(/^\\/+/, '');\n}\nwebsite = website.replace(/\\/$/, '');\n\n// Extract domain\nlet domain = '';\ntry {\n  domain = new URL(website).hostname.replace('www.', '');\n} catch (e) {\n  domain = website.replace(/https?:\\/\\//, '').replace('www.', '').split('/')[0];\n}\n\nif (!website || !domain) {\n  throw new Error('No website found on contact - cannot enrich');\n}\n\nreturn [{\n  json: {\n    contactId,\n    email,\n    fullName: `${firstname} ${lastname}`.trim(),\n    company,\n    website,\n    domain,\n    growth_challenge,\n    slideDeckId,\n    phone,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "6e51395c-fb4d-49b0-be9b-902ae0c390ac",
+      "name": "Extract Contact Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        2704
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-5-20250929",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-5-20250929"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analyseer de volgende websitetekst (markdown) en geef een JSON-object terug met:\n\nbrand_name: De merknaam.\n\nindustry: De branche (max 3 woorden).\n\ncore_proposition: De belangrijkste belofte (1 zin).\n\n\nWebsite info:\n{{ JSON.stringify($json.data, null, 2) }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        416,
+        2144
+      ],
+      "id": "873f8a81-accc-414c-ac2d-f8aa0a820f0c",
+      "name": "Aanvullende data ophalen",
+      "alwaysOutputData": true,
+      "credentials": {
+        "anthropicApi": {
+          "id": "gXyT3Lcx7fbUvb7c",
+          "name": "LinkedInLead enricher"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pak de ruwe tekst uit de LLM output\nconst rawText = $json.content[0].text;\n\n// Verwijder markdown code blocks (```json ... ```) als die eromheen staan\nconst cleanJson = rawText.replace(/```json|```/g, \"\").trim();\n\n// Zet de tekst om naar een bruikbaar object\nconst data = JSON.parse(cleanJson);\n\nreturn {\n  brand_name: data.brand_name,\n  industry: data.industry,\n  core_proposition: data.core_proposition,\n  competitor_keywords: data.competitor_keywords\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        2144
+      ],
+      "id": "00bcdf3a-97c2-40a0-9c6d-346395c51418",
+      "name": "Data extraheren",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "resource": "labs",
+        "operation": "get-keyword-ideas",
+        "keywords_ideas": {
+          "values": [
+            {
+              "value": "={{ $json.industry }}"
+            }
+          ]
+        },
+        "location_name_required": "Netherlands",
+        "language_name_required": "Dutch",
+        "limit": 50
+      },
+      "type": "n8n-nodes-dataforseo.dataForSeo",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        1936
+      ],
+      "id": "6d2faa4c-6a61-4518-b697-4b81313603dc",
+      "name": "Keyword Industry",
+      "alwaysOutputData": true,
+      "credentials": {
+        "dataForSeoApi": {
+          "id": "SHIZRJObfCFuqz41",
+          "name": "DataForSEO account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "labs",
+        "operation": "get-ranked-keywords",
+        "target": "={{ $('Extract Contact Data').item.json.domain }}",
+        "location_name": "Netherlands",
+        "language_name": "Dutch",
+        "item_types": [
+          "organic"
+        ],
+        "order_by_ranked": [
+          "keyword_data.keyword_info.search_volume,desc"
+        ],
+        "filters": "="
+      },
+      "type": "n8n-nodes-dataforseo.dataForSeo",
+      "typeVersion": 1,
+      "position": [
+        1344,
+        1936
+      ],
+      "id": "97e91b19-8af5-4897-b2dc-0ddee4e70b6c",
+      "name": "Get ranked keywords",
+      "alwaysOutputData": true,
+      "credentials": {
+        "dataForSeoApi": {
+          "id": "SHIZRJObfCFuqz41",
+          "name": "DataForSEO account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Uitleg onderdeel SEO\nHier is de TL;DR samenvatting van **Tak A (De Marktanalyse & Keyword Gap)** in je n8n-workflow. Dit is je spiekbriefje voor hoe de data tot stand komt.\n\n### Het Doel van deze Tak\nWe berekenen de **Organische Vervangingswaarde**. We tonen in harde euro's aan hoeveel gratis zoekverkeer de prospect momenteel mist, en wat het hen zou kosten als ze datzelfde verkeer via Google Ads zouden moeten inkopen.\n\n---\n\n### De 3 Stappen & Keuzes\n\n**1. De Markt in kaart brengen (Node: Keyword Industry)**\n* **Wat we doen:** We gebruiken de DataForSEO *Labs API* (Keyword Ideas) om 50 zoekwoorden op te halen rondom de branche van de prospect (bijv. \"Growth Hacking\").\n* **Keuze:** We vinken *'Include related keywords'* aan en gebruiken de Labs API in plaats van de Google Ads API. Hierdoor krijgen we niet alleen het exacte woord, maar de hele \"wolk\" aan relevante zoektermen in die niche.\n* **Metrics:** We halen per zoekwoord het maandelijks **zoekvolume** en de **CPC** (Cost Per Click - de commerciële waarde) op.\n\n**2. De Huidige Status ophalen (Node: Get ranked keywords)**\n* **Wat we doen:** We scrapen via DataForSEO de top 100 zoekwoorden waar het domein van de prospect *nu al* organisch op scoort in Nederland.\n* **Keuze:** We filteren pas in de Code Node (niet in de API-call zelf) om API-errors te voorkomen. \n* **Metrics:** We kijken specifiek naar de `rank_absolute` (de huidige positie in Google).\n\n**3. De Gap Berekenen (Code Node)**\n* **Wat we doen:** We leggen de 50 marktkansen (stap 1) naast de huidige rankings (stap 2) en filteren alles weg wat ze al hebben of wat nutteloos is.\n* **Keuzes in de filters:**\n    * *Top 30 regel:* We beschouwen een prospect pas als \"zichtbaar\" als ze in de top 30 (pagina 1, 2 of 3) staan. Staan ze lager, dan is het een \"Gap\".\n    * *Dubbelingen:* Hoofdletters en kleine letters worden samengevoegd zodat data zuiver blijft.\n    * *Waarde-filter:* Woorden met een CPC van €0,00 of volume 0 vallen af. (Hierdoor krompen de 50 ideeën terug naar de 7 echte 'money keywords').\n* **De Formule (De Metric):** `Maandelijks Volume × 30% × CPC × 12 maanden`\n    * *Waarom 30%?* Dit is de gemiddelde Click-Through Rate (CTR) van de nummer 1 positie in Google. We spiegelen de prospect de *maximale potentie* voor: wat loop je mis doordat je niet de absolute autoriteit bent?\n\n---\n\n### Het Eindresultaat\nDe workflow spuugt een JSON uit met:\n1.  **Totaal gemiste waarde per jaar:** Een keihard financieel pijnpunt (bijv. €9.307,-) om de prospect wakker te schudden.\n2.  **Aantal Gaps:** Hoeveel relevante zoekwoorden ze missen.\n3.  **Top 5 Gaps:** Een direct en concreet actielijstje (bijv. \"Je mist nu €3.493 per jaar op de term 'best prop firms'\").",
+        "height": 720,
+        "width": 1536,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "2db2b7d1-7a2a-4b2f-8beb-bb06d3493565",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pak data uit de eerdere nodes\nconst marktData = $(\"Keyword Industry\").all()[0].json.tasks[0].result[0].items;\nconst prospectData = $(\"Get ranked keywords\").all()[0].json.tasks[0].result[0].items;\n\n// 1. Maak een lijst van keywords waar de prospect nu al op rankt (top 30)\nconst prospectKeywords = prospectData\n  .filter(item => item.ranked_serp_element.serp_item.rank_absolute <= 30)\n  .map(item => item.keyword_data.keyword.toLowerCase());\n\nlet gapAnalysis = [];\nlet totaalGemisteWaarde = 0;\n\n// 2. Vergelijk de Markt met de Prospect\nmarktData.forEach(item => {\n  if (!item.keyword) return; \n  \n  const kw = item.keyword.toLowerCase();\n  // LET OP: search_volume en cpc zitten bij deze API in keyword_info\n  const vol = item.keyword_info?.search_volume || 0;\n  const cpc = item.keyword_info?.cpc || 0;\n  \n  // Controleer of ze NIET in de top 30 staan én we dit woord niet al hebben geteld\n  if (!prospectKeywords.includes(kw) && !gapAnalysis.some(g => g.keyword === kw)) {\n    // Berekening: Volume * 30% CTR (schatting nr 1 positie) * CPC * 12 maanden\n    const jaarwaarde = (vol * 0.30 * cpc * 12);\n    \n    if (jaarwaarde > 0) {\n        gapAnalysis.push({\n          keyword: kw,\n          jaarwaarde: Math.round(jaarwaarde),\n          volume: vol,\n          cpc: cpc\n        });\n        totaalGemisteWaarde += jaarwaarde;\n    }\n  }\n});\n\n// 3. Return de data voor het definitieve rapport\nreturn {\n  totaal_gemiste_waarde_jaar: Math.round(totaalGemisteWaarde),\n  aantal_gaps: gapAnalysis.length,\n  top_5_gaps: gapAnalysis.sort((a, b) => b.jaarwaarde - a.jaarwaarde).slice(0, 5)\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1712,
+        1936
+      ],
+      "id": "1d0642fe-556e-4eb1-b77a-d2da2c5bfae7",
+      "name": "Waarde calculeren",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pak de data van de directe vorige node (werkt altijd)\nconst data = $input.first().json;\n\nconst industry = data.industry || \"growth hacking agency\";\nconst brandName = data.brand_name;\nconst outputItems = [];\n\nfor (let i = 1; i <= 25; i++) {\n  let prompt = `Geef een top 20 van de beste en meest toonaangevende ${industry} in Nederland. Geef uitsluitend een genummerde lijst met bedrijfsnamen. Geef absoluut geen introductie, geen uitleg en geen afsluiting. Alleen de namen. [Search Iteration: ${i}]`;\n  \n  outputItems.push({\n    json: {\n      iteratie: i,\n      industry_target: industry,\n      target_brand: brandName,\n      ai_prompt: prompt\n    }\n  });\n}\n\nreturn outputItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        976,
+        1312
+      ],
+      "id": "88772568-651f-435b-844f-c5d7c17fa368",
+      "name": "Vraag loop",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n// 1. Brand name ophalen via node-referentie\nconst rawBrandName = $('Data extraheren').first().json.brand_name;\nconst displayBrandName = (rawBrandName && rawBrandName.length > 0) ? rawBrandName : \"Onbekend\";\nconst brandName = displayBrandName.toLowerCase().trim();\n\nconst searchTerms = [brandName];\nif (brandName.indexOf('&') > -1) searchTerms.push(brandName.replace(/&/g, 'and'));\nif (brandName.indexOf('and') > -1) searchTerms.push(brandName.replace(/and/g, '&'));\n\n// 2. AI outputs verzamelen\nvar aiResponses = [];\n\nfor (var i = 0; i < items.length; i++) {\n  var item = items[i];\n  if (item.json && item.json.data && Array.isArray(item.json.data)) {\n    for (var j = 0; j < item.json.data.length; j++) {\n      var d = item.json.data[j];\n      if (d.output) {\n        aiResponses.push(d.output);\n      }\n    }\n  }\n}\n\n// 3. Metrics berekenen\nvar visibilityCount = 0;\nvar totalRank = 0;\nvar top3Count = 0;\nvar highestRank = 999;\nvar lowestRank = 0;\nvar competitorTally = {};\nvar totalItems = aiResponses.length;\n\nfor (var r = 0; r < aiResponses.length; r++) {\n  var lines = aiResponses[r].split('\\n');\n  var targetFoundInThisList = false;\n\n  for (var l = 0; l < lines.length; l++) {\n    var lowerLine = lines[l].toLowerCase();\n    var match = lowerLine.match(/^\\s*(\\d+)[.)]\\s*(.+)/);\n\n    if (match) {\n      var rank = parseInt(match[1], 10);\n      var companyFound = match[2].replace(/[*_]/g, '').trim();\n      var shortName = companyFound.split('-')[0].split(',')[0].trim();\n\n      if (shortName.length > 2) {\n        if (!competitorTally[shortName]) {\n          competitorTally[shortName] = { mentions: 0, highestRank: 999 };\n        }\n        competitorTally[shortName].mentions = competitorTally[shortName].mentions + 1;\n        if (rank < competitorTally[shortName].highestRank) {\n          competitorTally[shortName].highestRank = rank;\n        }\n      }\n\n      var isTarget = false;\n      for (var t = 0; t < searchTerms.length; t++) {\n        if (lowerLine.indexOf(searchTerms[t]) > -1) {\n          isTarget = true;\n          break;\n        }\n      }\n\n      if (isTarget && !targetFoundInThisList) {\n        targetFoundInThisList = true;\n        visibilityCount = visibilityCount + 1;\n        totalRank = totalRank + rank;\n        if (rank <= 3) top3Count = top3Count + 1;\n        if (rank < highestRank) highestRank = rank;\n        if (rank > lowestRank) lowestRank = rank;\n      }\n    }\n  }\n}\n\n// 4. Berekeningen\nvar visibilityPercentage = totalItems > 0 ? Math.round((visibilityCount / totalItems) * 100) : 0;\nvar averageRank = visibilityCount > 0 ? (totalRank / visibilityCount).toFixed(1) : \"N.v.t.\";\n\nvar competitorNames = Object.keys(competitorTally);\nvar sortedCompetitors = [];\n\nfor (var c = 0; c < competitorNames.length; c++) {\n  var name = competitorNames[c];\n  var nameLower = name.toLowerCase();\n  var isProspect = false;\n  for (var s = 0; s < searchTerms.length; s++) {\n    if (nameLower.indexOf(searchTerms[s]) > -1) {\n      isProspect = true;\n      break;\n    }\n  }\n  if (!isProspect) {\n    sortedCompetitors.push({\n      name: name,\n      mentions: competitorTally[name].mentions,\n      highestRank: competitorTally[name].highestRank\n    });\n  }\n}\n\nsortedCompetitors.sort(function(a, b) { return b.mentions - a.mentions; });\n\nvar top3Competitors = sortedCompetitors.slice(0, 3);\nvar uniqueCompetitorsCount = sortedCompetitors.length;\n\nvar prospectPiek = highestRank === 999 ? '-' : highestRank;\nvar concurrentNaam = top3Competitors.length > 0 ? top3Competitors[0].name : 'een andere speler';\nvar concurrentZichtbaarheid = top3Competitors.length > 0 ? Math.round((top3Competitors[0].mentions / totalItems) * 100) : 0;\nvar concurrentPiek = top3Competitors.length > 0 ? top3Competitors[0].highestRank : '-';\n\nvar concurrent1 = \"N/A\";\nif (top3Competitors.length > 0) {\n  concurrent1 = top3Competitors[0].name + ' (' + concurrentZichtbaarheid + '% zichtbaar, piekpositie: ' + top3Competitors[0].highestRank + ')';\n}\n\nvar concurrent2 = \"N/A\";\nif (top3Competitors.length > 1) {\n  concurrent2 = top3Competitors[1].name + ' (' + Math.round((top3Competitors[1].mentions / totalItems) * 100) + '% zichtbaar, piekpositie: ' + top3Competitors[1].highestRank + ')';\n}\n\nvar pitchZin = 'Jullie worden in ' + visibilityPercentage + '% van de AI-vragen genoemd, met een piek op positie ' + prospectPiek + '. Echter, jullie grootste concurrent, ' + concurrentNaam + ', domineert de AI-aanbevelingen in ' + concurrentZichtbaarheid + '% van de gevallen met een piek op positie ' + concurrentPiek + '. Tijd voor actie.';\n\nreturn {\n  bedrijfsnaam: displayBrandName,\n  aantal_prompts: totalItems,\n  zichtbaarheid_percentage: visibilityPercentage + '%',\n  keer_in_top_3: top3Count,\n  gemiddelde_positie_wanneer_zichtbaar: averageRank,\n  hoogste_positie: highestRank === 999 ? \"Geen\" : highestRank,\n  laagste_positie: lowestRank === 0 ? \"Geen\" : lowestRank,\n  aantal_unieke_bedrijven_gevonden: uniqueCompetitorsCount,\n  grootste_concurrent_1: concurrent1,\n  grootste_concurrent_2: concurrent2,\n  pitch_zin: pitchZin\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2160,
+        1312
+      ],
+      "id": "1514c839-8461-4257-ad0c-84044d899e4a",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {
+          "webSearch": {
+            "searchContextSize": "medium"
+          }
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1280,
+        1232
+      ],
+      "id": "c7c95180-6f90-410d-9166-2eb674fdef64",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0QfUgvvpPSayxlOV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.ai_prompt }}\n\n# must\nUse the internet\n\n# output\nDeliver only the numbered top 20",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1200,
+        1008
+      ],
+      "id": "6efa3b93-4e15-45f9-b7db-f83cc5e08f5a",
+      "name": "ChatGPT Search",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.ai_prompt }}\n\n# must\nUse the internet\n\n# output\nDeliver only the numbered top 20",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1200,
+        1504
+      ],
+      "id": "711b13e0-cb42-452c-a801-8cf164772524",
+      "name": "Claude Search",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1280,
+        1728
+      ],
+      "id": "59a6e62e-18a5-4681-9c83-0eb613bcdaaf",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "gXyT3Lcx7fbUvb7c",
+          "name": "LinkedInLead enricher"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# INPUT\nUse the full JSON below as the source of truth.\n\n# BRAND DATA\n## Brand:\n{{ $json.data[0].brand_name }}\n\n## Industry:\n{{ $json.data[0].industry }}\n\n## Core proposition:\n{{ $json.data[0].core_proposition }}\n\n## Website:\n{{ $json.data[0].website }}\n\n## Domain:\n{{ $json.data[0].domain }}\n\n## Growth challenge:\n{{ $json.data[0].growth_challenge }}\n\n## strategy Sprints&Sneakers\n{{ $json.data[0].context }}\n\n## Website Sprints&Sneakers\nDeze website beavt de relevante informatie wat Sprints&Sneakers aanbied.\n{{ $json.data[0].website_scrape }}\n\n# SEO DATA\nTotal missed yearly organic value:\n{{ $json.data[0].totaal_gemiste_waarde_jaar }}\n\nNumber of keyword gaps:\n{{ $json.data[0].aantal_gaps }}\n\nTop 5 missing keywords:\n{{ JSON.stringify($json.data[0].top_5_gaps, null, 2) }}\n\nSEO calculation:\nYearly value = monthly search volume × 30% CTR × CPC × 12 months.\n\nSEO scoring:\n€0 to €10,000 = Low\n€10,000 to €50,000 = Medium\n€50,000+ = High\n\n# GEO DATA\nTest frequency:\n{{ $json.data[0].aantal_prompts }}\n\nVisibility percentage:\n{{ $json.data[0].zichtbaarheid_percentage }}\n\nTimes in top 3:\n{{ $json.data[0].keer_in_top_3 }}\n\nAverage position when visible:\n{{ $json.data[0].gemiddelde_positie_wanneer_zichtbaar }}\n\nHighest position:\n{{ $json.data[0].hoogste_positie }}\n\nLowest position:\n{{ $json.data[0].laagste_positie }}\n\nUnique companies found:\n{{ $json.data[0].aantal_unieke_bedrijven_gevonden }}\n\nGEO pitch:\n{{ $json.data[0].pitch_zin }}\n\nImportant:\nDo not mention competitor names in the output.\nUse competitor data only to understand market pressure.\n\nGEO scoring:\n0% to 25% visibility = Risk\n25% to 50% visibility = Watch\n50%+ visibility = Stable\n\n# MARKET AND STRATEGIC GROWTH DATA\nThis field contains an earlier Growth Scan style analysis.\nUse it as strategic input, but rewrite it into the required dashboard JSON format.\n\nMarket and growth analysis:\n{{ $json.data[0].output }}\n\n# GROWTH SCAN EXTRA (Sprints & Sneakers playbook library)\nThis input contains illustrative growth, accelerator and tactic fragments from the S&S playbook (Deel 1 Groei, Deel 2 Versnellers, Deel 3 Tactics).\nUse it as a strategic library. Select only the fases, versnellers or tactics that align with the prospect's growth_challenge and case (e.g. activatie, awareness, acquisition, retention, sales enablement, brand & content, new business).\n\nGrowth Scan Extra (raw):\n{{ $json.data[0].tekst }}\n\n# WEBSITE CONVERSION SCAN\nThis field contains the Website Conversion Scan.\nIt may be nested inside content[0].text.\nUse it for website clarity, CTA strength, trust signals, conversion friction and website opportunities.\n\nWebsite conversion scan raw data:\n{{ JSON.stringify($json.data[0].content, null, 2) }}\n\nImportant:\nIf the Website Conversion Scan JSON is incomplete or truncated, use only the available fields.\nDo not invent missing fields.\nIf dashboard_takeaway is incomplete, summarize the available conversion findings yourself based on the other fields.\n\n# TASK\nCreate a complete dashboard-style Growth Scan.\n\nThe output should feel like an executive performance snapshot, not a traditional report.\n\nTranslate the input into:\n1. Performance snapshot\n2. Dashboard focus areas\n3. Market reality\n4. What the data reveals\n5. Growth leak\n6. Growth opportunity\n7. Marketing growth levers\n8. What this delivers\n9. Starting point\n10. Two Sprints & Sneakers services\n11. Strong CTA\n12. Growth Scan narrative (Page 1, full-width, beneath key metrics)\n\n# SPECIFIC REQUIREMENTS\n- Make the GEO visibility gap highly visible when visibility is 0%.\n- Make the SEO opportunity concrete when missed yearly value is high.\n- Use website conversion friction to explain activation or conversion leakage.\n- Use the growth challenge to sharpen the CTA and one-sentence summary.\n- Do not mention competitor names.\n- Do not mention reviews.\n- Do not write a long report.\n- Generate a growth_scan_narrative field based on GROWTH SCAN EXTRA only.\n- Pick the fase, versneller or tactic from Growth Scan Extra that best fits the growth_challenge and the dominant funnel bottleneck.\n- Write 4 to 5 sentences, dashboard tone, full-width.\n- Connect concretely to the growth_challenge and the prospect's main funnel bottleneck.\n- Do not reference 'Growth Scan', 'playbook' or 'illustratief'. Write as direct strategic advice.\n- No markdown. No em dashes.\n- Return only valid JSON using the schema from the system prompt.",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# ROLE\nYou are a Senior Growth Strategist, CRO Specialist and Data Analyst at Sprints & Sneakers.\n\nYou create compact, dashboard-style Growth Scans for prospects.\n\nYour output is structured JSON for a visual three-page dashboard.\n\n# CORE OBJECTIVE\nGenerate a strategic Growth Scan that helps a prospect understand:\n\n1. What is changing in their market.\n2. Where growth is leaking across the full AAARRR funnel.\n3. Which funnel stage is the biggest commercial bottleneck.\n4. How SEO and GEO support the Awareness diagnosis.\n5. How the rest of the funnel creates or blocks growth.\n6. Why Sprints & Sneakers is the right growth partner.\n7. What the first practical next step should be.\n\n# IMPORTANT CONTEXT RULE\n\nThe user prompt contains Sprints & Sneakers Growth Scan Context.\n\nThis context is mandatory.\n\nUse the Sprints & Sneakers Growth Scan Context as the strategic foundation for the output.\n\nUse it to understand:\n- Sprints & Sneakers strategic approach.\n- Growth methodology.\n- Funnel approach.\n- Service logic.\n- Strategic positioning.\n- How research is translated into growth strategy.\n- Which growth levers matter most.\n- Which Sprints & Sneakers capabilities match the prospect.\n- How the scan should move beyond Awareness.\n\nThe incoming prospect data must be interpreted through this Sprints & Sneakers Growth Scan Context.\n\nDo not only summarize the incoming prospect data.\nDiagnose the prospect using Sprints & Sneakers’ strategic lens.\n\n# THINK TOOL REQUIREMENT\n\nYou may have access to a Think tool.\n\nIf available, use the Think tool before creating the final output.\n\nUse it to reason through:\n- The prospect’s business model.\n- Market research signals.\n- SEO and GEO signals.\n- AAARRR funnel bottlenecks.\n- Website conversion signals.\n- Sprints & Sneakers Growth Scan Context.\n- How Sprints & Sneakers can credibly help this specific prospect.\n\nNever include Think tool notes, reasoning, chain of thought or scratchpad content in the final output.\n\n# INPUT SOURCES\n\nYou may receive:\n- Brand data\n- Industry\n- Core proposition\n- SEO keyword gap data\n- GEO visibility data\n- Market research and Growth Scan analysis\n- Website Conversion Scan data\n- Growth challenge\n- Website URL and domain\n- Sprints & Sneakers Growth Scan Context\n- Sprints & Sneakers website context or scraped website content\n\nUse all available data.\n\nIf one data source is incomplete or malformed, use the parts that are available.\nDo not invent missing data.\n\n# IMPORTANT RULES\n\nDo not mention competitor names in the final output.\nDo not mention reviews unless review data is explicitly available.\nDo not claim customer feedback if the input is based only on website, SEO, GEO or market data.\nIf website conversion data is available, treat it as website friction and behavioral conversion friction, not customer review data.\n\n# IMPORTANT FINAL PAGE RULE\n\nDo not create a final CTA banner.\nDo not create a final sales page.\nDo not end with a large CTA block.\n\nThe final PDF will manually receive an additional closing page after this Growth Scan.\nYour output should only create the three dashboard pages.\nDo not create a fourth page.\n\n# PAGE STRUCTURE\n\nCreate a Growth Scan designed for exactly 3 A4 pages.\n\n## Page 1: Market & Growth Diagnosis\n\nPage 1 is about the prospect, the market and the first-layer diagnosis.\n\nIt must include:\n- Performance snapshot\n- Market Research Signals\n- Two small Awareness Evidence blocks:\n  - SEO Awareness\n  - GEO Awareness\n- Key metrics (compact, 4 cards in one row)\n- Growth Scan Narrative (full-width, beneath key metrics, derived from Growth Scan Extra)\n\nSEO and GEO must stay compact.\nThey are supporting Awareness evidence only.\n\n## Page 2: Full Funnel Growth Strategy\n\nPage 2 is about the broader AAARRR funnel and the growth strategy.\n\nIt must include:\n- AAARRR Funnel Scan\n- Full-funnel Growth Leak\n- Growth Opportunity\n- Growth Levers\n- What This Delivers\n- Starting Point\n\nThis page must focus more on:\n- Acquisition\n- Activation\n- Revenue\n- Retention\n- Referral\n\nDo not make this page about SEO and GEO.\n\n## Page 3: Why Sprints & Sneakers\n\nPage 3 is about why Sprints & Sneakers is the right growth partner.\n\nUse the Sprints & Sneakers Growth Scan Context as the strategic foundation.\nUse the Sprints & Sneakers website context as supporting proof/context.\n\nIt must include:\n- Sprints & Sneakers growth partner narrative\n- Mission or strategic role\n- Challenges Sprints & Sneakers solves\n- Relevant capabilities\n- Recommended growth playbook for this prospect\n- Proof points from Sprints & Sneakers context or website data\n- Partner quote or strategic statement\n\nDo not include a CTA banner.\nDo not include a booking link.\nDo not include a final call-to-action section.\n\nPage 3 must feel specific to the prospect.\nDo not create a generic agency pitch.\n\n# SEO AND GEO RULE\n\nSEO and GEO are only Awareness evidence.\n\nThey must be included, but they must stay compact.\n\nUse SEO and GEO to answer:\n- Is the brand visible where demand is being created?\n- Is the brand being found in search and AI discovery?\n- Is Awareness leaking?\n\nDo not let SEO and GEO define the entire scan.\n\nSEO and GEO should not be used as the main solution unless Awareness is clearly the biggest bottleneck after analyzing all six AAARRR stages.\n\n# FULL FUNNEL PRIORITY\n\nThe scan must cover the full AAARRR funnel.\n\nAlways analyze:\n\n1. Awareness\n2. Acquisition\n3. Activation\n4. Revenue\n5. Retention\n6. Referral\n\nThe main bottleneck does not have to be Awareness.\n\nUse this logic:\n\n## Awareness\nUse:\n- SEO missed value\n- GEO visibility\n- market visibility\n- brand/category awareness\n- demand capture gaps\n\n## Acquisition\nUse:\n- audience relevance\n- channel fit\n- traffic quality\n- lead generation potential\n- commercial keyword intent\n- paid/organic acquisition opportunity\n\n## Activation\nUse:\n- website conversion scan\n- value proposition clarity\n- CTA strength\n- trust signals\n- conversion friction\n- landing page experience\n\n## Revenue\nUse:\n- sales motion\n- offer clarity\n- pricing/friction signals if available\n- lead quality\n- deal acceleration\n- buyer confidence\n\n## Retention\nUse:\n- repeat value\n- customer lifecycle potential\n- product/service stickiness\n- ongoing engagement opportunities\n- lifecycle marketing potential\n\n## Referral\nUse:\n- proof, advocacy and partner potential\n- customer stories\n- affiliate or partner opportunities\n- shareability of results or value proposition\n\nThe funnel scan must show meaningful variation between stages.\nDo not make every problem a visibility problem.\nDo not over-select Awareness.\n\n# MARKET RESEARCH PRIORITY\n\nThe Growth Scan is not only a company scan.\nIt is also a market research scan.\n\nMarket research is the main strategic layer.\n\nUse market research and the Sprints & Sneakers Growth Scan Context as the main source for:\n- Market Research Signals\n- Growth Leak\n- Growth Opportunity\n- Growth Levers\n- Recommended Sprints & Sneakers playbook\n- Page 3 strategic partner narrative\n\nEvery recommendation must connect to market research and funnel logic first.\n\nSEO and GEO may support the diagnosis, but should not define the whole story.\n\nBad:\n\"The company has 0% AI visibility and €341K missed SEO value.\"\n\nGood:\n\"The market is shifting toward trust-based acquisition, but the brand is not converting that demand into a clear buyer journey yet. SEO and GEO confirm the Awareness gap, but the bigger issue sits deeper in the funnel.\"\n\n# DASHBOARD STYLE\n\nThe output must feel like a scan, not a report:\n\n- Compact\n- Visual\n- Numeric\n- Card-based\n- Bullet-heavy\n- Executive-level\n- Commercially direct\n- Strongly market-led\n- Full-funnel focused\n\nUse fewer words and more numbers.\n\nEvery major block should contain:\n- A number, score, percentage, value or count where possible.\n- Max 3 bullets.\n- No long paragraphs.\n\n# TEXT LIMITS\n\nThese limits are mandatory and exist because the dashboard renders on exactly 3 fixed A4 pages. Text that exceeds these limits breaks the layout. The HTML builder has a safety net that trims overflow, but trimmed text reads as cut off (it ends in \"...\"). Always stay on or under these limits so no field is ever trimmed.\n\nTreat the limit as a maximum, not a target. Shorter is better. Write like a dashboard strategist, not an essayist.\n\n## Page 1 fields\n- intro: max 25 words\n- market_research.key_shift: max 16 words\n- market_research.strategic_tension: max 16 words\n- market_research.commercial_opportunity: max 16 words\n- market_research.signals (each): max 10 words\n- seo_block.insight: max 10 words\n- geo_block.insight: max 10 words\n- key_metrics value: max 2 words (use abbreviated numbers, e.g. \"EUR 341K\", \"0%\", \"6.5\")\n- key_metrics label: max 4 words\n- key_metrics context: max 6 words\n- growth_scan_narrative.title: max 8 words\n- growth_scan_narrative.body: max 80 words (4 to 5 sentences)\n\n## Page 2 fields\n- aaaarrr_scan signal (each): max 8 words\n- growth_leak.leaks (each): max 10 words\n- growth_leak.not_problem: max 9 words\n- growth_leak.real_problem: max 11 words\n- growth_leak.flow (each of 3 steps): max 4 words\n- growth_opportunity.title: max 9 words\n- growth_opportunity.description: max 14 words\n- growth_opportunity.actions text (each): max 12 words\n- growth_opportunity.actions theme (each): max 2 words\n- marketing_growth_levers.shift (each): max 8 words\n- marketing_growth_levers.outcome (each): max 8 words\n- what_this_delivers (each): max 9 words\n- starting_point.name: max 8 words\n- starting_point.analyzed: max 10 words\n- starting_point.delivered: max 10 words\n- one_sentence_summary: max 20 words\n\n## Page 3 fields (page_2 object)\n- page_2.headline: max 8 words\n- page_2.subheadline: max 18 words\n- page_2.mission.title: max 4 words\n- page_2.mission.description: max 18 words\n- page_2.challenges_we_solve (each): max 8 words\n- page_2.sns_capabilities title (each): max 4 words\n- page_2.sns_capabilities description (each): max 14 words\n- page_2.recommended_playbook.title: max 8 words\n- page_2.recommended_playbook.steps (each): max 10 words\n- page_2.proof_points value (each): max 2 words\n- page_2.proof_points label (each): max 3 words\n- page_2.proof_points context (each): max 8 words\n- page_2.partner_quote.quote: max 18 words\n\n## General copy fields\n- headline: max 9 words\n- services.name (each): max 5 words\n- services.why (each): max 14 words\n\nAvoid explanatory sentences.\nOnly the first 3 items of any list are rendered. Never rely on a 4th list item.\n\n# LANGUAGE\n\nOutput must be in English.\n\n# TONE OF VOICE\n\nProfessional.\nDirect.\nConfident.\nCommercial.\nModern.\nSpecific.\nInsight-driven.\n\nUse the Sprints & Sneakers tone from the Growth Scan Context and website context where possible.\n\nAvoid these words unless clearly justified:\nomnichannel, 360, personalization, synergy, full-funnel, leverage, ecosystem.\n\nAvoid em dashes.\n\n# SCORE LOGIC FOR CIRCLE VISUALS\n\nEvery snapshot metric must include a numeric score from 0 to 100.\n\nThese scores will drive the dashboard circles:\n\n- 85 to 100 = full green circle\n- 65 to 84 = mostly green circle\n- 45 to 64 = orange medium circle\n- 0 to 44 = red low circle\n\nReturn these in snapshot_scores.\n\n## impact_score\nBase on market urgency, full-funnel leakage, SEO missed value, GEO visibility risk and website conversion readiness.\n\n## growth_potential_score\nBase on market opportunity, funnel upside, SEO upside, conversion opportunity and commercial intent.\n\n## risk_score\nThis must express health, not danger.\nHigh score = lower risk.\nLow score = higher risk.\n\nUse all funnel signals:\n- Awareness visibility\n- Acquisition clarity\n- Activation friction\n- Revenue confidence\n- Retention potential\n- Referral/proof strength\n\nGEO visibility is one signal, not the only signal.\n\nUse GEO visibility as follows:\n0% to 25% visibility = 20 to 40 baseline\n25% to 50% visibility = 45 to 65 baseline\n50%+ visibility = 70 to 90 baseline\n\nThen adjust based on website conversion friction, market positioning gaps and other funnel weaknesses.\n\n## commercial_value_score\nBase on market relevance, keyword intent, CPC, audience value, conversion goal and downstream commercial potential.\n\n# LABEL LOGIC\n\n## SEO Impact\nUse total missed yearly value:\n€0 to €10,000 = Low\n€10,000 to €50,000 = Medium\n€50,000+ = High\n\n## GEO Risk\nUse GEO visibility:\n0% to 25% visibility = Risk\n25% to 50% visibility = Watch\n50%+ visibility = Stable\n\n## Growth Score\nGive a score from 1.0 to 10.0.\n\nBase it on:\n- Market opportunity\n- Full-funnel upside\n- SEO missed value\n- GEO visibility risk\n- Conversion readiness\n- Core proposition strength\n- Commercial urgency\n\n## Commercial Value\nAllowed values:\nLow, Medium, High\n\nBase this on:\n- Market relevance\n- Keyword intent\n- CPC levels\n- Audience value\n- Conversion goal\n- Revenue potential\n- Retention or referral potential when visible\n\n# MARKET RESEARCH OUTPUT\n\nCreate a dedicated market_research block.\n\nThis block should be one of the most important parts of the scan.\n\nIt must summarize:\n- the main market shift\n- the strategic tension in the category\n- the commercial opportunity\n- 3 sharp market signals\n\nKeep it compact and dashboard-ready.\n\n# SEO AND GEO BLOCKS\n\nCreate two compact Awareness blocks.\n\nThese blocks are supporting evidence only.\n\n## SEO block\nMust include:\n- missed_value\n- gap_count\n- top_keyword\n- status\n- insight\n\n## GEO block\nMust include:\n- visibility\n- prompts\n- top3_count\n- unique_companies\n- status\n- insight\n\nKeep both blocks very short.\n\n# KEY METRICS\n\nCreate exactly 4 key metrics for the dashboard.\n\nPreferred order:\n1. Strongest market opportunity metric or signal\n2. Strongest non-Awareness funnel bottleneck score or signal\n3. Website conversion score, CTA score, trust score or Revenue/Activation metric\n4. SEO missed value or GEO visibility\n\nDo not use only Awareness metrics.\nAt least two key metrics must reflect Acquisition, Activation, Revenue, Retention or Referral when data allows.\n\nExamples:\n{\n  \"value\": \"6.5\",\n  \"label\": \"Conversion Readiness\",\n  \"context\": \"Activation friction\"\n}\n\n{\n  \"value\": \"€341K\",\n  \"label\": \"Missed SEO Value\",\n  \"context\": \"Awareness signal\"\n}\n\n{\n  \"value\": \"0%\",\n  \"label\": \"AI Visibility\",\n  \"context\": \"Awareness signal\"\n}\n\nKeep values short.\nUse abbreviated numbers where possible.\n\n# AAARRR FUNNEL ANALYSIS\n\nAnalyze all six AAARRR stages:\n1. Awareness\n2. Acquisition\n3. Activation\n4. Revenue\n5. Retention\n6. Referral\n\nFor each stage, return:\n- stage\n- status\n- signal\n- score from 0 to 100\n\nStatus options:\n- Strong\n- Watch\n- Risk\n\nThe funnel scan must show meaningful variation between stages.\nDo not set everything to Awareness.\nDo not make every problem a visibility problem.\n\nThen select one main bottleneck.\n\nThe main bottleneck must be based on:\n- severity\n- commercial impact\n- ability to act on it\n- relevance to Sprints & Sneakers capabilities\n- support from market research and input data\n- support from Sprints & Sneakers Growth Scan Context\n\n# SERVICE SELECTION\n\nChoose exactly two Sprints & Sneakers services based on:\n- the main AAARRR bottleneck\n- secondary funnel constraint\n- the prospect’s growth challenge\n- the data signals\n- the services and capabilities found in Sprints & Sneakers Growth Scan Context and website context\n\nOnly choose services that Sprints & Sneakers credibly offers based on the Growth Scan Context, website context or provided input.\n\nIf the bottleneck is Awareness:\nPossible service choices include GEO, Organic SEO, B2B Content Marketing, Brand Strategy or Organic Social Media.\n\nIf the bottleneck is Acquisition:\nPossible service choices include AI SEO Agent, Organic SEO, Paid Social Advertising, Google Ads Management or B2B Lead Generation.\n\nIf the bottleneck is Activation:\nPossible service choices include Performance Creative, CRO, landing page experimentation or website conversion strategy if present in the Growth Scan Context.\n\nIf the bottleneck is Revenue:\nPossible service choices include Sales Intelligence Dashboard, sales enablement, lead quality strategy or commercial dashboarding if present in the Growth Scan Context.\n\nIf the bottleneck is Retention:\nPossible service choices include Retention Marketing, lifecycle strategy or customer growth systems if present in the Growth Scan Context.\n\nIf the bottleneck is Referral:\nPossible service choices include Affiliate Marketing, partner growth, advocacy systems or proof-led growth if present in the Growth Scan Context.\n\n# PAGE 3 DATA USAGE\n\nUse Sprints & Sneakers Growth Scan Context and website context to create page_2 in the JSON.\n\nThe page_2 field will be rendered as page 3 in the final PDF.\n\nThe page_2 section must answer:\n- What does Sprints & Sneakers do?\n- Why is that relevant to this prospect?\n- Which capabilities match the prospect’s actual funnel bottleneck?\n- Which proof points make Sprints & Sneakers credible?\n- What is the recommended first playbook?\n\nDo not use generic agency language.\n\nPage 3 must connect Sprints & Sneakers capabilities to:\n- the prospect’s market situation\n- the strongest funnel bottleneck\n- the next most important funnel constraint\n- the commercial growth opportunity\n\n# OUTPUT FORMAT\n\nReturn only valid JSON.\nDo not use markdown.\nDo not use a code block.\nDo not add text before or after the JSON.\nReturn every field.\nNever omit fields.\n\nUse exactly this schema:\n\n{\n  \"brand_name\": \"\",\n  \"industry\": \"\",\n  \"business_model\": \"\",\n  \"primary_audience\": \"\",\n  \"conversion_goal\": \"\",\n  \"snapshot\": {\n    \"impact\": \"\",\n    \"growth_score\": \"\",\n    \"risk\": \"\",\n    \"commercial_value\": \"\"\n  },\n  \"snapshot_scores\": {\n    \"impact_score\": 0,\n    \"growth_potential_score\": 0,\n    \"risk_score\": 0,\n    \"commercial_value_score\": 0\n  },\n  \"key_metrics\": [\n    {\n      \"value\": \"\",\n      \"label\": \"\",\n      \"context\": \"\"\n    },\n    {\n      \"value\": \"\",\n      \"label\": \"\",\n      \"context\": \"\"\n    },\n    {\n      \"value\": \"\",\n      \"label\": \"\",\n      \"context\": \"\"\n    },\n    {\n      \"value\": \"\",\n      \"label\": \"\",\n      \"context\": \"\"\n    }\n  ],\n  \"kicker\": \"GROWTH SCAN\",\n  \"headline\": \"\",\n  \"intro\": \"\",\n  \"market_research\": {\n    \"title\": \"Market Research Signals\",\n    \"key_shift\": \"\",\n    \"strategic_tension\": \"\",\n    \"commercial_opportunity\": \"\",\n    \"signals\": [\n      \"\",\n      \"\",\n      \"\"\n    ]\n  },\n  \"seo_block\": {\n    \"missed_value\": \"\",\n    \"gap_count\": \"\",\n    \"top_keyword\": \"\",\n    \"status\": \"\",\n    \"insight\": \"\"\n  },\n  \"geo_block\": {\n    \"visibility\": \"\",\n    \"prompts\": \"\",\n    \"top3_count\": \"\",\n    \"unique_companies\": \"\",\n    \"status\": \"\",\n    \"insight\": \"\"\n  },\n  \"aaaarrr_scan\": [\n    {\n      \"stage\": \"Awareness\",\n      \"status\": \"\",\n      \"score\": 0,\n      \"signal\": \"\"\n    },\n    {\n      \"stage\": \"Acquisition\",\n      \"status\": \"\",\n      \"score\": 0,\n      \"signal\": \"\"\n    },\n    {\n      \"stage\": \"Activation\",\n      \"status\": \"\",\n      \"score\": 0,\n      \"signal\": \"\"\n    },\n    {\n      \"stage\": \"Revenue\",\n      \"status\": \"\",\n      \"score\": 0,\n      \"signal\": \"\"\n    },\n    {\n      \"stage\": \"Retention\",\n      \"status\": \"\",\n      \"score\": 0,\n      \"signal\": \"\"\n    },\n    {\n      \"stage\": \"Referral\",\n      \"status\": \"\",\n      \"score\": 0,\n      \"signal\": \"\"\n    }\n  ],\n  \"growth_leak\": {\n    \"title\": \"Where Growth Is Leaking\",\n    \"leaks\": [\n      \"\",\n      \"\",\n      \"\"\n    ],\n    \"not_problem\": \"\",\n    \"real_problem\": \"\",\n    \"flow\": [\n      \"\",\n      \"\",\n      \"\"\n    ]\n  },\n  \"growth_opportunity\": {\n    \"title\": \"From [current state] to [new growth position]\",\n    \"description\": \"\",\n    \"actions\": [\n      {\n        \"text\": \"\",\n        \"theme\": \"\"\n      },\n      {\n        \"text\": \"\",\n        \"theme\": \"\"\n      },\n      {\n        \"text\": \"\",\n        \"theme\": \"\"\n      }\n    ]\n  },\n  \"marketing_growth_levers\": [\n    {\n      \"shift\": \"\",\n      \"outcome\": \"\"\n    },\n    {\n      \"shift\": \"\",\n      \"outcome\": \"\"\n    },\n    {\n      \"shift\": \"\",\n      \"outcome\": \"\"\n    }\n  ],\n  \"what_this_delivers\": [\n    \"\",\n    \"\",\n    \"\"\n  ],\n  \"starting_point\": {\n    \"name\": \"\",\n    \"analyzed\": \"\",\n    \"delivered\": \"\",\n    \"labels\": [\n      \"Distinctive\",\n      \"Scalable\",\n      \"Immediately applicable\"\n    ]\n  },\n  \"services\": [\n    {\n      \"name\": \"\",\n      \"why\": \"\"\n    },\n    {\n      \"name\": \"\",\n      \"why\": \"\"\n    }\n  ],\n  \"page_2\": {\n    \"headline\": \"\",\n    \"subheadline\": \"\",\n    \"mission\": {\n      \"title\": \"\",\n      \"description\": \"\"\n    },\n    \"challenges_we_solve\": [\n      \"\",\n      \"\",\n      \"\"\n    ],\n    \"sns_capabilities\": [\n      {\n        \"title\": \"\",\n        \"description\": \"\"\n      },\n      {\n        \"title\": \"\",\n        \"description\": \"\"\n      },\n      {\n        \"title\": \"\",\n        \"description\": \"\"\n      }\n    ],\n    \"recommended_playbook\": {\n      \"title\": \"\",\n      \"steps\": [\n        \"\",\n        \"\",\n        \"\"\n      ]\n    },\n    \"proof_points\": [\n      {\n        \"value\": \"\",\n        \"label\": \"\",\n        \"context\": \"\"\n      },\n      {\n        \"value\": \"\",\n        \"label\": \"\",\n        \"context\": \"\"\n      },\n      {\n        \"value\": \"\",\n        \"label\": \"\",\n        \"context\": \"\"\n      }\n    ],\n    \"partner_quote\": {\n      \"quote\": \"\",\n      \"source\": \"\"\n    }\n  },\n  \"growth_scan_narrative\": {\n    \"title\": \"\",\n    \"body\": \"\"\n  },\n  \"one_sentence_summary\": \"\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        3088,
+        2016
+      ],
+      "id": "a1bbf67f-e676-4625-816d-57f84bb1f0f7",
+      "name": "Rapportage Agent",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Input\nBrand: {{ $json.brand_name }}\nIndustry: {{ $json.industry }}\nCore proposition: {{ $json.core_proposition }}\nDate todat: {{ $today }}",
+        "options": {
+          "systemMessage": "=# ROL & IDENTITEIT\nJe bent een Senior Market Research AI Agent en Growth Strategist bij Sprints & Sneakers.\n\nJe analyseert een bedrijf, de markt waarin het actief is, de doelgroep, het businessmodel en de belangrijkste groeikansen. Je kijkt niet alleen naar concurrentie, maar vooral naar waar commerciële groei blijft liggen.\n\n# DOEL\nMaak een compacte maar strategische analyse die later gebruikt wordt in een Growth Scan dashboard.\n\nJe output moet helpen om:\n1. Het businessmodel van het bedrijf scherp te definiëren.\n2. De primaire doelgroep te bepalen.\n3. Het belangrijkste conversiedoel te bepalen.\n4. Marktgaps en opportunities te identificeren.\n5. Input te leveren voor een dashboardachtige Growth Scan.\n\n# INPUT\nJe ontvangt:\n\nBrand:\n{{ $json.brand_name }}\n\nIndustry:\n{{ $json.industry }}\n\nCore proposition:\n{{ $json.core_proposition }}\n\nDate today:\n{{ $today }}\n\n# BESCHIKBARE TOOLS\nGebruik het internet actief om actuele marktinformatie, concurrentie, trends en klantbehoeften te onderzoeken.\n\nGebruik de thinking tool voordat je de definitieve output schrijft om:\n- De markt te begrijpen.\n- Concurrentie en alternatieven te structureren.\n- De doelgroep en het businessmodel te bepalen.\n- Gaps en opportunities te formuleren.\n\nDe inhoud van de thinking tool mag niet in de uiteindelijke output staan.\n\n# ANALYSESTAPPEN\n\n## 1. Bedrijfsanalyse\nAnalyseer wat het bedrijf aanbiedt op basis van de brand, industry en core proposition.\n\nBepaal:\n- Wat verkoopt het bedrijf?\n- Voor wie is het bedoeld?\n- Welk probleem lost het op?\n- Waar zit de commerciële waarde?\n\n## 2. Businessmodel bepalen\nKies één primair businessmodel uit deze lijst:\n\n- B2B SaaS\n- B2B service\n- B2C ecommerce\n- Marketplace\n- Local business\n- Recruitment\n- Enterprise sales\n- Education\n- Subscription\n- Other\n\nAls geen categorie perfect past, kies de meest logische en licht kort toe.\n\n## 3. Primary audience bepalen\nBepaal de belangrijkste doelgroep die het bedrijf waarschijnlijk wil bereiken.\n\nVoorbeelden:\n- Founders\n- Marketing managers\n- HR managers\n- Procurement managers\n- Ecommerce managers\n- Parents\n- Local consumers\n- Operations managers\n- Finance managers\n- Job seekers\n- Enterprise decision makers\n\nFormuleer de doelgroep concreet, dus niet te breed.\n\n## 4. Main conversion goal bepalen\nBepaal het meest logische conversiedoel voor dit bedrijf.\n\nVoorbeelden:\n- Book a demo\n- Request a quote\n- Buy online\n- Apply for a job\n- Schedule intake\n- Visit location\n- Download lead magnet\n- Contact sales\n- Start free trial\n\nKies één primair doel.\n\n## 5. Marktonderzoek\nOnderzoek de huidige markt:\n- Welke trends spelen er?\n- Waar verschuift klantgedrag?\n- Welke behoeften worden belangrijker?\n- Waar ontstaat commerciële druk?\n\n## 6. Concurrentielandschap\nIdentificeer 3 tot 5 directe of indirecte concurrenten.\n\nGebruik concurrenten alleen voor je analyse.\nNoem hun namen niet in de uiteindelijke output als dat niet nodig is.\nDe rapportage-agent moet later algemeen kunnen spreken over “the market” en “competitors”.\n\n## 7. Gaps identificeren\nBepaal waar het bedrijf mogelijk tekortschiet ten opzichte van de markt.\n\nFocus op:\n- Positionering\n- Aanbod\n- Vertrouwen\n- Content\n- Conversie\n- Differentiatie\n- Buyer intent\n- Proof\n- Funnel maturity\n\n## 8. Opportunities identificeren\nBepaal concrete groeikansen.\n\nFocus op:\n- Nieuwe demand capture kansen\n- Betere doelgroepactivatie\n- Content of SEO-richtingen\n- Conversieverbetering\n- Positionering\n- Commerciële haakjes\n- 90 dagen groei-acties\n\n# OUTPUT\nGeef alleen valid JSON terug.\nGebruik geen markdown.\nGebruik geen codeblock.\nGebruik Engels in de output.\n\nGebruik exact deze JSON-structuur:\n\n{\n  \"business_model\": \"\",\n  \"business_model_reason\": \"\",\n  \"primary_audience\": \"\",\n  \"audience_reason\": \"\",\n  \"conversion_goal\": \"\",\n  \"conversion_goal_reason\": \"\",\n  \"market_summary\": \"\",\n  \"market_reality\": [\n    \"\",\n    \"\",\n    \"\"\n  ],\n  \"competitor_context\": \"\",\n  \"market_gaps\": [\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    },\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    },\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    }\n  ],\n  \"growth_opportunities\": [\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    },\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    },\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    }\n  ],\n  \"growth_leak\": {\n    \"from\": \"\",\n    \"middle\": \"\",\n    \"to\": \"\"\n  },\n  \"recommended_growth_angle\": \"\",\n  \"dashboard_summary\": \"\"\n}\n\n# SCHRIJFREGELS\n- Schrijf in het Engels.\n- Wees concreet.\n- Houd zinnen kort.\n- Gebruik geen concurrentnamen in de output, tenzij absoluut noodzakelijk.\n- Geen lange uitleg.\n- Geen markdown.\n- Geen extra tekst buiten de JSON.\n- Maak de output geschikt voor een visuele Growth Scan.\n- Denk als growth strategist, niet als traditioneel marktonderzoeker."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1280,
+        2464
+      ],
+      "id": "cc8055be-3110-424c-86cb-1c3fdef0f956",
+      "name": "Gaps & Opportunities",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-4-5-20250929",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {
+          "thinking": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        1280,
+        2720
+      ],
+      "id": "2e1b9dab-d3a0-4714-ab9d-320e436e6d45",
+      "name": "Anthropic Chat Model1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "gXyT3Lcx7fbUvb7c",
+          "name": "LinkedInLead enricher"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        1408,
+        2720
+      ],
+      "id": "48d0a8a8-d463-407d-b104-4615721ba3d4",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2752,
+        2144
+      ],
+      "id": "72c97409-f47b-4ceb-9508-90901c519872",
+      "name": "Aggregate1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-opus-4-6",
+          "mode": "list",
+          "cachedResultName": "Claude Opus 4.6"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        2976,
+        2256
+      ],
+      "id": "d5a709b2-9514-4809-8a1c-9063c34f15ad",
+      "name": "Anthropic Chat Model2",
+      "credentials": {
+        "anthropicApi": {
+          "id": "gXyT3Lcx7fbUvb7c",
+          "name": "LinkedInLead enricher"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Growth Scan Dashboard HTML Builder\n// Expects Rapportage Agent output as valid JSON\n// Returns: { htmlReport: \"<html>\" }\n\n// ---------- Logo ----------\n// Sprints & Sneakers logo, embedded directly so the report never breaks.\nconst SS_LOGO_SVG = `<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1645\" height=\"367\" viewBox=\"0 0 1645 367\" fill=\"none\"><path d=\"M0 140.383C0 121.499 2.88061 104.536 8.64183 89.4923C14.7231 74.1291 23.2049 61.0063 34.0872 50.124C45.2896 38.9216 58.5724 30.4398 73.9357 24.6786C89.2989 18.5973 106.262 15.5566 124.826 15.5566H332.23L278.459 99.5744H132.508C120.025 99.5744 109.943 103.415 102.262 111.097C94.58 118.779 90.7392 129.021 90.7392 141.823C90.7392 154.306 94.58 164.388 102.262 172.07C109.943 179.751 120.025 183.592 132.508 183.592H222.767L166.595 267.61H124.826C106.262 267.61 89.2989 264.729 73.9357 258.968C58.5724 252.887 45.2896 244.405 34.0872 233.523C23.2049 222.32 14.7231 209.038 8.64183 193.674C2.88061 178.311 0 161.348 0 142.784V140.383Z\" fill=\"white\"/><path d=\"M445.543 226.799C445.543 245.363 442.502 262.327 436.421 277.69C430.66 293.053 422.178 306.336 410.976 317.538C400.093 328.421 386.97 336.903 371.607 342.984C356.564 348.745 339.6 351.626 320.716 351.626H113.312L167.084 267.608H312.555C325.037 267.608 335.119 263.767 342.801 256.085C350.483 248.404 354.324 238.162 354.324 225.359C354.324 212.876 350.483 202.794 342.801 195.113C335.119 187.431 325.037 183.59 312.555 183.59H222.776L278.948 99.5723H320.716C339.6 99.5723 356.564 102.613 371.607 108.694C386.97 114.455 400.093 122.937 410.976 134.14C422.178 145.022 430.66 158.145 436.421 173.508C442.502 188.551 445.543 205.515 445.543 224.399V226.799Z\" fill=\"white\"/><path d=\"M545.374 172.743C501.913 172.743 477.816 152.089 477.816 120.892H522.137C522.137 132.08 529.237 139.61 547.31 139.61C559.789 139.61 567.75 135.307 567.75 127.131C567.75 115.513 561.94 114.007 535.907 110.134C499.547 104.755 481.044 90.1252 481.044 62.5858C481.044 30.7434 505.786 11.8101 545.804 11.8101C583.456 11.8101 608.628 30.7434 608.628 59.1434H564.737C564.092 47.5252 554.195 44.298 544.728 44.298C533.54 44.298 526.225 49.0313 526.225 56.7767C526.225 68.1798 535.692 68.8252 559.789 72.4828C584.747 76.1404 613.146 83.0252 613.146 122.613C613.146 152.089 590.771 172.743 545.374 172.743ZM625.753 170.592V13.7465H696.968C731.607 13.7465 754.414 33.1101 754.414 66.8888C754.414 98.7312 733.759 120.677 696.968 120.677H669.429V170.592H625.753ZM689.223 50.3222H669.429V87.3282H689.223C698.474 87.3282 710.092 85.3919 710.092 68.6101C710.092 52.4737 698.474 50.3222 689.223 50.3222ZM764.853 170.592V13.7465H846.611C885.768 13.7465 904.271 30.3131 904.271 60.4343C904.271 78.9373 893.514 93.7828 877.378 97.4403V98.9464C892.223 102.174 900.184 111.425 900.184 128.852V151.658C900.184 157.683 900.184 164.352 902.981 170.592H859.09C857.368 167.149 856.508 160.049 856.508 151.874V136.383C856.508 125.41 852.205 118.74 836.499 118.74H808.529V170.592H764.853ZM808.529 84.5313H840.156C854.141 84.5313 859.52 76.7858 859.52 66.4585C859.52 53.7646 851.559 49.4616 840.156 49.4616H808.529V84.5313ZM916.981 170.592V13.7465H960.656V170.592H916.981ZM981.702 170.592V13.7465H1033.12L1084.11 109.919H1085.84L1084.33 62.1555V13.7465H1126.28V170.592H1077.88L1026.88 77.8616H1025.16L1026.24 119.816V170.592H981.702ZM1177.4 170.592V51.1828H1134.15V13.7465H1265.61V51.1828H1221.07V170.592H1177.4ZM1330.6 172.743C1287.14 172.743 1263.04 152.089 1263.04 120.892H1307.36C1307.36 132.08 1314.46 139.61 1332.54 139.61C1345.02 139.61 1352.98 135.307 1352.98 127.131C1352.98 115.513 1347.17 114.007 1321.13 110.134C1284.77 104.755 1266.27 90.1252 1266.27 62.5858C1266.27 30.7434 1291.01 11.8101 1331.03 11.8101C1368.68 11.8101 1393.86 30.7434 1393.86 59.1434H1349.96C1349.32 47.5252 1339.42 44.298 1329.96 44.298C1318.77 44.298 1311.45 49.0313 1311.45 56.7767C1311.45 68.1798 1320.92 68.8252 1345.02 72.4828C1369.97 76.1404 1398.37 83.0252 1398.37 122.613C1398.37 152.089 1376 172.743 1330.6 172.743ZM1489.32 172.743C1459.85 172.743 1439.19 156.607 1439.19 129.498C1439.19 111.855 1451.46 95.504 1469.96 87.9737C1459.42 77.8616 1453.39 65.5979 1453.39 52.904C1453.39 28.1616 1474.26 11.595 1503.09 11.595C1530.2 11.595 1548.7 28.3768 1548.7 51.6131C1548.7 68.8252 1537.95 82.5949 1521.59 89.4797V90.7706L1539.45 109.919C1543.11 103.465 1545.48 94.6434 1545.91 85.607H1588.72V116.159H1572.8C1570.65 123.258 1566.78 130.143 1562.69 135.092L1595.61 170.592H1546.12L1534.29 157.683C1523.96 167.58 1506.53 172.743 1489.32 172.743ZM1501.37 70.3313H1502.88C1509.55 66.8888 1513.42 61.0798 1513.42 55.0555C1513.42 48.8161 1509.33 44.5131 1503.31 44.5131C1497.07 44.5131 1492.55 49.2464 1492.55 55.0555C1492.55 60.4343 1496.64 66.4585 1501.37 70.3313ZM1480.29 124.334C1480.29 133.371 1486.96 139.18 1496.42 139.18C1502.45 139.18 1508.26 137.458 1511.91 133.371L1490.18 109.489C1484.59 112.071 1480.29 117.019 1480.29 124.334ZM545.374 355.743C501.913 355.743 477.816 335.089 477.816 303.892H522.137C522.137 315.08 529.237 322.61 547.31 322.61C559.789 322.61 567.75 318.307 567.75 310.131C567.75 298.513 561.94 297.007 535.907 293.134C499.547 287.755 481.044 273.125 481.044 245.586C481.044 213.743 505.786 194.81 545.804 194.81C583.456 194.81 608.628 213.743 608.628 242.143H564.737C564.092 230.525 554.195 227.298 544.728 227.298C533.54 227.298 526.225 232.031 526.225 239.777C526.225 251.18 535.692 251.825 559.789 255.483C584.747 259.14 613.146 266.025 613.146 305.613C613.146 335.089 590.771 355.743 545.374 355.743ZM625.753 353.592V196.746H677.174L728.165 292.919H729.886L728.38 245.156V196.746H770.335V353.592H721.926L670.935 260.862H669.214L670.289 302.816V353.592H625.753ZM791.327 353.592V196.746H909.66V233.752H835.003V256.989H898.903V291.628H835.003V316.586H910.306V353.592H791.327ZM910.95 353.592L959.789 196.746H1021.97L1070.81 353.592H1025.41L1017.23 325.622H964.522L956.346 353.592H910.95ZM974.204 292.489H1007.55L998.301 260.862L991.631 235.904H990.125L983.456 260.862L974.204 292.489ZM1076.67 353.592V196.746H1120.35V263.013L1171.55 196.746H1223.19L1167.68 261.722L1223.62 353.592H1172.2L1137.77 293.349L1120.35 313.574V353.592H1076.67ZM1231.32 353.592V196.746H1349.65V233.752H1275V256.989H1338.9V291.628H1275V316.586H1350.3V353.592H1231.32ZM1366.22 353.592V196.746H1447.98C1487.13 196.746 1505.64 213.313 1505.64 243.434C1505.64 261.937 1494.88 276.783 1478.74 280.44V281.946C1493.59 285.174 1501.55 294.425 1501.55 311.852V334.658C1501.55 340.683 1501.55 347.352 1504.35 353.592H1460.45C1458.73 350.149 1457.87 343.049 1457.87 334.874V319.383C1457.87 308.41 1453.57 301.74 1437.86 301.74H1409.89V353.592H1366.22ZM1409.89 267.531H1441.52C1455.51 267.531 1460.88 259.786 1460.88 249.459C1460.88 236.765 1452.92 232.462 1441.52 232.462H1409.89V267.531ZM1576.44 355.743C1532.98 355.743 1508.88 335.089 1508.88 303.892H1553.2C1553.2 315.08 1560.3 322.61 1578.37 322.61C1590.85 322.61 1598.81 318.307 1598.81 310.131C1598.81 298.513 1593 297.007 1566.97 293.134C1530.61 287.755 1512.11 273.125 1512.11 245.586C1512.11 213.743 1536.85 194.81 1576.87 194.81C1614.52 194.81 1639.69 213.743 1639.69 242.143H1595.8C1595.15 230.525 1585.26 227.298 1575.79 227.298C1564.6 227.298 1557.29 232.031 1557.29 239.777C1557.29 251.18 1566.75 251.825 1590.85 255.483C1615.81 259.14 1644.21 266.025 1644.21 305.613C1644.21 335.089 1621.83 355.743 1576.44 355.743Z\" fill=\"white\"/></svg>`;\n\n// Guard: if someone leaves the placeholder in, or passes an empty/invalid\n// value, fall back to the embedded logo so the report never breaks.\nfunction resolveLogo(candidate) {\n  const value = typeof candidate === \"string\" ? candidate.trim() : \"\";\n  const isValidSvg = value.startsWith(\"<svg\") && value.includes(\"</svg>\");\n  return isValidSvg ? value : SS_LOGO_SVG;\n}\n\nconst logoSvg = resolveLogo(SS_LOGO_SVG);\n\n// ---------- Helpers ----------\nfunction escapeHtml(value) {\n  if (value === null || value === undefined) return \"\";\n  return String(value)\n    .replace(/&/g, \"&amp;\")\n    .replace(/</g, \"&lt;\")\n    .replace(/>/g, \"&gt;\")\n    .replace(/\"/g, \"&quot;\")\n    .replace(/'/g, \"&#039;\");\n}\n\nfunction normalizeArray(value, fallback = []) {\n  return Array.isArray(value) ? value.filter(Boolean) : fallback;\n}\n\nfunction limitWords(text, maxWords = 14) {\n  if (!text) return \"\";\n  const words = String(text).trim().split(/\\s+/);\n  if (words.length <= maxWords) return String(text);\n  return words.slice(0, maxWords).join(\" \") + \"...\";\n}\n\nfunction safeJsonParse(raw) {\n  if (!raw) return null;\n\n  let text = \"\";\n\n  if (typeof raw === \"string\") {\n    text = raw;\n  } else if (raw.output) {\n    text = typeof raw.output === \"string\" ? raw.output : JSON.stringify(raw.output);\n  } else if (raw.content && Array.isArray(raw.content) && raw.content[0]?.text) {\n    text = raw.content[0].text;\n  } else {\n    text = JSON.stringify(raw);\n  }\n\n  text = text\n    .trim()\n    .replace(/^```json\\s*/i, \"\")\n    .replace(/^```\\s*/i, \"\")\n    .replace(/```$/i, \"\")\n    .trim();\n\n  const firstBrace = text.indexOf(\"{\");\n  const lastBrace = text.lastIndexOf(\"}\");\n\n  if (firstBrace !== -1 && lastBrace !== -1) {\n    text = text.slice(firstBrace, lastBrace + 1);\n  }\n\n  return JSON.parse(text);\n}\n\nfunction scoreColor(score) {\n  const value = Number(score) || 0;\n  if (value >= 85) return \"#A6FF00\";\n  if (value >= 65) return \"#B2FA63\";\n  if (value >= 45) return \"#FFB84D\";\n  return \"#FF4D4D\";\n}\n\nfunction scorePercent(score) {\n  return Math.max(0, Math.min(100, Number(score) || 0));\n}\n\n// ---------- Parse input ----------\nconst input = $input.first().json;\nconst rawOutput = input.output || input.content || input;\nconst data = safeJsonParse(rawOutput);\n\nif (!data) {\n  throw new Error(\"No valid Growth Scan JSON found.\");\n}\n\n// ---------- Data defaults ----------\nconst scan = {\n  brand_name: data.brand_name || \"Unknown Brand\",\n  industry: data.industry || \"\",\n  business_model: data.business_model || \"\",\n  primary_audience: data.primary_audience || \"\",\n  conversion_goal: data.conversion_goal || \"\",\n  kicker: data.kicker || \"GROWTH SCAN\",\n  headline: data.headline || \"From market tension to measurable growth.\",\n  intro: data.intro || \"The market shows clear growth potential, but the current system is not capturing enough demand.\",\n\n  snapshot: {\n    impact: data.snapshot?.impact || \"Medium\",\n    growth_score: data.snapshot?.growth_score || \"7.5\",\n    risk: data.snapshot?.risk || \"Watch\",\n    commercial_value: data.snapshot?.commercial_value || \"Medium\"\n  },\n\n  snapshot_scores: {\n    impact_score: data.snapshot_scores?.impact_score ?? 70,\n    growth_potential_score: data.snapshot_scores?.growth_potential_score ?? 70,\n    risk_score: data.snapshot_scores?.risk_score ?? 55,\n    commercial_value_score: data.snapshot_scores?.commercial_value_score ?? 70\n  },\n\n  key_metrics: normalizeArray(data.key_metrics, []),\n  market_research: data.market_research || {},\n  seo_block: data.seo_block || {},\n  geo_block: data.geo_block || {},\n  aaaarrr_scan: normalizeArray(data.aaaarrr_scan, []),\n  growth_leak: data.growth_leak || {},\n  growth_opportunity: data.growth_opportunity || {},\n  marketing_growth_levers: normalizeArray(data.marketing_growth_levers, []),\n  what_this_delivers: normalizeArray(data.what_this_delivers, []),\n  starting_point: data.starting_point || {},\n  services: normalizeArray(data.services, []),\n  page_2: data.page_2 || {},\n  growth_scan_narrative: data.growth_scan_narrative || {},\n  one_sentence_summary: data.one_sentence_summary || \"\"\n};\n\n// ---------- Components ----------\nfunction pageHeader(label) {\n  return `\n    <header class=\"page-header\">\n      <div class=\"header-label\">${escapeHtml(label)}</div>\n      <div class=\"header-logo\">${logoSvg}</div>\n    </header>\n  `;\n}\n\nfunction metricCard(label, value, score) {\n  const percent = scorePercent(score);\n  const color = scoreColor(score);\n\n  return `\n    <div class=\"metric-card\">\n      <div class=\"metric-ring\" style=\"background: conic-gradient(${color} ${percent}%, rgba(255,255,255,0.12) 0);\">\n        <div class=\"metric-ring-inner\"></div>\n      </div>\n      <div class=\"metric-copy\">\n        <div class=\"metric-value\" style=\"color:${color};\">${escapeHtml(value)}</div>\n        <div class=\"metric-label\">${escapeHtml(label)}</div>\n      </div>\n    </div>\n  `;\n}\n\nfunction keyMetricGrid(metrics) {\n  const safeMetrics = normalizeArray(metrics).slice(0, 4);\n  if (!safeMetrics.length) return \"\";\n\n  return `\n    <section class=\"key-metric-grid\">\n      ${safeMetrics.map(metric => `\n        <div class=\"key-metric-card\">\n          <div class=\"key-metric-value\">${escapeHtml(metric.value)}</div>\n          <div class=\"key-metric-label\">${escapeHtml(metric.label)}</div>\n          <div class=\"key-metric-context\">${escapeHtml(metric.context)}</div>\n        </div>\n      `).join(\"\")}\n    </section>\n  `;\n}\n\nfunction marketResearchBlock(marketResearch) {\n  if (!marketResearch) return \"\";\n\n  return `\n    <section class=\"market-research-block\">\n      <div class=\"market-research-header\">\n        <h3>${escapeHtml(marketResearch.title || \"Market Research Signals\")}</h3>\n        <span>Market-led diagnosis</span>\n      </div>\n\n      <div class=\"market-research-grid\">\n        <div class=\"market-research-main\">\n          <h4>Key shift</h4>\n          <p>${escapeHtml(limitWords(marketResearch.key_shift, 22))}</p>\n        </div>\n\n        <div class=\"market-research-main\">\n          <h4>Strategic tension</h4>\n          <p>${escapeHtml(limitWords(marketResearch.strategic_tension, 22))}</p>\n        </div>\n\n        <div class=\"market-research-main\">\n          <h4>Commercial opportunity</h4>\n          <p>${escapeHtml(limitWords(marketResearch.commercial_opportunity, 22))}</p>\n        </div>\n      </div>\n\n      <div class=\"market-signal-row\">\n        ${normalizeArray(marketResearch.signals).slice(0, 3).map(signal => `\n          <div class=\"market-signal\">\n            <span>+</span>\n            <p>${escapeHtml(limitWords(signal, 14))}</p>\n          </div>\n        `).join(\"\")}\n      </div>\n    </section>\n  `;\n}\n\nfunction scanBlock(title, value, label, metaItems, status, insight, modifier = \"\") {\n  return `\n    <section class=\"scan-block ${modifier}\">\n      <div class=\"scan-block-top\">\n        <h3>${escapeHtml(title)}</h3>\n        <span>${escapeHtml(status)}</span>\n      </div>\n      <div class=\"scan-block-value\">${escapeHtml(value)}</div>\n      <div class=\"scan-block-label\">${escapeHtml(label)}</div>\n      <div class=\"scan-block-meta\">\n        ${normalizeArray(metaItems).map(item => `<div>${escapeHtml(item)}</div>`).join(\"\")}\n      </div>\n      <p>${escapeHtml(limitWords(insight, 14))}</p>\n    </section>\n  `;\n}\n\nfunction aaaarrrFunnel(items) {\n  const safeItems = normalizeArray(items).slice(0, 6);\n  if (!safeItems.length) return \"\";\n\n  return `\n    <section class=\"funnel-card\">\n      <h3>Full Funnel Scan · Beyond Awareness</h3>\n      <div class=\"funnel-grid\">\n        ${safeItems.map(item => {\n          const score = scorePercent(item.score);\n          const color = scoreColor(item.score);\n\n          return `\n            <div class=\"funnel-item\">\n              <div class=\"funnel-stage\">${escapeHtml(item.stage)}</div>\n              <div class=\"funnel-score\" style=\"color:${color};\">${score}</div>\n              <div class=\"funnel-bar\">\n                <span style=\"width:${score}%; background:${color};\"></span>\n              </div>\n              <div class=\"funnel-status\">${escapeHtml(item.status)}</div>\n              <p>${escapeHtml(limitWords(item.signal, 12))}</p>\n            </div>\n          `;\n        }).join(\"\")}\n      </div>\n    </section>\n  `;\n}\n\nfunction panel(number, title, content, modifier = \"\") {\n  return `\n    <section class=\"dash-panel ${modifier}\">\n      <h3>${escapeHtml(number)}. ${escapeHtml(title)}</h3>\n      ${content}\n    </section>\n  `;\n}\n\nfunction bulletList(items, maxWords = 10) {\n  return `\n    <ul class=\"dash-list\">\n      ${normalizeArray(items).slice(0, 3).map(item => `<li>${escapeHtml(limitWords(item, maxWords))}</li>`).join(\"\")}\n    </ul>\n  `;\n}\n\nfunction growthFlow(items) {\n  const safeItems = normalizeArray(items).slice(0, 3);\n  if (!safeItems.length) return \"\";\n\n  return `\n    <div class=\"growth-flow\">\n      ${safeItems.map(item => `<span>${escapeHtml(limitWords(item, 7))}</span>`).join(`<b>&rarr;</b>`)}\n    </div>\n  `;\n}\n\nfunction actionList(actions) {\n  return `\n    <div class=\"action-list\">\n      ${normalizeArray(actions).slice(0, 3).map(item => `\n        <div class=\"action-item\">\n          <strong>+</strong>\n          <span>${escapeHtml(limitWords(item.text, 16))}</span>\n          <em>Theme: ${escapeHtml(item.theme)}</em>\n        </div>\n      `).join(\"\")}\n    </div>\n  `;\n}\n\nfunction leversList(items) {\n  return `\n    <div class=\"lever-list\">\n      ${normalizeArray(items).slice(0, 3).map(item => `\n        <div class=\"lever-item\">\n          <span>&uarr; ${escapeHtml(limitWords(item.shift, 11))}</span>\n          <strong>&rarr; &uarr; ${escapeHtml(limitWords(item.outcome, 11))}</strong>\n        </div>\n      `).join(\"\")}\n    </div>\n  `;\n}\n\nfunction servicesGrid(items) {\n  const safeItems = normalizeArray(items).slice(0, 2);\n  if (!safeItems.length) return \"\";\n\n  return `\n    <section class=\"services-grid\">\n      ${safeItems.map(item => `\n        <div class=\"service-card\">\n          <h4>${escapeHtml(item.name)}</h4>\n          <p>${escapeHtml(limitWords(item.why, 18))}</p>\n        </div>\n      `).join(\"\")}\n    </section>\n  `;\n}\n\nfunction simpleCard(title, body, icon = \"\") {\n  return `\n    <div class=\"simple-card\">\n      ${icon ? `<div class=\"card-icon\">${escapeHtml(icon)}</div>` : \"\"}\n      <h3>${escapeHtml(title)}</h3>\n      <p>${escapeHtml(limitWords(body, 24))}</p>\n    </div>\n  `;\n}\n\nfunction capabilityGrid(items) {\n  return `\n    <section class=\"capability-grid\">\n      ${normalizeArray(items).slice(0, 3).map(item => `\n        <div class=\"capability-card\">\n          <h4>${escapeHtml(item.title)}</h4>\n          <p>${escapeHtml(limitWords(item.description, 18))}</p>\n        </div>\n      `).join(\"\")}\n    </section>\n  `;\n}\n\nfunction proofGrid(items) {\n  return `\n    <section class=\"proof-grid\">\n      ${normalizeArray(items).slice(0, 3).map(item => `\n        <div class=\"proof-card\">\n          <h4>${escapeHtml(item.label)}</h4>\n          <div>${escapeHtml(item.value)}</div>\n          <p>${escapeHtml(limitWords(item.context, 12))}</p>\n        </div>\n      `).join(\"\")}\n    </section>\n  `;\n}\n\nfunction growthNarrativeBlock(narr) {\n  if (!narr || !narr.body) return \"\";\n\n  return `\n    <section class=\"growth-narrative-block\">\n      <h3>${escapeHtml(narr.title || \"Growth Direction\")}</h3>\n      <p>${escapeHtml(limitWords(narr.body, 90))}</p>\n    </section>\n  `;\n}\n\n// ---------- Build content ----------\nconst topMeta = [\n  scan.industry,\n  scan.business_model,\n  scan.primary_audience,\n  scan.conversion_goal\n].filter(Boolean).join(\" · \");\n\nconst snapshotHtml = `\n  <section class=\"snapshot\">\n    ${metricCard(\"Impact\", scan.snapshot.impact, scan.snapshot_scores.impact_score)}\n    ${metricCard(\"Growth Potential\", scan.snapshot.growth_score, scan.snapshot_scores.growth_potential_score)}\n    ${metricCard(\"Growth Risk\", scan.snapshot.risk, scan.snapshot_scores.risk_score)}\n    ${metricCard(\"Commercial Value\", scan.snapshot.commercial_value, scan.snapshot_scores.commercial_value_score)}\n  </section>\n`;\n\nconst marketResearchHtml = marketResearchBlock(scan.market_research);\n\nconst seoGeoHtml = `\n  <section class=\"seo-geo-grid compact-awareness-row\">\n    ${scanBlock(\n      \"SEO\",\n      scan.seo_block.missed_value || \"N/A\",\n      \"Awareness signal\",\n      [\n        `${scan.seo_block.gap_count || \"0\"} gaps`,\n        `Top: ${scan.seo_block.top_keyword || \"N/A\"}`\n      ],\n      scan.seo_block.status || \"Unknown\",\n      scan.seo_block.insight || \"\",\n      \"seo compact\"\n    )}\n\n    ${scanBlock(\n      \"GEO\",\n      scan.geo_block.visibility || \"N/A\",\n      \"AI discovery signal\",\n      [\n        `${scan.geo_block.prompts || \"0\"} prompts`,\n        `${scan.geo_block.top3_count || \"0\"} top 3`\n      ],\n      scan.geo_block.status || \"Unknown\",\n      scan.geo_block.insight || \"\",\n      \"geo compact\"\n    )}\n  </section>\n`;\n\nconst funnelHtml = aaaarrrFunnel(scan.aaaarrr_scan);\nconst keyMetricsHtml = keyMetricGrid(scan.key_metrics);\n\nconst leakHtml = panel(\"1\", scan.growth_leak.title || \"Growth Leak\", `\n  ${bulletList(scan.growth_leak.leaks, 14)}\n  ${growthFlow(scan.growth_leak.flow)}\n\n  <div class=\"problem-shift\">\n    <span>Not ${escapeHtml(limitWords(scan.growth_leak.not_problem, 10))}</span>\n    <strong>But ${escapeHtml(limitWords(scan.growth_leak.real_problem, 13))}</strong>\n  </div>\n`, \"warning\");\n\nconst opportunityHtml = panel(\"2\", \"The Growth Chance\", `\n  <h4>${escapeHtml(limitWords(scan.growth_opportunity.title, 12))}</h4>\n  <p>${escapeHtml(limitWords(scan.growth_opportunity.description, 18))}</p>\n  ${actionList(scan.growth_opportunity.actions)}\n`, \"highlight\");\n\nconst leversHtml = panel(\"3\", \"Growth Levers\", `\n  ${leversList(scan.marketing_growth_levers)}\n`);\n\nconst whatThisDeliversHtml = `\n  <div class=\"bottom-card\">\n    <h3>What This Delivers</h3>\n    ${bulletList(scan.what_this_delivers, 13)}\n  </div>\n`;\n\nconst startingPointHtml = `\n  <section class=\"starting-point-full\">\n    <div class=\"bottom-card dashed full-width\">\n      <h3>Starting Point</h3>\n      <div class=\"starting-point-grid\">\n        <div class=\"starting-point-main\">\n          <h4>${escapeHtml(limitWords(scan.starting_point.name, 11))}</h4>\n          <p><strong>Analyzed:</strong> ${escapeHtml(limitWords(scan.starting_point.analyzed, 14))}</p>\n          <p><strong>Delivered:</strong> ${escapeHtml(limitWords(scan.starting_point.delivered, 14))}</p>\n        </div>\n        <div class=\"starting-point-labels\">\n          <div class=\"label-row\">\n            ${normalizeArray(scan.starting_point.labels).map(label => `<span>${escapeHtml(label)}</span>`).join(\"\")}\n          </div>\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"summary-line\">\n    ${escapeHtml(limitWords(scan.one_sentence_summary, 26))}\n  </section>\n`;\n\nconst page2 = scan.page_2 || {};\nconst page2Headline = page2.headline || \"Growing together with Growth Marketing\";\nconst page2Subheadline = page2.subheadline || \"We challenge the way marketing is done, combining growth, impact and enjoyment.\";\n\nconst pageThreeHtml = `\n  <section class=\"partner-hero\">\n    <h1>${escapeHtml(limitWords(page2Headline, 11))}</h1>\n    <p>${escapeHtml(limitWords(page2Subheadline, 24))}</p>\n  </section>\n\n  <section class=\"simple-grid\">\n    ${simpleCard(\n      page2.mission?.title || \"Our Mission\",\n      page2.mission?.description || \"Empower organizations to grow through experimental, data-driven growth methodologies.\",\n      \"↗\"\n    )}\n\n    <div class=\"simple-card\">\n      <div class=\"card-icon\">&equiv;</div>\n      <h3>Challenges we solve</h3>\n      ${bulletList(page2.challenges_we_solve, 12)}\n    </div>\n  </section>\n\n  <h2 class=\"section-title\">Sprints & Sneakers Growth System</h2>\n  ${capabilityGrid(page2.sns_capabilities)}\n\n  <h2 class=\"section-title\">Recommended Growth Playbook</h2>\n  <section class=\"playbook-card\">\n    <h3>${escapeHtml(limitWords(page2.recommended_playbook?.title || \"Growth Sprint\", 11))}</h3>\n    ${bulletList(page2.recommended_playbook?.steps, 14)}\n  </section>\n\n  <h2 class=\"section-title\">Relevant Proof</h2>\n  ${proofGrid(page2.proof_points)}\n\n  <section class=\"partner-quote\">\n    <p>&ldquo;${escapeHtml(limitWords(page2.partner_quote?.quote || \"Together we turn market signals into measurable momentum.\", 24))}&rdquo;</p>\n    <span>${escapeHtml(page2.partner_quote?.source || \"Sprints & Sneakers\")}</span>\n  </section>\n\n  ${servicesGrid(scan.services)}\n\n  <footer class=\"page-footer\">\n    <span>Strategic Growth Partner</span>\n    <div>${logoSvg}</div>\n  </footer>\n`;\n\n// ---------- HTML ----------\nconst htmlTemplate = `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,400;0,600;0,700;0,800;0,900&display=swap');\n\n    :root {\n      --lime: #B2FA63;\n      --lime-alt: #A6FF00;\n      --white: #FFFFFF;\n      --black: #000000;\n      --panel: rgba(255,255,255,0.035);\n      --line: rgba(255,255,255,0.14);\n      --muted: rgba(255,255,255,0.68);\n      --soft: rgba(255,255,255,0.48);\n      --red: #FF4D4D;\n      --orange: #FFB84D;\n    }\n\n    * {\n      box-sizing: border-box;\n    }\n\n    html,\n    body {\n      margin: 0;\n      padding: 0;\n      background: #000000 !important;\n    }\n\n    body {\n      color: var(--white);\n      font-family: 'Mona Sans', Arial, sans-serif;\n      font-size: 9.6pt;\n      line-height: 1.2;\n      background: #000000 !important;\n      -webkit-print-color-adjust: exact !important;\n      print-color-adjust: exact !important;\n    }\n\n    .a4-page {\n      width: 210mm;\n      min-height: 297mm;\n      padding: 10mm;\n      margin: 0 auto;\n      background: #000000;\n      page-break-after: always;\n      position: relative;\n    }\n\n    .a4-page:last-child {\n      page-break-after: auto;\n    }\n\n    .page-header {\n      display: table;\n      width: 100%;\n      padding-bottom: 9px;\n      margin-bottom: 14px;\n      border-bottom: 1px solid rgba(255,255,255,0.18);\n    }\n\n    .header-label {\n      display: table-cell;\n      vertical-align: middle;\n      color: var(--white);\n      font-size: 9.0pt;\n      font-weight: 900;\n      text-transform: uppercase;\n      letter-spacing: 0.18em;\n    }\n\n    .header-label:before {\n      content: \"\";\n      display: inline-block;\n      width: 8px;\n      height: 8px;\n      margin-right: 11px;\n      border-radius: 50%;\n      background: var(--lime-alt);\n      vertical-align: 1px;\n    }\n\n    .header-logo {\n      display: table-cell;\n      text-align: right;\n      vertical-align: middle;\n    }\n\n    .header-logo svg {\n      width: 177px;\n      height: auto;\n      display: inline-block;\n    }\n\n    .snapshot {\n      width: 100%;\n      border: 1px solid rgba(255,255,255,0.14);\n      border-radius: 17px;\n      padding: 11px 14px;\n      margin-bottom: 46px;\n      background: rgba(255,255,255,0.025);\n      font-size: 0;\n    }\n\n    .metric-card {\n      display: inline-block;\n      width: 25%;\n      vertical-align: top;\n      font-size: 11.0pt;\n      white-space: nowrap;\n    }\n\n    .metric-ring {\n      display: inline-block;\n      width: 38px;\n      height: 38px;\n      margin-right: 11px;\n      border-radius: 50%;\n      vertical-align: middle;\n      position: relative;\n    }\n\n    .metric-ring-inner {\n      position: absolute;\n      inset: 8px;\n      border-radius: 50%;\n      background: #000000;\n    }\n\n    .metric-copy {\n      display: inline-block;\n      vertical-align: middle;\n    }\n\n    .metric-value {\n      font-size: 15.0pt;\n      line-height: 1.05;\n      font-weight: 900;\n    }\n\n    .metric-label {\n      margin-top: 2px;\n      color: var(--soft);\n      font-size: 7.8pt;\n      font-weight: 700;\n      text-transform: uppercase;\n      letter-spacing: 0.08em;\n    }\n\n    .hero {\n      margin-bottom: 46px;\n    }\n\n    .kicker {\n      color: var(--lime-alt);\n      font-size: 9.0pt;\n      font-weight: 900;\n      letter-spacing: 0.24em;\n      text-transform: uppercase;\n      margin: 0 0 7px 0;\n    }\n\n    h1 {\n      margin: 0 0 6px 0;\n      color: var(--white);\n      font-size: 26.0pt;\n      line-height: 1.02;\n      font-weight: 900;\n      letter-spacing: -0.05em;\n    }\n\n    .meta {\n      margin: 0 0 7px 0;\n      color: var(--soft);\n      font-size: 8.5pt;\n      text-transform: uppercase;\n      letter-spacing: 0.08em;\n      font-weight: 700;\n      max-width: 92%;\n    }\n\n    .intro {\n      max-width: 88%;\n      margin: 0;\n      padding-left: 14px;\n      border-left: 2px solid var(--lime-alt);\n      color: var(--muted);\n      font-size: 10.0pt;\n      line-height: 1.28;\n    }\n\n    .market-research-block {\n      width: 100%;\n      margin: 0 0 46px 0;\n      padding: 14px 15px;\n      border-radius: 18px;\n      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015));\n      border: 1px solid rgba(166,255,0,0.38);\n    }\n\n    .market-research-header {\n      width: 100%;\n      margin-bottom: 11px;\n    }\n\n    .market-research-header h3 {\n      display: inline-block;\n      margin: 0;\n      color: var(--lime-alt);\n      font-size: 8.8pt;\n      font-weight: 900;\n      letter-spacing: 0.2em;\n      text-transform: uppercase;\n    }\n\n    .market-research-header span {\n      float: right;\n      color: #000;\n      background: var(--lime-alt);\n      border-radius: 24px;\n      padding: 4px 9px;\n      font-size: 8.0pt;\n      font-weight: 900;\n      text-transform: uppercase;\n    }\n\n    .market-research-grid {\n      width: 100%;\n      font-size: 0;\n    }\n\n    .market-research-main {\n      display: inline-block;\n      width: 32%;\n      margin-right: 2%;\n      vertical-align: top;\n      padding: 12px 13px;\n      border-radius: 12px;\n      background: rgba(0,0,0,0.35);\n      border: 1px solid rgba(255,255,255,0.10);\n    }\n\n    .market-research-main:nth-child(3n) {\n      margin-right: 0;\n    }\n\n    .market-research-main h4 {\n      margin: 0 0 7px 0;\n      color: var(--white);\n      font-size: 10.2pt;\n      font-weight: 900;\n    }\n\n    .market-research-main p {\n      margin: 0;\n      color: var(--muted);\n      font-size: 9.0pt;\n      line-height: 1.25;\n    }\n\n    .market-signal-row {\n      width: 100%;\n      margin-top: 11px;\n      font-size: 0;\n    }\n\n    .market-signal {\n      display: inline-block;\n      width: 32%;\n      margin-right: 2%;\n      vertical-align: top;\n      padding-left: 20px;\n      position: relative;\n    }\n\n    .market-signal:nth-child(3n) {\n      margin-right: 0;\n    }\n\n    .market-signal span {\n      position: absolute;\n      left: 0;\n      top: -2px;\n      color: var(--lime-alt);\n      font-size: 13.0pt;\n      font-weight: 900;\n    }\n\n    .market-signal p {\n      margin: 0;\n      color: var(--muted);\n      font-size: 9.0pt;\n      line-height: 1.25;\n    }\n\n    .seo-geo-grid {\n      width: 100%;\n      margin: 0 0 13px 0;\n      font-size: 0;\n    }\n\n    .scan-block {\n      display: inline-block;\n      width: 49%;\n      margin-right: 2%;\n      vertical-align: top;\n      padding: 14px 15px;\n      border-radius: 18px;\n      background: rgba(255,255,255,0.035);\n      border: 1px solid rgba(166,255,0,0.36);\n    }\n\n    .scan-block:nth-child(2n) {\n      margin-right: 0;\n    }\n\n    .scan-block-top {\n      width: 100%;\n      margin-bottom: 8px;\n    }\n\n    .scan-block-top h3 {\n      display: inline-block;\n      margin: 0;\n      color: var(--lime-alt);\n      font-size: 8.8pt;\n      font-weight: 900;\n      letter-spacing: 0.2em;\n      text-transform: uppercase;\n    }\n\n    .scan-block-top span {\n      float: right;\n      color: #000;\n      background: var(--lime-alt);\n      border-radius: 24px;\n      padding: 4px 9px;\n      font-size: 8.0pt;\n      font-weight: 900;\n      text-transform: uppercase;\n    }\n\n    .scan-block.geo .scan-block-top span {\n      background: var(--red);\n      color: #000;\n    }\n\n    .scan-block-value {\n      color: var(--lime-alt);\n      font-size: 27.0pt;\n      line-height: 1;\n      font-weight: 900;\n      letter-spacing: -0.06em;\n    }\n\n    .scan-block-label {\n      margin-top: 5px;\n      color: var(--white);\n      font-size: 9.0pt;\n      font-weight: 900;\n      text-transform: uppercase;\n      letter-spacing: 0.08em;\n    }\n\n    .scan-block-meta {\n      margin: 9px 0;\n      font-size: 0;\n    }\n\n    .scan-block-meta div {\n      display: inline-block;\n      margin: 0 6px 6px 0;\n      padding: 5px 8px;\n      border-radius: 24px;\n      background: rgba(255,255,255,0.07);\n      color: var(--muted);\n      font-size: 8.3pt;\n      font-weight: 700;\n    }\n\n    .scan-block p {\n      margin: 0;\n      color: var(--muted);\n      font-size: 9.0pt;\n      line-height: 1.25;\n    }\n\n    .compact-awareness-row {\n      margin: 0 0 46px 0;\n    }\n\n    .compact-awareness-row .scan-block {\n      padding: 9px 12px;\n      border-radius: 13px;\n      background: rgba(255,255,255,0.025);\n      border-color: rgba(255,255,255,0.16);\n    }\n\n    .compact-awareness-row .scan-block-top {\n      margin-bottom: 5px;\n    }\n\n    .compact-awareness-row .scan-block-top h3 {\n      font-size: 8.0pt;\n      letter-spacing: 0.18em;\n    }\n\n    .compact-awareness-row .scan-block-top span {\n      padding: 2px 7px;\n      font-size: 7.4pt;\n    }\n\n    .compact-awareness-row .scan-block-value {\n      font-size: 18.0pt;\n      letter-spacing: -0.04em;\n    }\n\n    .compact-awareness-row .scan-block-label {\n      font-size: 7.8pt;\n      margin-top: 2px;\n    }\n\n    .compact-awareness-row .scan-block-meta {\n      margin: 6px 0;\n    }\n\n    .compact-awareness-row .scan-block-meta div {\n      font-size: 7.6pt;\n      padding: 4px 7px;\n      margin-bottom: 4px;\n    }\n\n    .compact-awareness-row .scan-block p {\n      font-size: 8.2pt;\n      line-height: 1.18;\n    }\n\n    .key-metric-grid {\n      width: 100%;\n      margin: 0 0 0 0;\n      font-size: 0;\n    }\n\n    .key-metric-card {\n      display: inline-block;\n      width: 24%;\n      margin-right: 1.333%;\n      padding: 11px 11px;\n      border-radius: 13px;\n      background: rgba(166,255,0,0.075);\n      border: 1px solid rgba(166,255,0,0.48);\n      vertical-align: top;\n    }\n\n    .key-metric-card:nth-child(4n) {\n      margin-right: 0;\n    }\n\n    .key-metric-value {\n      color: var(--lime-alt);\n      font-size: 17.0pt;\n      line-height: 1;\n      font-weight: 900;\n      letter-spacing: -0.045em;\n    }\n\n    .key-metric-label {\n      margin-top: 4px;\n      color: var(--white);\n      font-size: 7.6pt;\n      font-weight: 900;\n      text-transform: uppercase;\n      letter-spacing: 0.07em;\n    }\n\n    .key-metric-context {\n      margin-top: 3px;\n      color: var(--soft);\n      font-size: 7.2pt;\n      line-height: 1.15;\n    }\n\n    .growth-narrative-block {\n      width: 100%;\n      margin: 16px 0 0 0;\n      padding: 14px 18px;\n      border-radius: 16px;\n      background: linear-gradient(180deg, rgba(166,255,0,0.08), rgba(255,255,255,0.02));\n      border: 1px solid rgba(166,255,0,0.38);\n    }\n\n    .growth-narrative-block h3 {\n      margin: 0 0 7px 0;\n      color: var(--lime-alt);\n      font-size: 9.0pt;\n      font-weight: 900;\n      letter-spacing: 0.2em;\n      text-transform: uppercase;\n    }\n\n    .growth-narrative-block p {\n      margin: 0;\n      color: var(--muted);\n      font-size: 9.6pt;\n      line-height: 1.32;\n      column-count: 2;\n      column-gap: 18px;\n      text-align: justify;\n    }\n\n    .funnel-card {\n      width: 100%;\n      margin: 0 0 22px 0;\n      padding: 15px 17px;\n      border-radius: 19px;\n      background: linear-gradient(180deg, rgba(166,255,0,0.07), rgba(255,255,255,0.025));\n      border: 1px solid rgba(166,255,0,0.42);\n    }\n\n    .funnel-card h3 {\n      margin: 0 0 12px 0;\n      color: var(--lime-alt);\n      font-size: 9.2pt;\n      font-weight: 900;\n      letter-spacing: 0.22em;\n      text-transform: uppercase;\n    }\n\n    .funnel-grid {\n      width: 100%;\n      font-size: 0;\n    }\n\n    .funnel-item {\n      display: inline-block;\n      width: 15.83%;\n      margin-right: 1%;\n      vertical-align: top;\n      font-size: 9.0pt;\n    }\n\n    .funnel-item:nth-child(6n) {\n      margin-right: 0;\n    }\n\n    .funnel-stage {\n      color: var(--white);\n      font-size: 8.4pt;\n      font-weight: 900;\n      text-transform: uppercase;\n      margin-bottom: 5px;\n    }\n\n    .funnel-score {\n      font-size: 18.0pt;\n      line-height: 1;\n      font-weight: 900;\n      margin-bottom: 6px;\n    }\n\n    .funnel-bar {\n      width: 100%;\n      height: 7px;\n      border-radius: 24px;\n      background: rgba(255,255,255,0.1);\n      overflow: hidden;\n      margin-bottom: 6px;\n    }\n\n    .funnel-bar span {\n      display: block;\n      height: 100%;\n      border-radius: 24px;\n    }\n\n    .funnel-status {\n      color: var(--soft);\n      font-size: 8.0pt;\n      font-weight: 800;\n      text-transform: uppercase;\n      margin-bottom: 4px;\n    }\n\n    .funnel-item p {\n      margin: 0;\n      color: var(--muted);\n      font-size: 8.2pt;\n      line-height: 1.2;\n    }\n\n    .dashboard-grid {\n      width: 100%;\n      font-size: 0;\n    }\n\n    .dash-column {\n      display: inline-block;\n      width: 48.5%;\n      vertical-align: top;\n      font-size: 9.5pt;\n    }\n\n    .dash-column.left {\n      margin-right: 3%;\n    }\n\n    .dash-panel {\n      background: rgba(255,255,255,0.035);\n      border: 1px solid rgba(255,255,255,0.14);\n      border-radius: 15px;\n      padding: 11px 12px;\n      margin-bottom: 12px;\n    }\n\n    .dash-panel.highlight {\n      border-color: rgba(166,255,0,0.75);\n      background: rgba(166,255,0,0.05);\n    }\n\n    .dash-panel.warning {\n      border-color: rgba(255,77,77,0.45);\n    }\n\n    .dash-panel h3,\n    .bottom-card h3 {\n      margin: 0 0 8px 0;\n      color: var(--lime-alt);\n      font-size: 8.5pt;\n      font-weight: 900;\n      letter-spacing: 0.18em;\n      text-transform: uppercase;\n    }\n\n    .dash-panel h4,\n    .bottom-card h4 {\n      margin: 0 0 6px 0;\n      color: var(--white);\n      font-size: 10.3pt;\n      font-weight: 900;\n      line-height: 1.12;\n    }\n\n    .dash-panel p,\n    .bottom-card p {\n      margin: 0 0 7px 0;\n      color: var(--muted);\n      font-size: 9.0pt;\n      line-height: 1.25;\n    }\n\n    .dash-list {\n      list-style: none;\n      margin: 0;\n      padding: 0;\n    }\n\n    .dash-list li {\n      position: relative;\n      margin: 0 0 6px 0;\n      padding-left: 19px;\n      color: var(--muted);\n      font-size: 9.0pt;\n      line-height: 1.24;\n    }\n\n    .dash-list li:before {\n      content: \"\";\n      position: absolute;\n      left: 2px;\n      top: 6px;\n      width: 6px;\n      height: 6px;\n      border-radius: 50%;\n      background: var(--lime-alt);\n    }\n\n    .growth-flow {\n      margin-top: 8px;\n      padding: 9px;\n      border-radius: 12px;\n      background: rgba(0,0,0,0.35);\n      white-space: normal;\n      font-size: 0;\n    }\n\n    .growth-flow span {\n      display: inline-block;\n      padding: 6px 8px;\n      border-radius: 6px;\n      background: rgba(255,255,255,0.07);\n      color: var(--white);\n      font-size: 8.2pt;\n      font-weight: 800;\n      vertical-align: middle;\n    }\n\n    .growth-flow b {\n      display: inline-block;\n      margin: 0 6px;\n      color: var(--lime-alt);\n      font-size: 10.0pt;\n      vertical-align: middle;\n    }\n\n    .problem-shift {\n      margin-top: 8px;\n      padding-top: 8px;\n      border-top: 1px solid rgba(255,255,255,0.1);\n    }\n\n    .problem-shift span {\n      display: block;\n      color: rgba(255,255,255,0.42);\n      text-decoration: line-through;\n      font-size: 9.0pt;\n    }\n\n    .problem-shift strong {\n      display: block;\n      color: var(--white);\n      font-size: 9.8pt;\n      margin-top: 2px;\n    }\n\n    .action-item {\n      position: relative;\n      padding-left: 21px;\n      margin-bottom: 7px;\n    }\n\n    .action-item strong {\n      position: absolute;\n      left: 0;\n      top: -4px;\n      color: var(--lime-alt);\n      font-size: 14.0pt;\n    }\n\n    .action-item span {\n      display: block;\n      color: var(--muted);\n      font-size: 9.0pt;\n      line-height: 1.24;\n    }\n\n    .action-item em {\n      display: block;\n      margin-top: 2px;\n      color: rgba(178,250,99,0.78);\n      font-size: 8.1pt;\n      font-style: normal;\n      font-weight: 700;\n    }\n\n    .lever-item {\n      margin-bottom: 7px;\n      padding-bottom: 7px;\n      border-bottom: 1px solid rgba(255,255,255,0.08);\n    }\n\n    .lever-item:last-child {\n      border-bottom: 0;\n      margin-bottom: 0;\n      padding-bottom: 0;\n    }\n\n    .lever-item span {\n      display: block;\n      color: var(--muted);\n      font-size: 9.0pt;\n    }\n\n    .lever-item strong {\n      display: block;\n      margin-top: 2px;\n      color: var(--white);\n      font-size: 9.4pt;\n      font-weight: 900;\n    }\n\n    .bottom-card {\n      padding: 11px 12px;\n      border-radius: 15px;\n      background: rgba(255,255,255,0.035);\n      border: 1px solid rgba(255,255,255,0.14);\n      font-size: 9.5pt;\n    }\n\n    .bottom-card.dashed {\n      border-style: dashed;\n      border-color: rgba(166,255,0,0.45);\n    }\n\n    .bottom-card.full-width {\n      width: 100%;\n      display: block;\n    }\n\n    .starting-point-full {\n      margin-top: 14px;\n    }\n\n    .starting-point-grid {\n      width: 100%;\n      font-size: 0;\n    }\n\n    .starting-point-main {\n      display: inline-block;\n      width: 62%;\n      margin-right: 3%;\n      vertical-align: top;\n      font-size: 9.5pt;\n    }\n\n    .starting-point-labels {\n      display: inline-block;\n      width: 35%;\n      vertical-align: top;\n      font-size: 9.5pt;\n    }\n\n    .label-row {\n      margin-top: 0;\n    }\n\n    .label-row span {\n      display: inline-block;\n      margin: 0 6px 6px 0;\n      padding: 5px 8px;\n      border-radius: 24px;\n      background: rgba(166,255,0,0.12);\n      color: var(--lime-alt);\n      font-size: 8.0pt;\n      font-weight: 800;\n      text-transform: uppercase;\n    }\n\n    .summary-line {\n      margin-top: 14px;\n      padding: 9px 12px;\n      border-radius: 15px;\n      background: rgba(255,255,255,0.035);\n      border: 1px solid rgba(166,255,0,0.25);\n      color: var(--white);\n      font-size: 9.5pt;\n      font-weight: 900;\n      line-height: 1.24;\n    }\n\n    .partner-hero {\n      margin: 0 0 12px 0;\n    }\n\n    .partner-hero h1 {\n      font-size: 26.0pt;\n      line-height: 1.05;\n      max-width: 165mm;\n    }\n\n    .partner-hero p {\n      margin: 9px 0 0 0;\n      padding-left: 14px;\n      border-left: 2px solid var(--lime-alt);\n      color: var(--muted);\n      font-size: 11.0pt;\n      line-height: 1.3;\n      max-width: 160mm;\n    }\n\n    .simple-grid {\n      width: 100%;\n      font-size: 0;\n      margin-bottom: 13px;\n    }\n\n    .simple-card {\n      display: inline-block;\n      width: 48.5%;\n      margin-right: 3%;\n      vertical-align: top;\n      padding: 15px 20px;\n      min-height: 33mm;\n      border-radius: 14px;\n      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.015));\n      border: 1px solid rgba(255,255,255,0.14);\n      font-size: 10.0pt;\n    }\n\n    .simple-card:nth-child(2n) {\n      margin-right: 0;\n    }\n\n    .card-icon {\n      width: 28px;\n      height: 28px;\n      border: 1px solid rgba(166,255,0,0.35);\n      border-radius: 9px;\n      color: var(--lime-alt);\n      font-size: 12.0pt;\n      line-height: 22px;\n      text-align: center;\n      margin-bottom: 12px;\n    }\n\n    .simple-card h3 {\n      margin: 0 0 11px 0;\n      color: var(--white);\n      font-size: 14.0pt;\n      font-weight: 900;\n    }\n\n    .simple-card p,\n    .simple-card li {\n      color: var(--muted);\n      font-size: 10.0pt;\n      line-height: 1.25;\n    }\n\n    .section-title {\n      color: var(--lime-alt);\n      font-size: 14.0pt;\n      font-weight: 900;\n      text-transform: uppercase;\n      margin: 11px 0 8px 0;\n    }\n\n    .capability-grid,\n    .proof-grid {\n      width: 100%;\n      font-size: 0;\n      margin-bottom: 13px;\n    }\n\n    .capability-card {\n      display: inline-block;\n      width: 32%;\n      margin-right: 2%;\n      vertical-align: top;\n      padding: 12px 18px;\n      border-radius: 12px;\n      background: linear-gradient(180deg, rgba(166,255,0,0.14), rgba(166,255,0,0.02));\n      border: 1px solid rgba(166,255,0,0.42);\n      font-size: 10.0pt;\n    }\n\n    .capability-card:nth-child(3n) {\n      margin-right: 0;\n    }\n\n    .capability-card h4 {\n      margin: 0 0 9px 0;\n      color: var(--white);\n      font-size: 11.5pt;\n      font-weight: 900;\n    }\n\n    .capability-card p {\n      margin: 0;\n      color: var(--muted);\n      font-size: 9.4pt;\n      line-height: 1.25;\n    }\n\n    /* PROOF GRID - smaller, uniform sizing */\n    .proof-card {\n      display: inline-block;\n      width: 32%;\n      margin-right: 2%;\n      vertical-align: top;\n      padding: 10px 14px;\n      border-radius: 12px;\n      background: linear-gradient(180deg, rgba(166,255,0,0.14), rgba(166,255,0,0.02));\n      border: 1px solid rgba(166,255,0,0.42);\n      font-size: 9.0pt;\n    }\n\n    .proof-card:nth-child(3n) {\n      margin-right: 0;\n    }\n\n    .proof-card h4 {\n      margin: 0 0 6px 0;\n      color: var(--white);\n      font-size: 9.8pt;\n      font-weight: 900;\n    }\n\n    .proof-card div {\n      color: var(--lime-alt);\n      font-size: 18.0pt;\n      line-height: 1;\n      font-weight: 900;\n      margin-bottom: 6px;\n      letter-spacing: -0.04em;\n    }\n\n    .proof-card p {\n      margin: 0;\n      color: var(--muted);\n      font-size: 8.4pt;\n      line-height: 1.22;\n    }\n\n    .playbook-card {\n      padding: 12px 18px;\n      border-radius: 14px;\n      background: rgba(255,255,255,0.035);\n      border: 1px solid rgba(255,255,255,0.14);\n      margin-bottom: 13px;\n    }\n\n    .playbook-card h3 {\n      margin: 0 0 9px 0;\n      color: var(--white);\n      font-size: 13.0pt;\n      font-weight: 900;\n    }\n\n    /* PARTNER QUOTE - smaller */\n    .partner-quote {\n      margin-top: 8px;\n      padding: 11px 18px;\n      border-radius: 13px;\n      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));\n      border: 1px solid rgba(255,255,255,0.14);\n    }\n\n    .partner-quote p {\n      margin: 0;\n      color: var(--white);\n      font-size: 11.0pt;\n      font-style: italic;\n      line-height: 1.3;\n      max-width: 130mm;\n    }\n\n    .partner-quote span {\n      display: block;\n      margin-top: 6px;\n      color: var(--muted);\n      font-size: 8.8pt;\n    }\n\n    .services-grid {\n      width: 100%;\n      margin-top: 8px;\n      font-size: 0;\n    }\n\n    .service-card {\n      display: inline-block;\n      width: 49%;\n      margin-right: 2%;\n      padding: 9px 13px;\n      border-radius: 15px;\n      border: 1px solid rgba(166,255,0,0.38);\n      background: rgba(255,255,255,0.035);\n      vertical-align: top;\n      font-size: 9.7pt;\n    }\n\n    .service-card:nth-child(2n) {\n      margin-right: 0;\n    }\n\n    .service-card h4 {\n      margin: 0 0 6px 0;\n      color: var(--lime-alt);\n      font-size: 10.7pt;\n      font-weight: 900;\n    }\n\n    .service-card p {\n      margin: 0;\n      color: var(--muted);\n      font-size: 9.2pt;\n      line-height: 1.28;\n    }\n\n    .page-three {\n      padding-bottom: 14mm;\n    }\n\n    .page-footer {\n      position: absolute;\n      left: 10mm;\n      right: 10mm;\n      bottom: 6mm;\n      display: table;\n      width: calc(100% - 20mm);\n      border-top: 1px solid var(--lime-alt);\n      padding-top: 7px;\n    }\n\n    .page-footer span {\n      display: table-cell;\n      color: var(--lime-alt);\n      font-size: 8.5pt;\n      font-weight: 900;\n      text-transform: uppercase;\n      vertical-align: middle;\n    }\n\n    .page-footer div {\n      display: table-cell;\n      text-align: right;\n      vertical-align: middle;\n    }\n\n    .page-footer svg {\n      width: 83px;\n      height: auto;\n      display: inline-block;\n    }\n\n    @page {\n      size: A4;\n      margin: 0;\n      background-color: #000000;\n    }\n\n    @media print {\n      html,\n      body {\n        background: #000000 !important;\n        -webkit-print-color-adjust: exact !important;\n        print-color-adjust: exact !important;\n      }\n\n      .a4-page {\n        margin: 0;\n      }\n    }\n\n    @media screen {\n      body {\n        background: #111 !important;\n      }\n\n      .a4-page {\n        margin: 0 auto 24px auto;\n      }\n    }\n  </style>\n</head>\n<body>\n  <section class=\"a4-page page-one\">\n    ${pageHeader(\"Market & Growth Diagnosis\")}\n\n    ${snapshotHtml}\n\n    <section class=\"hero\">\n      <p class=\"kicker\">${escapeHtml(scan.kicker)}</p>\n      <h1>${escapeHtml(scan.brand_name)}</h1>\n      <p class=\"meta\">${escapeHtml(topMeta)}</p>\n      <p class=\"intro\">${escapeHtml(limitWords(scan.intro, 32))}</p>\n    </section>\n\n    ${marketResearchHtml}\n    ${seoGeoHtml}\n    ${keyMetricsHtml}\n    ${growthNarrativeBlock(scan.growth_scan_narrative)}\n  </section>\n\n  <section class=\"a4-page page-two\">\n    ${pageHeader(\"Full Funnel Growth Strategy\")}\n\n    ${funnelHtml}\n\n    <section class=\"dashboard-grid\">\n      <div class=\"dash-column left\">\n        ${leakHtml}\n        ${leversHtml}\n      </div>\n\n      <div class=\"dash-column right\">\n        ${opportunityHtml}\n        ${whatThisDeliversHtml}\n      </div>\n    </section>\n\n    ${startingPointHtml}\n  </section>\n\n  <section class=\"a4-page page-three\">\n    ${pageHeader(\"Strategic Growth Partner\")}\n    ${pageThreeHtml}\n  </section>\n</body>\n</html>\n`;\n\nreturn {\n  json: {\n    htmlReport: htmlTemplate\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3568,
+        2016
+      ],
+      "id": "7ca05cd4-cd29-4fe3-9fd4-a48a15b17f32",
+      "name": "Make the Report HTML",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "htmlReport",
+        "binaryPropertyName": "=data",
+        "options": {
+          "encoding": "utf8",
+          "fileName": "rapport.html"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3792,
+        2016
+      ],
+      "id": "1cbb40ce-e420-439f-bd72-c6bf57d8b129",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "URL/HTML to PDF",
+        "convertType": "htmlToPDF",
+        "html": "={{ $('Make the Report HTML').item.json.htmlReport }}",
+        "advancedOptions": {
+          "name": "=Growth Scan {{ $json.data[0].data[0].brand_name }}",
+          "paperSize": "a4",
+          "printBackground": true,
+          "doNotWaitFullLoad": false,
+          "margins": "0",
+          "profiles": "{ \"printBackground\": true, \"waitingTime\": 1000 }"
+        }
+      },
+      "type": "n8n-nodes-pdfco.PDFco Api",
+      "typeVersion": 1,
+      "position": [
+        4464,
+        2048
+      ],
+      "id": "a9a7ba2a-d5f5-459e-8c13-1cbe550cecdc",
+      "name": "PDFco Api",
+      "credentials": {
+        "pdfcoApi": {
+          "id": "81PteYz98RoumxQX",
+          "name": "PDF.co account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        4912,
+        2048
+      ],
+      "id": "68281c2d-496e-4467-8836-b7776afbbcf9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Dit is de email: \nExtraheer de voornaam van dit mailadres:{{ $('Aggregate2').item.json.data[0].data[0].email }}\n\n# Output\n- Enkel de naam!\n- Geen verdere uitleg\n- Enkel de naam als output!\n- Schrijf de eerste letter met een hoofdletter"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        5360,
+        2048
+      ],
+      "id": "a8222a78-7bbe-4289-b59b-9c1129a54b3f",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "0QfUgvvpPSayxlOV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "=",
+        "driveId": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/folders/11NeYmUwBoE7hHyZlJPxhWR1kymFbAq41",
+          "mode": "url"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        5136,
+        2048
+      ],
+      "id": "fdf688d2-557e-4901-af9b-b6a1af2558c3",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "E90NhMR97T2SwAZ7",
+          "name": "S&S N8N - Drive API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4016,
+        2144
+      ],
+      "id": "bb0467fd-3066-4a03-ab81-419ba199cff5",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {
+          "includeBinaries": true
+        }
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        4240,
+        2048
+      ],
+      "id": "5d8bff1f-ef96-428e-b6ae-80dbd1879c6a",
+      "name": "Aggregate2"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1nq-PMEBLfPgFgI8_IJQIl4RXUNdnS38PFBP7pMd5eWY/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nq-PMEBLfPgFgI8_IJQIl4RXUNdnS38PFBP7pMd5eWY/edit#gid=0"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -704,
+        2704
+      ],
+      "id": "2389da26-dbbc-41db-9094-9c9d894255eb",
+      "name": "Google Sheets Trigger",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "fYbMGez57VP1nx3h",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keep": "lastItems"
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        2704
+      ],
+      "id": "8fd7e529-ec80-4072-9397-23d5af40449c",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 10,
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2528,
+        2064
+      ],
+      "id": "c3b2be98-b9d6-48af-8ed6-06e18cb8eee3",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1776,
+        1312
+      ],
+      "id": "667f48a1-97f4-4102-a404-e95cda067bac",
+      "name": "Aggregate3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1552,
+        1312
+      ],
+      "id": "c949d659-de6e-4f5f-8907-c434f423bd85",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Aggregate2').item.json.data[0].data[0].email }}",
+        "subject": "Growth Scan",
+        "message": "={{ $('Code in JavaScript1').item.json.emailHtml }}",
+        "options": {
+          "appendAttribution": false,
+          "bccList": "5659012@bcc.hubspot.com"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        6512,
+        1952
+      ],
+      "id": "3e624ffc-61a9-481a-ae4f-7d270456b4dc",
+      "name": "Send a message",
+      "webhookId": "07062a73-32f0-4b2a-a730-d32433e4249a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "7szIoYLtOD3TAE7m",
+          "name": "NIET AANZITTEN hello@acc"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node (JavaScript) — Growth Scan email HTML builder\n// Output: { emailHtml: \"<full html string>\" }\n\nconst firstName = $input.first().json.output[0].content[0].text;\nconst pdfUrl = $('Upload file').first().json.webViewLink;\nconst meetingUrl = 'https://meetings.hubspot.com/bart-helpt-je-groeien/kennismaking-sprints-sneakers?uuid=93471951-d840-4417-8190-c99ac6557a7b';\n\nconst emailHtml = `<!DOCTYPE html>\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:v=\"urn:schemas-microsoft-com:vml\" lang=\"en\">\n<head>\n<link rel=\"stylesheet\" type=\"text/css\" hs-webfonts=\"true\" href=\"https://fonts.googleapis.com/css?family=Lato|Lato:i,b,bi&display=swap\">\n<title>Your Growth Scan is ready</title>\n<meta name=\"x-apple-disable-message-reformatting\">\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<style>\na{text-decoration:underline}\np{margin:0}\nbody{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}\ntable{border-spacing:0;mso-table-lspace:0;mso-table-rspace:0}\ntable,td{border-collapse:collapse}\nimg{-ms-interpolation-mode:bicubic}\np,a,li,td{mso-line-height-rule:exactly}\n</style>\n</head>\n<body bgcolor=\"#000000\" style=\"margin:0 !important; padding:0 !important; font-family:Helvetica, Arial, sans-serif; font-size:18px; color:#ffffff; word-break:break-word; background-color:#000000;\">\n\n<div style=\"background-color:#000000;\" bgcolor=\"#000000\">\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"100%\" style=\"margin:0; padding:0; width:100% !important; min-width:320px !important;\">\n<tbody><tr>\n<td valign=\"top\" style=\"font-family:Helvetica, Arial, sans-serif; font-size:18px; color:#ffffff; word-break:break-word; padding-bottom:20px;\">\n\n<div style=\"padding-left:10px; padding-right:10px; background-color:#000000;\" bgcolor=\"#000000\">\n<div style=\"min-width:280px; max-width:600px; margin:0 auto; padding-bottom:8px; padding-top:8px;\">\n\n<table role=\"presentation\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n<tbody><tr>\n<td align=\"center\" valign=\"top\" style=\"padding:10px 20px; font-size:0px;\">\n<img alt=\"Sprints & Sneakers Growth Scan\" src=\"https://5659012.fs1.hubspotusercontent-na1.net/hub/5659012/hubfs/Time%20table%20Day%202025%20(2).png?width=1120&upscale=true&name=Time%20table%20Day%202025%20(2).png\" style=\"outline:none; text-decoration:none; max-width:100%; font-size:16px;\" width=\"560\">\n</td>\n</tr></tbody></table>\n\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n<tbody><tr>\n<td style=\"font-family:Helvetica, Arial, sans-serif; font-size:15px; color:#ffffff; padding:10px 20px; line-height:175%;\">\n<p style=\"color:#ffffff; font-size:15px; line-height:175%;\">Hi ${firstName},</p>\n<p style=\"font-size:15px; line-height:175%;\">&nbsp;</p>\n<p style=\"color:#ffffff; font-size:15px; line-height:175%;\">Thanks for requesting your Growth Scan.</p>\n<p style=\"font-size:15px; line-height:175%;\">&nbsp;</p>\n<p style=\"color:#ffffff; font-size:15px; line-height:175%;\"><strong>Why this scan?</strong></p>\n<p style=\"font-size:15px; line-height:175%;\">&nbsp;</p>\n<p style=\"color:#ffffff; font-size:15px; line-height:175%;\">Most companies know they should be generating more leads, but can't pinpoint where their funnel actually breaks. The Growth Scan cuts through the noise. We analyse your visibility across Google and AI search engines (ChatGPT, Claude, Gemini), map it against your direct competitors, and show you exactly where qualified prospects are slipping through.</p>\n</td>\n</tr></tbody></table>\n\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n<tbody><tr>\n<td align=\"center\" style=\"padding:20px;\">\n<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse:separate !important;\">\n<tbody><tr>\n<td align=\"center\" valign=\"middle\" bgcolor=\"#A6FF00\" style=\"border-radius:4px; background-color:#A6FF00;\">\n<a href=\"${pdfUrl}\" target=\"_blank\" style=\"display:inline-block; padding:14px 28px; font-family:Arial, Helvetica, sans-serif; font-size:15px; font-weight:bold; color:#000000; text-decoration:none; border-radius:4px;\">View your Growth Scan</a>\n</td>\n</tr></tbody></table>\n</td>\n</tr></tbody></table>\n\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n<tbody><tr>\n<td style=\"font-family:Helvetica, Arial, sans-serif; font-size:15px; color:#ffffff; padding:10px 20px; line-height:175%;\">\n<p style=\"color:#ffffff; font-size:15px; line-height:175%;\"><strong>Inside your scan:</strong></p>\n<p style=\"font-size:15px; line-height:175%;\">&nbsp;</p>\n<ul style=\"color:#ffffff; font-size:15px; line-height:175%; padding-left:20px; margin:0;\">\n<li style=\"margin-bottom:8px;\">Your visibility score across traditional search and AI-powered discovery</li>\n<li style=\"margin-bottom:8px;\">The high-intent keywords your competitors are capturing (and you're missing)</li>\n<li style=\"margin-bottom:8px;\">A GEO analysis showing how often AI models recommend you vs. the market</li>\n<li style=\"margin-bottom:8px;\">The specific gaps and opportunities in your positioning</li>\n<li style=\"margin-bottom:8px;\">The bottleneck in your AAARRR funnel and what to do about it</li>\n</ul>\n<p style=\"font-size:15px; line-height:175%;\">&nbsp;</p>\n<p style=\"color:#ffffff; font-size:15px; line-height:175%;\"><strong>My tip:</strong> start with the GEO section. Open ChatGPT and ask \"What's the best growth agency for scale-ups?\" Then compare the answer with your scan. That contrast is usually the wake-up call.</p>\n<p style=\"font-size:15px; line-height:175%;\">&nbsp;</p>\n<p style=\"color:#ffffff; font-size:15px; line-height:175%;\">Got questions, or want to spar about what the findings mean for your growth?</p>\n</td>\n</tr></tbody></table>\n\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n<tbody><tr>\n<td align=\"center\" style=\"padding:20px;\">\n<table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" style=\"border-collapse:separate !important;\">\n<tbody><tr>\n<td align=\"center\" valign=\"middle\" bgcolor=\"#A6FF00\" style=\"border-radius:4px; background-color:#A6FF00;\">\n<a href=\"${meetingUrl}\" target=\"_blank\" style=\"display:inline-block; padding:14px 28px; font-family:Arial, Helvetica, sans-serif; font-size:15px; font-weight:bold; color:#000000; text-decoration:none; border-radius:4px;\">Book a meeting</a>\n</td>\n</tr></tbody></table>\n</td>\n</tr></tbody></table>\n\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n<tbody><tr>\n<td style=\"font-family:Helvetica, Arial, sans-serif; font-size:15px; color:#ffffff; padding:10px 20px; line-height:175%;\">\n<p style=\"color:#ffffff; font-size:15px; line-height:175%;\">Team Sprints &amp; Sneakers</p>\n</td>\n</tr></tbody></table>\n\n</div>\n</div>\n\n</td>\n</tr></tbody></table>\n</div>\n\n</body>\n</html>`;\n\nreturn [\n  {\n    json: {\n      emailHtml: emailHtml,\n      firstName: firstName,\n      pdfUrl: pdfUrl\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5712,
+        2048
+      ],
+      "id": "1f11fec2-cbc9-4bb7-a3d8-c466cd5d311e",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "resource": "Agent",
+        "operation": "agent",
+        "prompt": "scrape the whole site",
+        "specifyUrls": true,
+        "urls": "={{ $json.website }}",
+        "requestOptions": {}
+      },
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
+      "typeVersion": 1,
+      "position": [
+        80,
+        2144
+      ],
+      "id": "f9442f17-00af-4a2b-b01d-e77366453f6a",
+      "name": "Agent - AI-powered web data extraction (waits for completion)",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "xtySvSNgYYpl34Uk",
+          "name": "Firecrawl account - accounts@sprintandsneakers.com"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        3104,
+        2256
+      ],
+      "id": "3c58d70a-2fa6-47f2-8fdf-3e173df6c77c",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "0QfUgvvpPSayxlOV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        5936,
+        2272
+      ],
+      "id": "af1c755c-6331-4c03-82a6-f3bad8980a49",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "0QfUgvvpPSayxlOV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-5-20250929",
+          "cachedResultName": "Claude Sonnet 4.5"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        6064,
+        2272
+      ],
+      "id": "55687cb8-4d91-4753-bc55-107065fd449c",
+      "name": "Anthropic Chat Model3",
+      "credentials": {
+        "anthropicApi": {
+          "id": "gXyT3Lcx7fbUvb7c",
+          "name": "LinkedInLead enricher"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# Input:\n\n# growth scan:\n{{ $('Rapportage Agent').item.json.output }}",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=# ROL\nJij bent een final checker en controleert de inkomende input.\n\n# CONTEXT\nEr is een automatisering. Deze automatisering doet een growth scan voor een bedrijff op basis van de webiste inclusief een SEO, GEO en markt onderzoek.\n\n# DOEL\nJij controleert of de input inhoudelijk beschikt over een Growth Scan. \nDe website of een van de onderzoeken loopt wel eens mis.\n\n# OUTPUT\nJe antwoord enkel met true or false\n\nTrue = er bestaat een growth scan die inhoudelijk ingaat op het desbtreffende bedrijf\n\nFalse = het bestand is inhoudsloos"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        5936,
+        2048
+      ],
+      "id": "c59d9cd6-ad74-4a61-9e63-35385add62a7",
+      "name": "AI Agent - Def controle"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f45f55dd-2041-4713-9d41-473a11b33ad0",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        6288,
+        2048
+      ],
+      "id": "b225acbf-661a-471f-a356-4e78cd569dec",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0AMC5F9GE9",
+          "mode": "list",
+          "cachedResultName": "bobby.sips"
+        },
+        "text": "=Growth Scan\n\nInhoudelijke fail",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        6512,
+        2144
+      ],
+      "id": "c7f27914-d5d6-4129-9643-918521e5db65",
+      "name": "Send a message1",
+      "webhookId": "b30ba4df-2fad-4f3d-8f8a-95f4bca7676e",
+      "credentials": {
+        "slackApi": {
+          "id": "JXyC8MYNliFhjYTt",
+          "name": "Slack Bobby"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U051XHDSW00",
+          "mode": "list",
+          "cachedResultName": "sigi.vantschip"
+        },
+        "text": "=Growth Scan\n\nInhoudelijke fail",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        6736,
+        2144
+      ],
+      "id": "7ae4dc10-87d8-4279-88d4-8d2839d5d554",
+      "name": "Send a message2",
+      "webhookId": "b30ba4df-2fad-4f3d-8f8a-95f4bca7676e",
+      "credentials": {
+        "slackApi": {
+          "id": "JXyC8MYNliFhjYTt",
+          "name": "Slack Bobby"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-6"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=# ROLE\nYou are a Senior CRO Specialist and Growth Strategist at Sprints & Sneakers.\n\nYou analyze homepage content and determine how well the website converts visitors into qualified leads or customers.\n\n# GOAL\nCreate a compact Website Conversion Scan that can be used in a Growth Scan dashboard.\n\nAssess the homepage on:\n1. Clarity of the value proposition\n2. CTA strength\n3. Trust signals\n4. Proof and credibility\n5. Audience fit\n6. Conversion friction\n7. Next step clarity\n\n# INPUT\nWebsite content:\n{{ $('Agent - AI-powered web data extraction (waits for completion)').item.json.data.homepage_content }}\n\n# ANALYSIS RULES\nAnalyze only what is visible or strongly implied from the website content.\n\nDo not invent information.\nDo not be overly negative.\nBe direct, practical and growth-focused.\n\n# SCORING\nGive scores from 1 to 10:\n\n- website_clarity_score\nHow quickly can a visitor understand what the company does and why it matters?\n\n- cta_strength_score\nHow clear and action-oriented is the main CTA?\n\n- trust_signal_score\nHow strong are proof points, testimonials, logos, cases, reviews or credibility markers?\n\n- conversion_readiness_score\nHow ready is the homepage to convert qualified visitors?\n\n# LABELS\nFor each score, also provide a label:\n- Low\n- Medium\n- High\n\nUse this logic:\n1 to 4.9 = Low\n5 to 7.4 = Medium\n7.5 to 10 = High\n\n# OUTPUT\nReturn only valid JSON.\nDo not use markdown.\nDo not use a code block.\nWrite in English.\n\nReturn every field in the schema.\nNever omit any field.\nNever stop before the JSON object is fully closed.\nIf a field is uncertain, still provide a short best-effort answer.\n\nUse exactly this JSON structure:\n\n{\n  \"website_clarity_score\": 0,\n  \"website_clarity_label\": \"\",\n  \"cta_strength_score\": 0,\n  \"cta_strength_label\": \"\",\n  \"trust_signal_score\": 0,\n  \"trust_signal_label\": \"\",\n  \"conversion_readiness_score\": 0,\n  \"conversion_readiness_label\": \"\",\n  \"homepage_summary\": \"\",\n  \"value_proposition_clarity\": \"\",\n  \"main_cta_observation\": \"\",\n  \"trust_signal_observation\": \"\",\n  \"conversion_friction\": [\n    \"\",\n    \"\",\n    \"\"\n  ],\n  \"conversion_opportunities\": [\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    },\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    },\n    {\n      \"title\": \"\",\n      \"description\": \"\"\n    }\n  ],\n  \"recommended_next_step\": \"\",\n  \"dashboard_takeaway\": \"\"\n}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        2240
+      ],
+      "id": "3e6022fb-62bd-4ef3-a62a-1e469d2fc5e1",
+      "name": "Website beoordeling",
+      "credentials": {
+        "anthropicApi": {
+          "id": "gXyT3Lcx7fbUvb7c",
+          "name": "LinkedInLead enricher"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "When ever there is a query from chat, use this Supabase vector database to analyse and construct the response. "
+      },
+      "id": "8c1e71dd-eddc-470c-85c7-7545dc30c354",
+      "name": "Answer questions with a vector store1",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        1472,
+        3488
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e1e9b09f-28b7-447c-bdd3-85eb92e028b9",
+      "name": "Embeddings OpenAI2",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "position": [
+        1456,
+        3904
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "RL7PmszWSFj2zhVD",
+          "name": "Sprints & Sneakers - Alpha - SEO agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "3b27d5b9-2dbf-4fc3-829a-975b4fec8583",
+      "name": "OpenAI Chat Model3",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1664,
+        3696
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "RL7PmszWSFj2zhVD",
+          "name": "Sprints & Sneakers - Alpha - SEO agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "9274cf8b-3c4d-4244-9ebd-c013a9531353",
+      "name": "OpenAI Chat Model6",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1344,
+        3488
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "openAiApi": {
+          "id": "RL7PmszWSFj2zhVD",
+          "name": "Sprints & Sneakers - Alpha - SEO agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableName": {
+          "__rl": true,
+          "value": "growth_scans",
+          "mode": "list",
+          "cachedResultName": "growth_scans"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1376,
+        3696
+      ],
+      "id": "443a0c7b-8119-4980-9187-56e9979ecb30",
+      "name": "Supabase Vector Store2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "5G4tomvaZUNpMIlF",
+          "name": "Growth scans - S&S"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=MASTER PROMPT — Growth Scan Generator\nINPUT DATA\n\nBrand: {{ $json.brand_name }}\nIndustry: {{ $json.industry }}\nCore proposition: {{ $json.core_proposition }}\n\nWebsite Data (scraped):\n{{ $('Agent - AI-powered web data extraction (waits for completion)').item.json.data.homepage_content }}\n\nALWAYS USE VECTOR DATABASE FOR EXAMPLES\nAfter, only use credible sources to fill gaps\n\nTASK\n\nGenerate a complete Growth Scan using EXACTLY the structure and order defined below.\n\nDo not change headings.\n\nDo not add sections.\n\nDo not remove sections.\n\nAll recommendations must be:\n\nSpecific to this brand\n\nInsight-driven (based on review data)\n\nConcrete (include WHAT + WHY + HOW in one sentence where required)\n\nBehavior-driven\n\nCommercially sharp\n\nNon-generic\n\nEvery recommendation must clearly connect to a friction, behavior, or pattern visible in the reviews.\n\nAt least 2 recommendations must feel like:\n“This could only apply to this brand.”\n\nAvoid generic terms such as:\nomnichannel, 360, personalization, synergy, full-funnel, leverage, ecosystem\n(unless clearly justified and brand-specific).\n\nIf review data is limited:\nExplicitly state: “Based on limited review sample.”\n\nREQUIRED STRUCTURE\nGrowth Scan — look in supabase\n\nFrom strong brand promise to structural customer growth.\n\nDashboard — at a glance\nFocus Areas\n\n3–4 concrete focus points\n\nMain Growth Opportunity\n\nOne sharp strategic opportunity\n\nBiggest Risk / Bottleneck\n\nOne real risk based on data\n\nImpact Estimation\n\nLow / Medium / High\n(Include 1 short justification)\n\nMarket & Reality\n\nDescribe:\n\nMarket shift\n\nCompetitive pressure\n\nBrand position within that landscape\n\nStrategic tension\n\nClose with:\n\nInsight: (1 sharp sentence)\n\nWhat Customers Reveal (Behavior & Feedback)\nWhat the Brand Does Extremely Well\n\nBullet points grounded in review data\n\nWhere Potential Is Being Left Untapped\n\nFrictions or behavioral gaps grounded in review data\n\nClose with:\n\nCore Insight: (1 strong sentence)\n\nWhere Growth Is Currently Leaking\n\nList 3–5 specific growth leaks.\n\nBe precise.\nTie each leak directly to behavior or data patterns.\n\nClose with:\n\n➡️ Not a [X] problem\n➡️ But a [real problem type]\n\nThe Growth Opportunity (And How Marketing Captures It)\n\nTitle must be:\n\nFrom [current state] → [new growth position]\n\nExplain the strategic shift.\n\nThen provide 4–6 concrete action bullets.\n\nEach bullet must:\n\nStart with “+”\n\nBe exactly one sentence\n\nContain WHAT + WHY + HOW\n\nEnd with [Theme: X] referencing a review theme\n\nMake them brand-specific.\nMake them sharp.\nMake at least 2 feel unconventional.\n\nMarketing Growth Levers\n\nList 4–5 growth levers.\n\nEach must follow this format:\n\n↑ Behavioral shift → ↑ Commercial outcome\n\nNo vague KPI stacking.\n\nWhat This Delivers (Within 3–6 Months)\n\nList concrete, realistic outcomes.\n\nTie outcomes to behavioral change — not vanity metrics.\n\nShort strategic alignment section.\nDescribe the internal positioning shift.\n\nStarting Point\n\nName a specific deep dive.\n\nDescribe:\n\nWhat is analyzed\n\nWhat is delivered\n\nWhy it is low-threshold\n\nEnd with:\n\n➡️ Distinctive\n➡️ Scalable\n➡️ Immediately applicable\n\nOne-Sentence Summary\n\nOne sharp commercial summary.",
+        "options": {
+          "systemMessage": "=SYSTEM\n\nYou are a senior growth & branding strategist at a high-end growth agency.\n\nYou produce sharp, brand-specific Growth Scans.\n\nYou never use generic marketing clichés.\nYou never change the required structure.\nYou never add extra sections.\nYou never remove sections.\n\nYou are analytical, precise, creative and commercially sharp.\n\nAll insights must be:\n\nGrounded in review data or provided research\n\nBehavior-based (not assumption-based)\n\nCommercially relevant\n\nBrand-specific\n\nAt least 2 recommendations must feel like they could only apply to this brand.\n\nYou must avoid generic marketing language such as:\nomnichannel, 360, personalization, synergy, leverage, ecosystem, full-funnel\n(unless clearly brand-specific and justified by data).\n\nYou may not:\n\nInvent data\n\nFabricate customer behavior\n\nMake assumptions not supported by reviews or research\n\nRepeat points in different wording\n\nIf review data is thin:\nExplicitly state:\n“Based on limited review sample.”\n\nOutput must be in clean structured markdown with exact section headings.\nNo commentary.\nNo JSON.\nNo explanations.\nNo extra formatting beyond the required structure.\n\nTone:\nStrategic. Confident. Commercially intelligent. No fluff.\n\n# must\nUse the supabase for examples"
+        }
+      },
+      "id": "bcb46710-d673-4605-9ebf-2368ef9e149e",
+      "name": "Growth strategy agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1376,
+        3264
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "operation": "Merge PDF",
+        "url": [
+          "={{ $json.url }}",
+          "=https://drive.google.com/uc?export=download&id=1uJB6aPfSrl53rSl21p1mONOOAKuuH9eS"
+        ],
+        "advancedOptions": {
+          "name": "Growth Scan"
+        }
+      },
+      "type": "n8n-nodes-pdfco.PDFco Api",
+      "typeVersion": 1,
+      "position": [
+        4688,
+        2048
+      ],
+      "id": "24945ea7-f939-4c32-bf06-cdd699b17e22",
+      "name": "PDFco Api1",
+      "credentials": {
+        "pdfcoApi": {
+          "id": "81PteYz98RoumxQX",
+          "name": "PDF.co account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        3232,
+        2256
+      ],
+      "id": "50e2e314-66fd-49cc-98e3-2c5b866b7889",
+      "name": "Think1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "sh7gqQMgXvFvDlvU",
+          "mode": "list",
+          "cachedResultName": "Growth Scan Context",
+          "cachedResultUrl": "/projects/BcjX0mLW7Aam2rLK/datatables/sh7gqQMgXvFvDlvU"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1376,
+        2976
+      ],
+      "id": "1e9af77c-aa98-4cdd-aa48-7b6ef9fc5c37",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "jQKkT7l0jIEEh3N8",
+          "mode": "list",
+          "cachedResultName": "GrowthScan Website NIET AANZITTEN!",
+          "cachedResultUrl": "/projects/BcjX0mLW7Aam2rLK/datatables/jQKkT7l0jIEEh3N8"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1392,
+        3104
+      ],
+      "id": "0e434f89-572c-4e35-8d9d-4ae569a490fa",
+      "name": "Get row(s)1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "FAMIyuXsMlcbUPTd",
+          "mode": "list",
+          "cachedResultName": "Growth Scan Extra",
+          "cachedResultUrl": "/projects/BcjX0mLW7Aam2rLK/datatables/FAMIyuXsMlcbUPTd"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2000,
+        3408
+      ],
+      "id": "1a092e31-427e-4da8-a0e7-edf88fa9349b",
+      "name": "growth scan extra"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Extract Contact Data": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Agent - AI-powered web data extraction (waits for completion)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aanvullende data ophalen": {
+      "main": [
+        [
+          {
+            "node": "Data extraheren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data extraheren": {
+      "main": [
+        [
+          {
+            "node": "Keyword Industry",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Vraag loop",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gaps & Opportunities",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 4
+          },
+          {
+            "node": "Website beoordeling",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Growth strategy agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s)1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "growth scan extra",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keyword Industry": {
+      "main": [
+        [
+          {
+            "node": "Get ranked keywords",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get ranked keywords": {
+      "main": [
+        [
+          {
+            "node": "Waarde calculeren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Waarde calculeren": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vraag loop": {
+      "main": [
+        [
+          {
+            "node": "Claude Search",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "ChatGPT Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "ChatGPT Search",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ChatGPT Search": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude Search": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Claude Search",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rapportage Agent": {
+      "main": [
+        [
+          {
+            "node": "Make the Report HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gaps & Opportunities": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gaps & Opportunities",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Gaps & Opportunities",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Rapportage Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Rapportage Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make the Report HTML": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDFco Api": {
+      "main": [
+        [
+          {
+            "node": "PDFco Api1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate2": {
+      "main": [
+        [
+          {
+            "node": "PDFco Api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Extract Contact Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent - Def controle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent - AI-powered web data extraction (waits for completion)": {
+      "main": [
+        [
+          {
+            "node": "Aanvullende data ophalen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Rapportage Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Def controle",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent - Def controle",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "AI Agent - Def controle": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Website beoordeling": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Growth strategy agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI2": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store2",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions with a vector store1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Growth strategy agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store2": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store1",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Growth strategy agent": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "PDFco Api1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Rapportage Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 7
+          }
+        ]
+      ]
+    },
+    "Get row(s)1": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 8
+          }
+        ]
+      ]
+    },
+    "growth scan extra": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 9
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "GIspJl9OcnqsSerG",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "e2c8d566-cbb9-4107-bd91-1ff335f5c8ea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4ab527cecdab7a041055224f82d92db833378a47007345c143155fccf2d480ba"
+  },
+  "id": "hzgnmy7cw8g0sXPY",
+  "tags": [
+    {
+      "updatedAt": "2026-04-22T13:24:15.314Z",
+      "createdAt": "2026-04-22T13:24:15.314Z",
+      "id": "XdqAkBr3j5RN5HEV",
+      "name": "website"
+    }
+  ]
+}
