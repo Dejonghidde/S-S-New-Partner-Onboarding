@@ -1,0 +1,65 @@
+1. De goede ideeën, gecategoriseerd
+Partner: cadeaus en tastbare momenten
+Sneaker-drop: custom sneakers in de merkkleuren van de partner, "Partner #47, 1 of 1", bij de kickoff.
+De cadeau-lijn (twee momenten): starter kit bij de kickoff (met S&S-branding, uitleg werkwijze, plus AI-cursus, skill of agent als cadeau); weken later onaangekondigd het thuisfront-pakket volgens de Giftology-regels (geen S&S-logo, hun naam, gericht op het gezin).
+De trofee bij het eerste resultaat, vorm nog te kiezen uit: de gouden plaat, de winnende creative museaal ingelijst, de eerste euro ingelijst, of de sneaker.
+Het weekendje weg: midden in maand één, precies als het eerste grote experiment draait; bij terugkomst ligt het resultaat klaar.
+Keuzepunt hierbij: wordt de sneaker de trofee, dan hoort hij bij het eerste resultaat en vervalt de kickoff-sneaker (niet dubbelen). Blijft de sneaker het kickoff-welkom, kies dan een van de andere drie als trofee.
+
+Partner: kennis en waarde delen
+Introductie in growth hacking: persoonlijke kijk in de S&S-wereld met demonstraties uit eigen werk, of de workshopvariant van Sharif.
+Van salesverhaal naar hun voorspelling: de best werkende experimenttypes uit de eigen library, doorgerekend op hun cijfers en funnel. Voorwaarde die in het overzicht naar Bart expliciet benoemd moet worden: dit kan alleen als experimenten, resultaten en bevindingen daadwerkelijk goed gedocumenteerd zijn.
+Partner: inleving en framing
+S&S wordt eerst klant: vóór de kickoff iets kopen, de klantreis doorlopen, ervaring delen met bonnetje.
+Sprint 0: de onboarding heet geen onboarding meer maar Sprint 0.
+Team: partnerkennis klaar voor gebruik
+De "al geprobeerd"-lijst: wat de partner al deed, wat niet werkte en waarom.
+De partner-skill: een Claude-skill per partner (brandbook, tone-of-voice, vragenlijst-antwoorden) waarmee elke medewerker direct on-brand ads, teksten en berichten genereert.
+Team: samenwerking en communicatie
+Eén voordeur, nooit doorverwezen: één vast aanspreekpunt of kanaal; doorverwijzen gebeurt achter de schermen, nooit richting de partner.
+Nog niet door jou beoordeeld, uit je eigen oorspronkelijke lijst: testen op eigen risico, de eerste update op dag 5, Failure #001, hun taal leren en gebruiken, teamintro via het werk, het Kimpton-gebaar, en de klantstemmen. Zeg wanneer je wilt welke daarvan alsnog mee moeten of weg kunnen.
+
+2. Statusupdate basisonboarding: wat staat er nu
+De nieuwe onboarding-automation is volledig herbouwd en staat klaar naast de oude flow (die live gewoon doordraait tot de overstap). Zodra het intake-form wordt ingevuld, doet de nieuwe flow automatisch dit:
+
+Eén route voor alle growth-teams in plaats van zes kopieën: teamverschillen komen uit een configuratietab, een nieuw team toevoegen is een regel invullen. Rho heeft een eigen route. Een onbekende teamnaam geeft een melding in plaats van een stille halve run.
+Het volledige partnerpakket in één run: Drive-projectmap plus gedeelde map, DPA-kopie, Growth Funnel-sheet, Monday-items (tech-ticket, Client overview, partnerbord uit template), intern en extern Slack-kanaal, en (nieuw) de assignment letter en handover als kopie in de partnermap plus een verse kopie van de herschreven Tooling Access Guide.
+Eén verzorgde welkomstmail in NL of EN, ondertekend door de accountlead met reply-to naar die persoon, met de juiste vragenlijst-link (B2B of B2C).
+Zachte poort: ontbreekt er iets bij de intake, dan start de flow wél, maar het gemis wordt zichtbaar gemarkeerd en gemeld.
+Realtime status per partner: een registry-tab als machinebron (alle ids, links en statussen) plus statuskolommen op Monday waar het team kijkt.
+De vragenlijst-lus is gesloten: de vragenlijst draait live op Cloudflare, uploads landen direct in de partnermap, en bij insturen springt de status automatisch op "binnen" met een Slack-melding aan het team.
+Handmatige stappen worden bewaakt: partner in het externe kanaal, partner op Monday, kickstart plannen, LastPass en brand assets zijn losse subitems met eigenaar; na 3 werkdagen volgt automatisch een reminder, daarna escalatie.
+Kickstart-standaard: een vast format (succescriteria, rollen, ritme, eerste mijlpaal) met een handover-gate: de kickstart wordt pas bevestigd als opdrachtbrief en handover binnen zijn.
+Betrouwbaar gemaakt: geen persoonsgebonden accounts meer in de keten (service-account, bot-token, API-tokens), geen AI-stappen meer in het kritieke pad (het mailadres van de partner gaat 1-op-1 door), en elke fout geeft binnen 15 minuten een melding met partnernaam en oorzaak in plaats van stil te falen.
+Wat er nog moet vóór livegang: de end-to-end-test van de hele keten per team, en daarna de cutover (oude scenario uit, nieuwe aan) met rollback klaar. Daarnaast ligt de HubSpot-koppeling klaar als volgende stap: de spike is gedaan, het beslisdocument ligt ter review, en de trigger-basis is al gebouwd, zodat de onboarding straks automatisch start bij een getekend contract in plaats van via het handmatige form.
+
+Bewust geparkeerd: mailverzending via een eigen stabiel domein (Brevo) wacht op een managementbesluit; tot die tijd loopt de mail via de bestaande Gmail-route.
+
+3. De research workflow, objectief doorgelicht
+Wat er staat en aantoonbaar werkt
+Een n8n-workflow van 77 nodes, inactief, handmatig te starten, schrijvend naar een vaste testmap. Erin zitten: de tech-tagscan, Semrush (SEO en concurrenten), reviews met thema-analyse, de Meta- en Google-ad-libraries, LinkedIn-bedrijfspagina, Instagram-profiel, screenshots, zeven AI-blokken (profiel, markt, funnel, aannames, cross-check en twee kleinere) en de assemblage naar een echt Google Doc plus een prefill-JSON. Er is één bewezen end-to-end-run (testcase Mollie) die een echt document en een echte prefill-JSON opleverde. Daar gingen drie taaie bugs aan vooraf (een bekende n8n-bug met Shared Drives, een uitgeschakelde Google-API, veldnaam-botsingen). Kosten per run zijn geen probleem: raming 0,50 tot 2 euro.
+
+Wat er niet staat
+De kwaliteitstoets uit het eigen plan (drie proefbedrijven draaien, beoordeling met de rubric) is nog niet gedaan. Er is dus één technische run en nul inhoudelijk beoordeelde packs.
+De prefill vult volgens het vastgelegde contract drie velden: tech-stack, actieve ad-kanalen en concurrenten (in vraagvorm). Meer was bewust nooit het plan; interpretatieve research zou gespreksstof voor de kickstart zijn, geen form-inhoud.
+De vragenlijst-kant bestaat nog niet: geen verificatiekaart in de form, geen Worker-endpoint dat de JSON aanlevert.
+De koppeling aan een echte partner (juiste map per partner) en de automatische trigger zijn niet gestart.
+Beperkingen in wat er wel staat: de profiel- en markt-agents draaien zonder actuele webdata (alleen trainingskennis), alleen Instagram en maximaal 12 posts, de visuele beoordeling is een lege stub, drie scraper-koppelingen zijn nog nooit tegen een echte run geverifieerd, en de cross-check-bevindingen komen niet in het document terecht.
+Kwaliteit van de output in deze staat
+De feitelijke delen (tags, ad-tellingen, reviewscores, SEO-data, Instagram-cijfers) zijn betrouwbaar waar de bron dekt; dat deel zit goed, maar het is smal. De interpretatieve delen (profiel, markt, funnel) zijn onbewezen: de ene geslaagde run was Mollie, een bedrijf waar elk AI-model toevallig veel van weet. Bij een typische, minder bekende partner is zonder actuele webdata de kans op generieke of gedateerde tekst reëel, precies de "ladekoek" die vertrouwen kost in plaats van oplevert. Netto: in deze staat bruikbaar als intern startdocument mét menselijke review per pack; niet op consistent niveau voor iets dat een partner te zien krijgt.
+
+Resterend werk om het volledig functioneel te krijgen
+Ter referentie: de huidige stand kostte al 3 tot 4 dagen.
+
+Wat	Schatting
+Proefronde met drie bedrijven, beoordeling, fixes die daaruit komen	1 tot 2 dagen
+Kwaliteitsslag interpretatieve agents (actuele webdata via extra betaalde dienst, bredere socials, visuele rubric, opmaak)	2 tot 4 dagen
+Vragenlijst-kant: verificatiekaart in de form plus Worker-endpoint (partner-facing, dus extra zorgvuldigheid)	1 tot 2 dagen
+Automatisering per partner: juiste map, trigger, meldingen, foutafhandeling	1 tot 2 dagen
+Realistisch totaal: nog 5 tot 10 werkdagen bovenop de bestede 3 tot 4, en dit soort integratiewerk loopt eerder uit dan in (de Shared Drive-bug alleen al kostte een dagdeel, en drie scrapers hebben nog nooit echt gedraaid). Daar komt een blijvende kostenpost bij die geen bouwwerk is: een menselijke review per pack, want de interpretatieve kwaliteit is nooit vanzelf gegarandeerd.
+
+Wat het de partner uiteindelijk scheelt
+Direct door de prefill: weinig. Drie vraagblokken worden bevestigen in plaats van invullen; een paar minuten invultijd, plus mogelijk een goede eerste indruk als de kwaliteit klopt. De echte winst voor de partner (vragenlijst minstens 50% korter, invultijd onder de 30 minuten) komt uit het schrappen van vragen, en dat schrappen is alleen verantwoord als het team die informatie toch krijgt: dáárvoor is het pack de dekking. De workflow bespaart de partner dus vooral indirect en het team direct. Zonder de workflow kan een deel van de sanering alsnog (vragen waarvan het antwoord al in contract, HubSpot of handover zit kunnen sowieso weg), maar de secties die op research leunen hebben dan een alternatief nodig: in de vragenlijst laten staan, of een handmatig research-uur per partner.
+
+Slotsom
+Het technische fundament staat en is op één run bewezen; dat is reëel werk dat er ligt. Maar de resterende investering (5 tot 10 dagen plus een vast review-proces per partner) zit precies in het deel met het grootste kwaliteitsrisico, terwijl de directe partner-winst van de prefill beperkt is tot drie velden. De vraag voor het gesprek met Bart is daarmee niet "kan het" (dat is aangetoond), maar "is die investering het waard voor vooral interne waarde plus de onderbouwing om de vragenlijst te mogen halveren".
