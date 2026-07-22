@@ -1,0 +1,133 @@
+- generic [active] [ref=e1]:
+  - link "Skip to form" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - main [ref=e3]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - img "Sprints & Sneakers logo optie1-1" [ref=e11]
+        - heading "Feedback on the past quarter (2 min)" [level=1] [ref=e15]
+        - paragraph [ref=e19]: By filling out our customer satisfaction survey, you help us tremendously in better tailoring our services to your needs, enabling us to achieve better results with continuously improving quality.
+        - generic [ref=e24]:
+          - generic [ref=e25]: Email*
+          - textbox "Email*" [ref=e26]
+        - generic [ref=e31]:
+          - generic [ref=e32]: First name*
+          - textbox "First name*" [ref=e33]
+        - generic [ref=e38]:
+          - generic [ref=e39]: Last name*
+          - textbox "Last name*" [ref=e40]
+        - generic [ref=e45]:
+          - generic [ref=e46]: 1. What do you think of the results we've achieved?*
+          - generic [ref=e47]: Results of sprintgoals, experiments and activities
+          - radiogroup "1. What do you think of the results we've achieved?*" [ref=e49]:
+            - generic [ref=e51]:
+              - radio "1" [ref=e52] [cursor=pointer]
+              - text: "1"
+            - generic [ref=e54]:
+              - radio "2" [ref=e55] [cursor=pointer]
+              - text: "2"
+            - generic [ref=e57]:
+              - radio "3" [ref=e58] [cursor=pointer]
+              - text: "3"
+            - generic [ref=e60]:
+              - radio "4" [ref=e61] [cursor=pointer]
+              - text: "4"
+            - generic [ref=e63]:
+              - radio "5" [ref=e64] [cursor=pointer]
+              - text: "5"
+            - generic [ref=e66]:
+              - radio "6" [ref=e67] [cursor=pointer]
+              - text: "6"
+            - generic [ref=e69]:
+              - radio "7" [ref=e70] [cursor=pointer]
+              - text: "7"
+            - generic [ref=e72]:
+              - radio "8" [ref=e73] [cursor=pointer]
+              - text: "8"
+            - generic [ref=e75]:
+              - radio "9" [ref=e76] [cursor=pointer]
+              - text: "9"
+            - generic [ref=e78]:
+              - radio "10" [ref=e79] [cursor=pointer]
+              - text: "10"
+        - generic [ref=e84]:
+          - generic [ref=e85]: 1. Explanation (not required)
+          - textbox "1. Explanation (not required)" [ref=e86]
+        - generic [ref=e91]:
+          - generic [ref=e92]: 2. What do you think about our way of working and sprint process?*
+          - generic [ref=e93]: Consider the (amount of) sprint activities, degree of execution, expectations & deliverables
+          - radiogroup "2. What do you think about our way of working and sprint process?*" [ref=e95]:
+            - generic [ref=e97]:
+              - radio "1" [ref=e98] [cursor=pointer]
+              - text: "1"
+            - generic [ref=e100]:
+              - radio "2" [ref=e101] [cursor=pointer]
+              - text: "2"
+            - generic [ref=e103]:
+              - radio "3" [ref=e104] [cursor=pointer]
+              - text: "3"
+            - generic [ref=e106]:
+              - radio "4" [ref=e107] [cursor=pointer]
+              - text: "4"
+            - generic [ref=e109]:
+              - radio "5" [ref=e110] [cursor=pointer]
+              - text: "5"
+            - generic [ref=e112]:
+              - radio "6" [ref=e113] [cursor=pointer]
+              - text: "6"
+            - generic [ref=e115]:
+              - radio "7" [ref=e116] [cursor=pointer]
+              - text: "7"
+            - generic [ref=e118]:
+              - radio "8" [ref=e119] [cursor=pointer]
+              - text: "8"
+            - generic [ref=e121]:
+              - radio "9" [ref=e122] [cursor=pointer]
+              - text: "9"
+            - generic [ref=e124]:
+              - radio "10" [ref=e125] [cursor=pointer]
+              - text: "10"
+        - generic [ref=e130]:
+          - generic [ref=e131]: 2. Explanation (not required)
+          - textbox "2. Explanation (not required)" [ref=e132]
+        - generic [ref=e137]:
+          - generic [ref=e138]: 3. How has the collaboration with the team been going so far?*
+          - generic [ref=e139]: Think about on-site collaboration, communication, teamwork and task allocation.
+          - radiogroup "3. How has the collaboration with the team been going so far?*" [ref=e141]:
+            - generic [ref=e143]:
+              - radio "1" [ref=e144] [cursor=pointer]
+              - text: "1"
+            - generic [ref=e146]:
+              - radio "2" [ref=e147] [cursor=pointer]
+              - text: "2"
+            - generic [ref=e149]:
+              - radio "3" [ref=e150] [cursor=pointer]
+              - text: "3"
+            - generic [ref=e152]:
+              - radio "4" [ref=e153] [cursor=pointer]
+              - text: "4"
+            - generic [ref=e155]:
+              - radio "5" [ref=e156] [cursor=pointer]
+              - text: "5"
+            - generic [ref=e158]:
+              - radio "6" [ref=e159] [cursor=pointer]
+              - text: "6"
+            - generic [ref=e161]:
+              - radio "7" [ref=e162] [cursor=pointer]
+              - text: "7"
+            - generic [ref=e164]:
+              - radio "8" [ref=e165] [cursor=pointer]
+              - text: "8"
+            - generic [ref=e167]:
+              - radio "9" [ref=e168] [cursor=pointer]
+              - text: "9"
+            - generic [ref=e170]:
+              - radio "10" [ref=e171] [cursor=pointer]
+              - text: "10"
+        - generic [ref=e176]:
+          - generic [ref=e177]: 3. Explanation (not required)
+          - textbox "3. Explanation (not required)" [ref=e178]
+        - generic [ref=e183]:
+          - generic [ref=e184]: 4. What specific actions should we take to make our collaboration a 10?
+          - textbox "4. What specific actions should we take to make our collaboration a 10?" [ref=e185]
+      - button "Submit" [ref=e188] [cursor=pointer]
