@@ -38,10 +38,29 @@ h1{
   max-width:640px;
   margin:0 0 28px;
 }
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:24px;
+  align-items:flex-end;
+  border-bottom:1px solid var(--line);
+  padding-bottom:0;
+}
+.group{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.group-label{
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:0.6px;
+  text-transform:uppercase;
+  color:var(--sub);
+}
 .tabs{
   display:flex;
   gap:4px;
-  border-bottom:1px solid var(--line);
 }
 .tab{
   appearance:none;
@@ -57,6 +76,7 @@ h1{
   cursor:pointer;
   position:relative;
 }
+.tab:last-child{margin-right:0;}
 .tab:after{
   content:"";
   position:absolute;
@@ -81,7 +101,7 @@ h1{
 iframe{
   width:664px;
   max-width:100%;
-  height:1250px;
+  height:1350px;
   border:none;
   display:block;
   background:#F2F2F2;
@@ -106,11 +126,23 @@ template{display:none;}
 <body>
 <div class="wrap">
   <h1>Welkomstmail nieuwe partner</h1>
-  <p class="lede">Productieversie voor modules "Send email to partner (NL)" (33) en "Send email to partner (EN)" (34) in scenario 6525431. Geldt niet voor team Rho/GLJ (module 56).</p>
+  <p class="lede">Productieversie voor module "Send email to partner (NL)" (33) en "Send email to partner (EN)" (34) in scenario 6525431. Geldt niet voor team Rho/GLJ (module 56).</p>
 
-  <div class="tabs" role="tablist">
-    <button class="tab" id="tab-nl" role="tab" aria-selected="true" onclick="show('nl')">Nederlands</button>
-    <button class="tab" id="tab-en" role="tab" aria-selected="false" onclick="show('en')">English</button>
+  <div class="controls">
+    <div class="group">
+      <span class="group-label">Taal</span>
+      <div class="tabs" role="tablist" aria-label="Taal">
+        <button class="tab" id="tab-nl" role="tab" aria-selected="true" onclick="setLang('nl')">Nederlands</button>
+        <button class="tab" id="tab-en" role="tab" aria-selected="false" onclick="setLang('en')">English</button>
+      </div>
+    </div>
+    <div class="group">
+      <span class="group-label">Partnertype</span>
+      <div class="tabs" role="tablist" aria-label="Partnertype">
+        <button class="tab" id="tab-b2c" role="tab" aria-selected="true" onclick="setType('b2c')">B2C</button>
+        <button class="tab" id="tab-b2b" role="tab" aria-selected="false" onclick="setType('b2b')">B2B</button>
+      </div>
+    </div>
   </div>
 
   <div class="frame-card">
@@ -119,12 +151,13 @@ template{display:none;}
     </div>
   </div>
 
-  <p class="footnote">De <code>{{...}}</code>-tokens zijn live Make-variabelen (bedrijfsnaam, voornaam, DPA-link, vragenlijstlink, mapLink, en het per-team toegewezen contact via module 961). Die tonen hier als platte tekst en worden pas ingevuld als Make de mail daadwerkelijk verstuurt.</p>
+  <p class="footnote">De <code>{{...}}</code>-tokens zijn live Make-variabelen (bedrijfsnaam, voornaam, DPA-link, vragenlijstlink, mapLink, en het per-team toegewezen contact via module 961). Die tonen hier als platte tekst en worden pas ingevuld als Make de mail daadwerkelijk verstuurt. De copy is voor B2B en B2C identiek: alleen <code>{{2.qPath}}</code> verschilt (<code>/b2b?c=</code> versus <code>/?c=</code>), zichtbaar gemaakt met de partnertype-toggle hierboven.</p>
 </div>
 
 <template id="tpl-nl"><!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#F2F2F2;">
+<div style="display:none;max-height:0;overflow:hidden;">Vier stappen om te starten met {{2.company}}: DPA, vragenlijst, Drive-map en platformtoegang.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2F2F2;">
 <tr><td align="center" style="padding:32px 16px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#FFFFFF;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -191,7 +224,7 @@ template{display:none;}
 <table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="32" height="32" align="center" valign="middle" style="background:#B2FA63;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;color:#000000;">2</td></tr></table>
 </td>
 <td valign="top" style="padding:20px 0 24px 0;border-bottom:1px solid #EEEEEE;">
-<a href="{{2.qPath}}{{965.id}}" style="color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;">Vertel ons over {{2.company}}</a>
+<a href="__QPATH__{{965.id}}" style="color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;">Vertel ons over {{2.company}}</a>
 <p style="margin:6px 0 0 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5;">De antwoorden vormen de basis voor de eerste growth audit.</p>
 </td>
 </tr>
@@ -211,7 +244,7 @@ template{display:none;}
 <table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="32" height="32" align="center" valign="middle" style="background:#B2FA63;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;color:#000000;">4</td></tr></table>
 </td>
 <td valign="top" style="padding:20px 0 0 0;">
-<a href="https://docs.google.com/document/d/1-dCRWI-sb4VsIe6vhDBhKmxz5s9l4fuNaR7n_6l_bOI/edit?usp=sharing" style="color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;">Geef ons toegang tot jullie platforms</a>
+<a href="{{972.webViewLink}}" style="color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;">Geef ons toegang tot jullie platforms</a>
 <p style="margin:6px 0 0 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5;">Deze gids beschrijft per platform hoe je ons toegang verleent, zodat we het werk voor jullie kunnen uitvoeren.</p>
 </td>
 </tr>
@@ -219,9 +252,25 @@ template{display:none;}
 </table>
 </td></tr>
 
+<!-- NEXT STEP -->
+<tr><td style="background:#FFFFFF;padding:0 40px 8px 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2F2F2;">
+<tr><td style="padding:20px 24px;">
+<p style="margin:0 0 8px 0;color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;line-height:1.5;">Wat er nu gebeurt</p>
+<p style="margin:0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.55;">Ons team richt jullie omgeving in zodra de vier stappen hierboven binnen zijn. Binnen 3 tot 5 werkdagen nemen we contact op om de kickstart in te plannen.</p>
+</td></tr>
+</table>
+</td></tr>
+
+<!-- WELCOME VIDEO PLACEHOLDER -->
+<!--
+  Video-blok reserveren, nog niet zichtbaar (Bart's welkomstvideo, zie tickets/README.md sectie welkomstvideo).
+  Zodra de video klaar is: thumbnail + play-icon + link hier tussen NEXT STEP en SIGN OFF.
+-->
+
 <!-- SIGN OFF -->
-<tr><td style="background:#FFFFFF;padding:36px 40px 44px 40px;">
-<p style="margin:0 0 4px 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;">Heb je vragen? Neem contact op met {{961.leadName}} via <a href="mailto:{{961.leadEmail}}" style="color:#111111;font-weight:bold;text-decoration:underline;">{{961.leadEmail}}</a>.</p>
+<tr><td style="background:#FFFFFF;padding:28px 40px 44px 40px;">
+<p style="margin:0 0 4px 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;">{{961.leadName}} is jullie vaste aanspreekpunt en bewaakt de hele onboarding. Loopt iets vast of duurt iets te lang, mail <a href="mailto:{{961.leadEmail}}" style="color:#111111;font-weight:bold;text-decoration:underline;">{{961.leadEmail}}</a>.</p>
 <p style="margin:16px 0 0 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;">Tot snel,</p>
 <p style="margin:0;color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;">Team Sprints &amp; Sneakers</p>
 </td></tr>
@@ -257,6 +306,7 @@ template{display:none;}
 <template id="tpl-en"><!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#F2F2F2;">
+<div style="display:none;max-height:0;overflow:hidden;">Four steps to get started with {{2.company}}: DPA, questionnaire, Drive folder and platform access.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2F2F2;">
 <tr><td align="center" style="padding:32px 16px;">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:600px;background:#FFFFFF;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -323,7 +373,7 @@ template{display:none;}
 <table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="32" height="32" align="center" valign="middle" style="background:#B2FA63;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;color:#000000;">2</td></tr></table>
 </td>
 <td valign="top" style="padding:20px 0 24px 0;border-bottom:1px solid #EEEEEE;">
-<a href="{{2.qPath}}{{965.id}}" style="color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;">Tell us about {{2.company}}</a>
+<a href="__QPATH__{{965.id}}" style="color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;">Tell us about {{2.company}}</a>
 <p style="margin:6px 0 0 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5;">The answers form the basis for the first growth audit.</p>
 </td>
 </tr>
@@ -343,7 +393,7 @@ template{display:none;}
 <table role="presentation" cellpadding="0" cellspacing="0"><tr><td width="32" height="32" align="center" valign="middle" style="background:#B2FA63;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;color:#000000;">4</td></tr></table>
 </td>
 <td valign="top" style="padding:20px 0 0 0;">
-<a href="https://docs.google.com/document/d/1-dCRWI-sb4VsIe6vhDBhKmxz5s9l4fuNaR7n_6l_bOI/edit?usp=sharing" style="color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;">Grant us access to your platforms</a>
+<a href="{{972.webViewLink}}" style="color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;text-decoration:none;">Grant us access to your platforms</a>
 <p style="margin:6px 0 0 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.5;">This guide describes, per platform, how to grant us access so we can carry out the work for you.</p>
 </td>
 </tr>
@@ -351,9 +401,25 @@ template{display:none;}
 </table>
 </td></tr>
 
+<!-- NEXT STEP -->
+<tr><td style="background:#FFFFFF;padding:0 40px 8px 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F2F2F2;">
+<tr><td style="padding:20px 24px;">
+<p style="margin:0 0 8px 0;color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:bold;line-height:1.5;">What happens now</p>
+<p style="margin:0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.55;">Our team sets up your environment as soon as the four steps above are in. Within 3 to 5 working days we will reach out to schedule the kickstart.</p>
+</td></tr>
+</table>
+</td></tr>
+
+<!-- WELCOME VIDEO PLACEHOLDER -->
+<!--
+  Reserved video block, not yet visible (Bart's welcome video, see tickets/README.md welkomstvideo section).
+  Once the video is ready: thumbnail + play icon + link here, between NEXT STEP and SIGN OFF.
+-->
+
 <!-- SIGN OFF -->
-<tr><td style="background:#FFFFFF;padding:36px 40px 44px 40px;">
-<p style="margin:0 0 4px 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;">Any questions? Please contact {{961.leadName}} at <a href="mailto:{{961.leadEmail}}" style="color:#111111;font-weight:bold;text-decoration:underline;">{{961.leadEmail}}</a>.</p>
+<tr><td style="background:#FFFFFF;padding:28px 40px 44px 40px;">
+<p style="margin:0 0 4px 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;">{{961.leadName}} is your fixed point of contact and owns the entire onboarding. If anything stalls or takes too long, email <a href="mailto:{{961.leadEmail}}" style="color:#111111;font-weight:bold;text-decoration:underline;">{{961.leadEmail}}</a>.</p>
 <p style="margin:16px 0 0 0;color:#555555;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5;">Talk soon,</p>
 <p style="margin:0;color:#111111;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:bold;">Team Sprints &amp; Sneakers</p>
 </td></tr>
@@ -387,13 +453,32 @@ template{display:none;}
 </template>
 
 <script>
-function show(lang){
+var state = { lang: 'nl', type: 'b2c' };
+
+function setLang(lang){
+  state.lang = lang;
   document.getElementById('tab-nl').setAttribute('aria-selected', lang === 'nl');
   document.getElementById('tab-en').setAttribute('aria-selected', lang === 'en');
-  var tpl = document.getElementById(lang === 'nl' ? 'tpl-nl' : 'tpl-en');
-  document.getElementById('preview').srcdoc = tpl.innerHTML;
+  render();
 }
-show('nl');
+
+function setType(type){
+  state.type = type;
+  document.getElementById('tab-b2c').setAttribute('aria-selected', type === 'b2c');
+  document.getElementById('tab-b2b').setAttribute('aria-selected', type === 'b2b');
+  render();
+}
+
+function render(){
+  var tpl = document.getElementById(state.lang === 'nl' ? 'tpl-nl' : 'tpl-en');
+  var qpath = state.type === 'b2b'
+    ? 'https://onboarding.sprintsandsneakers.dev/b2b?c='
+    : 'https://onboarding.sprintsandsneakers.dev/?c=';
+  var html = tpl.innerHTML.split('__QPATH__').join(qpath);
+  document.getElementById('preview').srcdoc = html;
+}
+
+render();
 </script>
 </body>
 </html>
